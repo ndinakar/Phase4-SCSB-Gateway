@@ -11,7 +11,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +20,7 @@ import org.recap.BaseTestCase;
 import org.recap.ReCAPConstants;
 import org.recap.Service.RestHeaderService;
 import org.recap.model.*;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,7 @@ import static org.junit.Assert.*;
  * Created by hemalathas on 4/11/16.
  */
 public class RequestItemRestControllerUT extends BaseTestCase{
-    private static final Logger logger = Logger.getLogger(RequestItemRestControllerUT.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestItemRestControllerUT.class);
 
     @Mock
     private RequestItemRestController requestItemRestController;
@@ -528,7 +529,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
             producer.sendBody(endpointUri, testString);
             logger.info("Start");
         }catch(Exception e){
-            logger.error(e);
+            logger.error(e.toString());
         }
     }
 
@@ -541,9 +542,9 @@ public class RequestItemRestControllerUT extends BaseTestCase{
             producer.sendBody(endpointUri, testString);
             logger.info("Start");
             Exchange receive = consumer.receive(endpointUri);
-            logger.info(receive.getOut().getBody());
+            logger.info(receive.getMessage().getBody().toString());
         }catch(Exception e){
-            logger.error(e);
+            logger.error(e.toString());
         } finally {
 
         }
@@ -557,7 +558,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         try {
 
         }catch(Exception e){
-            logger.error(e);
+            logger.error(e.toString());
         } finally {
 
         }

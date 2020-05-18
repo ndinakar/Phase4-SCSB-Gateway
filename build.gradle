@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.1.RELEASE'
+		springBootVersion = '2.2.6.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -11,12 +11,14 @@ buildscript {
 }
 
 plugins {
-	id "org.sonarqube" version "2.0.1"
+	id "org.sonarqube" version "2.8"
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 apply plugin: 'jacoco'
 
 //added to accept systemproperties while executing gradlew test cmd
@@ -25,11 +27,11 @@ test {
 }
 
 jar {
-	baseName = 'scsb'
-	version = '0.0.1-SNAPSHOT'
+	archiveBaseName = 'phase4-scsb-gateway'
+	archiveVersion = '0.0.1-SNAPSHOT'
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 repositories {
 	mavenCentral()
@@ -37,26 +39,29 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web-services')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('commons-beanutils:commons-beanutils:1.9.2')
-	compile('io.springfox:springfox-swagger-ui:2.5.0')
-	compile('io.springfox:springfox-swagger2:2.5.0')
-	compile('org.apache.commons:commons-lang3:3.4')
-	compile('org.codehaus.jettison:jettison:1.3.7')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	compile('org.apache.camel:camel-bindy:2.18.0')
-	compile('org.apache.camel:camel-spring-boot-starter:2.18.0')
-	compile('org.apache.camel:camel-ftp:2.18.0')
-	compile('org.apache.camel:camel-csv:2.18.0')
-	compile('info.freelibrary:freelib-marc4j:2.6.12')
-	compile('org.apache.solr:solr-solrj:6.0.1')
-	compile('org.apache.activemq:activemq-camel:5.14.1')
-	compile('org.apache.activemq:activemq-pool:5.14.1')
-	compile('org.apache.activemq:activemq-broker:5.14.1')
-	compile('org.apache.activemq:activemq-client:5.14.1')
-	runtime('mysql:mysql-connector-java:6.0.3')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	implementation('org.springframework.boot:spring-boot-starter-web-services')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('commons-beanutils:commons-beanutils:1.9.4')
+	implementation('io.springfox:springfox-swagger-ui:2.9.2')
+	implementation('io.springfox:springfox-swagger2:2.9.2')
+	implementation('org.apache.commons:commons-lang3:3.10')
+	implementation('org.codehaus.jettison:jettison:1.4.1')
+	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+	implementation('org.apache.camel:camel-bindy:3.2.0')
+	implementation('org.apache.camel.springboot:camel-spring-boot-starter:3.2.0')
+	implementation('org.apache.camel:camel-activemq:3.2.0')
+	implementation('org.apache.camel:camel-jms:3.2.0')
+	implementation('org.apache.camel:camel-ftp:3.2.0')
+	implementation('org.apache.camel:camel-csv:3.2.0')
+	implementation('info.freelibrary:freelib-marc4j:2.6.12')
+	implementation('org.apache.solr:solr-solrj:8.5.1')
+	implementation('org.apache.activemq:activemq-camel:5.15.12')
+	implementation('org.apache.activemq:activemq-pool:5.15.12')
+	implementation('org.apache.activemq:activemq-broker:5.15.12')
+	implementation('org.apache.activemq:activemq-client:5.15.12')
+	implementation('log4j:log4j:1.2.17')
+	runtime('mysql:mysql-connector-java:8.0.16')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 jacocoTestReport {
