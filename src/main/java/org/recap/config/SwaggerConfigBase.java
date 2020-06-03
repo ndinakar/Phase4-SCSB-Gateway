@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
@@ -19,7 +19,7 @@ import static com.google.common.collect.Lists.newArrayList;
 /**
  * @author Sheik Sahib on 5/28/20
  */
-abstract class SwaggerConfigBase extends WebMvcConfigurerAdapter {
+abstract class SwaggerConfigBase implements WebMvcConfigurer {
 
     protected static String ERROR_INFORMATION_CLASS = "ErrorInfo";
     protected static String INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
