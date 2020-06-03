@@ -1,10 +1,14 @@
 package org.recap.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Created by sudhishk on 16/12/16.
  */
+@Getter
+@Setter
 public class ItemCheckinResponse extends AbstractResponseItem {
-
     private boolean alert;
     private boolean magneticMedia;
     private boolean resensitize;
