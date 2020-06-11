@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ItemHoldResponse extends AbstractResponseItem {
-    private boolean available;
+    private Boolean available;
     private String transactionDate;
     private String institutionID;
     private String patronIdentifier;
