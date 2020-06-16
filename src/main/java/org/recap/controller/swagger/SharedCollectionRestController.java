@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.recap.ReCAPConstants;
 import org.recap.model.AccessionRequest;
 import org.recap.model.BibItemAvailabityStatusRequest;
-import org.recap.model.DeAccessionRequest;
+import org.recap.model.deaccession.DeAccessionRequest;
 import org.recap.model.ItemAvailabityStatusRequest;
 import org.recap.model.acession.AccessionResponse;
 import org.recap.model.transfer.TransferRequest;
