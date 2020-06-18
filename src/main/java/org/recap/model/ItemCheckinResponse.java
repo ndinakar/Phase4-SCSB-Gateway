@@ -8,23 +8,16 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ItemCheckinResponse extends AbstractResponseItem {
+public class ItemCheckinResponse extends BaseResponseItem {
     private boolean alert;
     private boolean magneticMedia;
     private boolean resensitize;
-    private String transactionDate;
-    private String institutionID;
-    private String patronIdentifier;
-    private String titleIdentifier;
     private String dueDate;
     private String feeType ;
     private String securityInhibit;
     private String currencyType;
     private String feeAmount;
     private String mediaType;
-    private String bibId;
-    private String ISBN;
-    private String LCCN;
     private String permanentLocation;
     private String sortBin;
     private String collectionCode;
@@ -33,10 +26,8 @@ public class ItemCheckinResponse extends AbstractResponseItem {
     private String alertType;
     private String holdPatronId;
     private String holdPatronName;
-    private String jobId;
     private boolean processed;
-    private String updatedDate;
-    private String createdDate;
+
 
     /**
      * Gets permanent location.
@@ -237,78 +228,6 @@ public class ItemCheckinResponse extends AbstractResponseItem {
     }
 
     /**
-     * Gets transaction date.
-     *
-     * @return the transaction date
-     */
-    public String getTransactionDate() {
-        return transactionDate;
-    }
-
-    /**
-     * Sets transaction date.
-     *
-     * @param transactionDate the transaction date
-     */
-    public void setTransactionDate(String transactionDate) {
-        this.transactionDate = transactionDate;
-    }
-
-    /**
-     * Gets institution id.
-     *
-     * @return the institution id
-     */
-    public String getInstitutionID() {
-        return institutionID;
-    }
-
-    /**
-     * Sets institution id.
-     *
-     * @param institutionID the institution id
-     */
-    public void setInstitutionID(String institutionID) {
-        this.institutionID = institutionID;
-    }
-
-    /**
-     * Gets patron identifier.
-     *
-     * @return the patron identifier
-     */
-    public String getPatronIdentifier() {
-        return patronIdentifier;
-    }
-
-    /**
-     * Sets patron identifier.
-     *
-     * @param patronIdentifier the patron identifier
-     */
-    public void setPatronIdentifier(String patronIdentifier) {
-        this.patronIdentifier = patronIdentifier;
-    }
-
-    /**
-     * Gets title identifier.
-     *
-     * @return the title identifier
-     */
-    public String getTitleIdentifier() {
-        return titleIdentifier;
-    }
-
-    /**
-     * Sets title identifier.
-     *
-     * @param titleIdentifier the title identifier
-     */
-    public void setTitleIdentifier(String titleIdentifier) {
-        this.titleIdentifier = titleIdentifier;
-    }
-
-    /**
      * Gets due date.
      *
      * @return the due date
@@ -416,77 +335,6 @@ public class ItemCheckinResponse extends AbstractResponseItem {
         this.mediaType = mediaType;
     }
 
-    /**
-     * Gets bib id.
-     *
-     * @return the bib id
-     */
-    public String getBibId() {
-        return bibId;
-    }
-
-    /**
-     * Sets bib id.
-     *
-     * @param bibId the bib id
-     */
-    public void setBibId(String bibId) {
-        this.bibId = bibId;
-    }
-
-    /**
-     * Gets isbn.
-     *
-     * @return the isbn
-     */
-    public String getISBN() {
-        return ISBN;
-    }
-
-    /**
-     * Sets isbn.
-     *
-     * @param ISBN the isbn
-     */
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
-    }
-
-    /**
-     * Gets lccn.
-     *
-     * @return the lccn
-     */
-    public String getLCCN() {
-        return LCCN;
-    }
-
-    /**
-     * Sets lccn.
-     *
-     * @param LCCN the lccn
-     */
-    public void setLCCN(String LCCN) {
-        this.LCCN = LCCN;
-    }
-
-    /**
-     * Gets job id.
-     *
-     * @return the job id
-     */
-    public String getJobId() {
-        return jobId;
-    }
-
-    /**
-     * Sets job id.
-     *
-     * @param jobId the job id
-     */
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
 
     /**
      * Is processed boolean.
@@ -504,41 +352,5 @@ public class ItemCheckinResponse extends AbstractResponseItem {
      */
     public void setProcessed(boolean processed) {
         this.processed = processed;
-    }
-
-    /**
-     * Gets updated date.
-     *
-     * @return the updated date
-     */
-    public String getUpdatedDate() {
-        return updatedDate;
-    }
-
-    /**
-     * Sets updated date.
-     *
-     * @param updatedDate the updated date
-     */
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    /**
-     * Gets created date.
-     *
-     * @return the created date
-     */
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * Sets created date.
-     *
-     * @param createdDate the created date
-     */
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
     }
 }

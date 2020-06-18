@@ -9,20 +9,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ItemHoldResponse extends AbstractResponseItem {
+public class ItemHoldResponse extends BaseResponseItem {
+
     private Boolean available;
-    private String transactionDate;
-    private String institutionID;
-    private String patronIdentifier;
-    private String titleIdentifier;
     private String expirationDate;
     private String pickupLocation;
     private String queuePosition;
-    private String bibId;
-    private String ISBN;
-    private String LCCN;
     private String trackingId;
-    private String jobId;
-    private String updatedDate;
-    private String createdDate;
+
 }

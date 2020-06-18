@@ -19,47 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/updateCgdService")
-public class UpdateCgdRestController {
+public class UpdateCgdRestController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateCgdRestController.class);
-
-    @Value("${scsb.solr.client.url}")
-    private String scsbSolrClient;
-
-
-    @Autowired
-    RestHeaderService restHeaderService;
-
-    public RestHeaderService getRestHeaderService(){
-        return restHeaderService;
-    }
-
-    /**
-     * Gets rest template.
-     *
-     * @return the rest template
-     */
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
-
-    /**
-     * Gets scsb solr client url.
-     *
-     * @return the scsb solr client url
-     */
-    public String getScsbSolrClientUrl() {
-        return scsbSolrClient;
-    }
-
-    /**
-     * Sets scsb solr client url.
-     *
-     * @param scsbSolrClientUrl the scsb solr client url
-     */
-    public void setScsbSolrClientUrl(String scsbSolrClientUrl) {
-        this.scsbSolrClient = scsbSolrClientUrl;
-    }
 
     /**
      * This method will call scsb-solr-client microservice to update CGD for an item in scsb database and scsb solr.
