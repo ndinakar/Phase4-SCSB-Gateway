@@ -1,15 +1,18 @@
 package org.recap.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by sudhishk on 16/12/16.
  */
-@Data
+@Getter
+@Setter
 public class ItemCheckoutResponse extends AbstractResponseItem {
-    private boolean Renewal;
-    private boolean magneticMedia;
-    private boolean Desensitize;
+    private Boolean Renewal;
+    private Boolean magneticMedia;
+    private Boolean Desensitize;
     private String transactionDate;
     private String institutionID;
     private String patronIdentifier;

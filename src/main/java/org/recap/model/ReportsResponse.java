@@ -2,6 +2,7 @@ package org.recap.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.recap.model.search.DeaccessionItemResultsRow;
 
 import java.util.ArrayList;
 import java.util.List;
