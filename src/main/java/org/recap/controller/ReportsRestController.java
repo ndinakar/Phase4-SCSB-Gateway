@@ -20,38 +20,9 @@ import org.springframework.web.client.RestTemplate;
  */
 @RestController
 @RequestMapping("/reportsService")
-public class ReportsRestController {
+public class ReportsRestController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateCgdRestController.class);
-
-    @Value("${scsb.solr.client.url}")
-    private String scsbSolrClient;
-
-    @Autowired
-    RestHeaderService restHeaderService;
-
-    public RestHeaderService getRestHeaderService(){
-        return restHeaderService;
-    }
-
-    /**
-     * Gets rest template.
-     *
-     * @return the rest template
-     */
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
-
-    /**
-     * Gets scsb solr client url.
-     *
-     * @return the scsb solr client url
-     */
-    public String getScsbSolrClientUrl() {
-        return scsbSolrClient;
-    }
-
 
     /**
      * This method will call scsb-solr-client microservice to get total counts of accessioned and deaccessioned items in scsb.
