@@ -20,20 +20,12 @@ import org.springframework.web.client.RestTemplate;
  */
 @RestController
 @RequestMapping("/scheduleService")
-public class ScheduleJobsController {
+public class ScheduleJobsController extends  AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduleJobsController.class);
 
     @Value("${scsb.batch.schedule.url}")
     private String scsbScheduleUrl;
-
-
-    @Autowired
-    RestHeaderService restHeaderService;
-
-    public RestHeaderService getRestHeaderService(){
-        return restHeaderService;
-    }
 
     /**
      * Gets scsb schedule url.
@@ -44,23 +36,6 @@ public class ScheduleJobsController {
         return scsbScheduleUrl;
     }
 
-    /**
-     * Sets scsb schedule url.
-     *
-     * @param scsbScheduleUrl the scsb schedule url
-     */
-    public void setScsbScheduleUrl(String scsbScheduleUrl) {
-        this.scsbScheduleUrl = scsbScheduleUrl;
-    }
-
-    /**
-     * Gets rest template.
-     *
-     * @return the rest template
-     */
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
 
     /**
      *  This method is exposed as scheduler service for other microservices to schedule or reschedule or unschedule a job.
