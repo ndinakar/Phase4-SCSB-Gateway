@@ -3,8 +3,6 @@ package org.recap.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 /**
  * Created by akulak on 8/3/17.
  */

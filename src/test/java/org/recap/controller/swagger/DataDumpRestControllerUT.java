@@ -4,16 +4,22 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
-import org.recap.ReCAPConstants;
+import org.recap.RecapConstants;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by hemalathas on 17/7/17.
@@ -53,7 +59,7 @@ public class DataDumpRestControllerUT extends BaseTestCase{
         inputMap.put("transmissionType",transmissionType);
         inputMap.put("emailToAddress",emailToAddress);
 
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
         Mockito.when(dataDumpRestController.getRestTemplate()).thenReturn(restTemplate);
         Mockito.when(dataDumpRestController.getScsbEtlUrl()).thenReturn(scsbEtlUrl);
         Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, requestEntity, String.class, inputMap)).thenReturn(responseEntity);

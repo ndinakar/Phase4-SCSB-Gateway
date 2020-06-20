@@ -3,12 +3,10 @@ package org.recap.model;
 import org.junit.Test;
 import org.recap.BaseTestCase;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by hemalathas on 24/3/17.

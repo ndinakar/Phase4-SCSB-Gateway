@@ -4,12 +4,10 @@ import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.model.search.DeaccessionItemResultsRow;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by hemalathas on 23/3/17.

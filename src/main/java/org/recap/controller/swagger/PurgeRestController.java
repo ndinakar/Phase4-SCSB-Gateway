@@ -4,11 +4,16 @@ package org.recap.controller.swagger;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.recap.ReCAPConstants;
+import org.recap.RecapCommonConstants;
+import org.recap.RecapConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,7 +83,7 @@ public class PurgeRestController {
         Map response = null;
         try{
             HttpEntity requestEntity = getHttpEntity();
-            responseEntity = getRestTemplate().exchange(getScsbCircUrl()+ ReCAPConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class);
+            responseEntity = getRestTemplate().exchange(getScsbCircUrl()+ RecapConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class);
             response = responseEntity.getBody();
         }catch(Exception e){
             getLogger().error("Exception",e);
@@ -99,7 +104,7 @@ public class PurgeRestController {
         Map response = null;
         try {
             HttpEntity requestEntity = getHttpEntity();
-            ResponseEntity<Map> responseEntity = getRestTemplate().exchange(getScsbCircUrl() + ReCAPConstants.REST_URL_PURGE_EXCEPTION_REQUESTS, HttpMethod.GET, requestEntity, Map.class);
+            ResponseEntity<Map> responseEntity = getRestTemplate().exchange(getScsbCircUrl() + RecapConstants.REST_URL_PURGE_EXCEPTION_REQUESTS, HttpMethod.GET, requestEntity, Map.class);
             response = responseEntity.getBody();
         } catch (Exception e) {
             getLogger().error("Exception", e);
@@ -109,7 +114,7 @@ public class PurgeRestController {
 
     private HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(ReCAPConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 
