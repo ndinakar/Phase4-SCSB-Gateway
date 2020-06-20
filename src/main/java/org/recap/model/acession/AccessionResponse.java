@@ -1,6 +1,5 @@
 package org.recap.model.acession;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

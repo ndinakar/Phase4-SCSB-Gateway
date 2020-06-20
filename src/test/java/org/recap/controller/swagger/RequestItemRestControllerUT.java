@@ -1,31 +1,49 @@
 package org.recap.controller.swagger;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.models.HttpMethod;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
-import org.slf4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
-import org.recap.ReCAPConstants;
+import org.recap.RecapCommonConstants;
+import org.recap.RecapConstants;
 import org.recap.Service.RestHeaderService;
-import org.recap.model.*;
+import org.recap.model.AbstractResponseItem;
+import org.recap.model.CancelRequestResponse;
+import org.recap.model.ItemCheckInRequest;
+import org.recap.model.ItemCheckOutRequest;
+import org.recap.model.ItemCheckinResponse;
+import org.recap.model.ItemCheckoutResponse;
+import org.recap.model.ItemCreateBibRequest;
+import org.recap.model.ItemCreateBibResponse;
+import org.recap.model.ItemHoldCancelRequest;
+import org.recap.model.ItemHoldRequest;
+import org.recap.model.ItemHoldResponse;
+import org.recap.model.ItemInformationRequest;
+import org.recap.model.ItemInformationResponse;
+import org.recap.model.ItemRecalRequest;
+import org.recap.model.ItemRecallResponse;
+import org.recap.model.ItemRefileRequest;
+import org.recap.model.ItemRefileResponse;
+import org.recap.model.ItemRequestInformation;
+import org.recap.model.ItemResponseInformation;
+import org.recap.model.PatronInformationRequest;
+import org.recap.model.PatronInformationResponse;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -34,7 +52,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by hemalathas on 4/11/16.
@@ -90,7 +112,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
 
     @Test
     public void testValidRequest() throws JSONException {
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.VALID_REQUEST, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapCommonConstants.VALID_REQUEST, HttpStatus.OK);
         ItemRequestInformation itemRequestInformation = new ItemRequestInformation();
         itemRequestInformation.setItemBarcodes(Arrays.asList("32101047717911"));
         itemRequestInformation.setTitleIdentifier("105 paintings in the John Herron Art Museum.");
@@ -109,14 +131,14 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.validateItemRequest(itemRequestInformation)).thenCallRealMethod();
         ResponseEntity responseEntity1 = requestItemRestController.validateItemRequest(itemRequestInformation);
         assertNotNull(responseEntity1);
-        assertEquals(responseEntity.getBody(), ReCAPConstants.VALID_REQUEST);
+        assertEquals(responseEntity.getBody(), RecapCommonConstants.VALID_REQUEST);
     }
 
 
 
     @Test
     public void testRequestWithInvalidRequestingInst() throws JSONException {
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.INVALID_REQUEST_INSTITUTION+"\n", HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapConstants.INVALID_REQUEST_INSTITUTION+"\n", HttpStatus.OK);
         ItemRequestInformation itemRequestInformation = new ItemRequestInformation();
         itemRequestInformation.setPatronBarcode("45678915");
         itemRequestInformation.setRequestType("Borrow Direct");
@@ -131,7 +153,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.validateItemRequest(itemRequestInformation)).thenCallRealMethod();
         ResponseEntity responseEntity1 = requestItemRestController.validateItemRequest(itemRequestInformation);
         assertNotNull(responseEntity1);
-        assertEquals(responseEntity.getBody(),ReCAPConstants.INVALID_REQUEST_INSTITUTION+"\n");
+        assertEquals(responseEntity.getBody(), RecapConstants.INVALID_REQUEST_INSTITUTION+"\n");
     }
 
     @Test
@@ -154,7 +176,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
 
     @Test
     public void testRequestParameterWithEDDRequestType() throws JSONException {
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.START_PAGE_AND_END_PAGE_REQUIRED+"\n", HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapConstants.START_PAGE_AND_END_PAGE_REQUIRED+"\n", HttpStatus.OK);
         ItemRequestInformation itemRequestInformation = new ItemRequestInformation();
         itemRequestInformation.setPatronBarcode("45678915");
         itemRequestInformation.setRequestType("EDD");
@@ -167,7 +189,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.validateItemRequest(itemRequestInformation)).thenCallRealMethod();
         ResponseEntity responseEntity1 = requestItemRestController.validateItemRequest(itemRequestInformation);
         assertNotNull(responseEntity1);
-        assertEquals(responseEntity.getBody(),ReCAPConstants.START_PAGE_AND_END_PAGE_REQUIRED+"\n");
+        assertEquals(responseEntity.getBody(), RecapConstants.START_PAGE_AND_END_PAGE_REQUIRED+"\n");
     }
 
     @Test
@@ -177,7 +199,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         cancelRequestResponse.setScreenMessage("Request cancelled.");
         cancelRequestResponse.setSuccess(true);
         ResponseEntity<CancelRequestResponse> responseEntity = new ResponseEntity<CancelRequestResponse>(cancelRequestResponse,HttpStatus.OK);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_CANCEL).queryParam("requestId", 129);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbCircUrl() + RecapConstants.URL_REQUEST_CANCEL).queryParam("requestId", 129);
         Mockito.when(requestItemRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getRestHeaderService()).thenReturn(restHeaderService);
@@ -192,7 +214,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
     @Test
     public void testcheckinItemRequest() throws IOException {
 
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.PRINCETON, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapCommonConstants.PRINCETON, HttpStatus.OK);
         String response = responseEntity.getBody().toString();
         ItemRequestInformation itemRequestInfo = new ItemRequestInformation();
         ItemCheckInRequest itemCheckInRequest = new ItemCheckInRequest();
@@ -232,7 +254,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getItemInformationRequest()).thenReturn(itemInformationRequest);
-        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_INFORMATION, org.springframework.http.HttpMethod.POST, request, ItemInformationResponse.class)).thenReturn(responseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_INFORMATION, org.springframework.http.HttpMethod.POST, request, ItemInformationResponse.class)).thenReturn(responseEntity);
         Mockito.when(requestItemRestController.itemInformation(itemInformationRequest)).thenCallRealMethod();
         AbstractResponseItem abstractResponseItem = requestItemRestController.itemInformation(itemInformationRequest);
         assertNotNull(abstractResponseItem);
@@ -254,7 +276,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getItemInformationRequest()).thenReturn(itemInformationRequest);
-        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_INFORMATION, org.springframework.http.HttpMethod.POST, request, ItemInformationResponse.class)).thenReturn(responseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_INFORMATION, org.springframework.http.HttpMethod.POST, request, ItemInformationResponse.class)).thenReturn(responseEntity);
         Mockito.when(requestItemRestController.itemInformation(itemInformationRequest)).thenCallRealMethod();
         AbstractResponseItem abstractResponseItem = requestItemRestController.itemInformation(itemInformationRequest);
         assertNotNull(abstractResponseItem);
@@ -380,7 +402,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         HttpEntity request = new HttpEntity(itemRefileRequest);
         Mockito.when(requestItemRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
-        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() +   ReCAPConstants.URL_REQUEST_RE_FILE, org.springframework.http.HttpMethod.POST, request, ItemRefileResponse.class)).thenReturn(responseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() +   RecapConstants.URL_REQUEST_RE_FILE, org.springframework.http.HttpMethod.POST, request, ItemRefileResponse.class)).thenReturn(responseEntity);
         Mockito.when(requestItemRestController.refileItem(itemRefileRequest)).thenCallRealMethod();
         ItemRefileResponse itemRefileResponse1 = requestItemRestController.refileItem(itemRefileRequest);
         assertNotNull(itemRefileResponse1);
@@ -392,7 +414,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
 
     @Test
     public void testCheckoutItemRequest() throws IOException {
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.PRINCETON, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapCommonConstants.PRINCETON, HttpStatus.OK);
         String response = responseEntity.getBody().toString();
         ItemRequestInformation itemRequestInfo = new ItemRequestInformation();
         ItemCheckOutRequest itemCheckOutRequest = new ItemCheckOutRequest();
@@ -419,7 +441,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
 
     @Test
     public void testCheckoutItemRequest_RestClientException() throws IOException {
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.PRINCETON, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapCommonConstants.PRINCETON, HttpStatus.OK);
         String response = responseEntity.getBody().toString();
         ItemRequestInformation itemRequestInfo = new ItemRequestInformation();
         ItemCheckOutRequest itemCheckOutRequest = new ItemCheckOutRequest();
@@ -446,7 +468,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
     }
     @Test
     public void testCheckoutItemRequest_Exception() throws IOException {
-        ResponseEntity responseEntity = new ResponseEntity(ReCAPConstants.PRINCETON, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(RecapCommonConstants.PRINCETON, HttpStatus.OK);
         String response = responseEntity.getBody().toString();
         ItemRequestInformation itemRequestInfo = new ItemRequestInformation();
         ItemCheckOutRequest itemCheckOutRequest = new ItemCheckOutRequest();
@@ -497,7 +519,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getItemRequestInformation()).thenReturn(itemRequestInfo);
         Mockito.when(requestItemRestController.getObjectMapper()).thenReturn(objectMapper);
         Mockito.when(requestItemRestController.getObjectMapper().readValue(response, ItemHoldResponse.class)).thenReturn(itemHoldResponse);
-        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_HOLD, itemRequestInfo, String.class)).thenReturn(responseResponseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_HOLD, itemRequestInfo, String.class)).thenReturn(responseResponseEntity);
         Mockito.when(requestItemRestController.holdItemRequest(itemHoldRequest)).thenCallRealMethod();
         AbstractResponseItem abstractResponseItem = requestItemRestController.holdItemRequest(itemHoldRequest);
         assertNotNull(abstractResponseItem);
@@ -524,7 +546,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getItemRequestInformation()).thenReturn(itemRequestInfo);
         Mockito.when(requestItemRestController.getObjectMapper()).thenReturn(objectMapper);
-        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class)).thenReturn(responseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class)).thenReturn(responseEntity);
         Mockito.when(requestItemRestController.getObjectMapper().readValue(response, ItemCreateBibResponse.class)).thenReturn(itemCreateBibResponse);
         Mockito.when(requestItemRestController.createBibRequest(itemCreateBibRequest)).thenCallRealMethod();
         AbstractResponseItem abstractResponseItem = requestItemRestController.createBibRequest(itemCreateBibRequest);
@@ -554,7 +576,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getItemRequestInformation()).thenReturn(itemRequestInfo);
         Mockito.when(requestItemRestController.getObjectMapper()).thenReturn(objectMapper);
-        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class)).thenReturn(responseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class)).thenReturn(responseEntity);
         Mockito.when(requestItemRestController.getObjectMapper().readValue(response, ItemCreateBibResponse.class)).thenThrow(new RestClientException("Exception occured"));
         Mockito.when(requestItemRestController.getLogger()).thenReturn(mocklogger);
         Mockito.when(requestItemRestController.createBibRequest(itemCreateBibRequest)).thenCallRealMethod();
@@ -615,7 +637,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getItemRequestInformation()).thenReturn(itemRequestInfo);
         Mockito.when(requestItemRestController.getObjectMapper()).thenReturn(objectMapper);
-        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_RECALL, itemRequestInfo, String.class)).thenReturn(responseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_RECALL, itemRequestInfo, String.class)).thenReturn(responseEntity);
         Mockito.when(requestItemRestController.getObjectMapper().readValue(response, ItemRecallResponse.class)).thenReturn(itemRecallResponse);
         Mockito.when(requestItemRestController.recallItem(itemRecalRequest)).thenCallRealMethod();
         AbstractResponseItem abstractResponseItem = requestItemRestController.recallItem(itemRecalRequest);
@@ -646,7 +668,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getItemRequestInformation()).thenReturn(itemRequestInfo);
         Mockito.when(requestItemRestController.getObjectMapper()).thenReturn(objectMapper);
-        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() +   ReCAPConstants.URL_REQUEST_PATRON_INFORMATION, org.springframework.http.HttpMethod.POST, request, PatronInformationResponse.class)).thenReturn(responseEntity);
+        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() +   RecapConstants.URL_REQUEST_PATRON_INFORMATION, org.springframework.http.HttpMethod.POST, request, PatronInformationResponse.class)).thenReturn(responseEntity);
         Mockito.when(requestItemRestController.patronInformation(patronInformationRequest)).thenCallRealMethod();
         PatronInformationResponse informationResponse = requestItemRestController.patronInformation(patronInformationRequest);
         assertNotNull(informationResponse);
@@ -674,7 +696,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(requestItemRestController.getItemRequestInformation()).thenReturn(itemRequestInfo);
         Mockito.when(requestItemRestController.getObjectMapper()).thenReturn(objectMapper);
-        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() +   ReCAPConstants.URL_REQUEST_PATRON_INFORMATION, org.springframework.http.HttpMethod.POST, request, PatronInformationResponse.class)).thenThrow(new RestClientException("Exception occured"));
+        Mockito.when(requestItemRestController.getRestTemplate().exchange(getScsbCircUrl() +   RecapConstants.URL_REQUEST_PATRON_INFORMATION, org.springframework.http.HttpMethod.POST, request, PatronInformationResponse.class)).thenThrow(new RestClientException("Exception occured"));
         Mockito.when(requestItemRestController.patronInformation(patronInformationRequest)).thenCallRealMethod();
         Mockito.when(requestItemRestController.getLogger()).thenReturn(mocklogger);
         PatronInformationResponse informationResponse = requestItemRestController.patronInformation(patronInformationRequest);
@@ -739,8 +761,8 @@ public class RequestItemRestControllerUT extends BaseTestCase{
             ItemRequestInformation itemRequestInfo = new ItemRequestInformation();
             itemRequestInfo.setPatronBarcode("32101077423406");
             itemRequestInfo.setItemBarcodes(Arrays.asList("3652147896532455"));
-            itemRequestInfo.setRequestType(ReCAPConstants.REQUEST_TYPE_RETRIEVAL);
-            itemRequestInfo.setRequestingInstitution(ReCAPConstants.PRINCETON);
+            itemRequestInfo.setRequestType(RecapCommonConstants.REQUEST_TYPE_RETRIEVAL);
+            itemRequestInfo.setRequestingInstitution(RecapCommonConstants.PRINCETON);
             itemRequestInfo.setEmailAddress("ksudhish@gmail.com");
 
             HttpEntity request = new HttpEntity(itemRequestInfo);
@@ -748,7 +770,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
             Mockito.when(requestItemRestController.getRestTemplate()).thenReturn(mockRestTemplate);
             Mockito.when(requestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
             Mockito.when(requestItemRestController.getProducer()).thenReturn(producerTemplate);
-            Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class)).thenReturn(responseEntity);
+            Mockito.when(requestItemRestController.getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class)).thenReturn(responseEntity);
             Mockito.when(requestItemRestController.itemRequest(itemRequestInfo)).thenCallRealMethod();
             itemResponseInformation = requestItemRestController.itemRequest(itemRequestInfo);
             assertNotNull(itemResponseInformation);
@@ -812,8 +834,8 @@ public class RequestItemRestControllerUT extends BaseTestCase{
             ItemRequestInformation itemRequestInformation=new ItemRequestInformation();
             itemRequestInformation.setItemBarcodes(Arrays.asList("PULTST54321"));
             itemRequestInformation.setPatronBarcode("45678913");
-             itemRequestInformation.setRequestType(ReCAPConstants.REQUEST_TYPE_RETRIEVAL);
-            itemRequestInformation.setRequestingInstitution(ReCAPConstants.PRINCETON);
+             itemRequestInformation.setRequestType(RecapCommonConstants.REQUEST_TYPE_RETRIEVAL);
+            itemRequestInformation.setRequestingInstitution(RecapCommonConstants.PRINCETON);
             itemRequestInformation.setEmailAddress("ksudhish@gmail.com");
             itemRequestInformation.setDeliveryLocation("htcsc");
             itemRequestInformation.setTitleIdentifier("New BooK");
@@ -822,7 +844,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
             ObjectMapper objectMapper= new ObjectMapper();
             json = objectMapper.writeValueAsString(itemRequestInformation);
 
-            producer.sendBodyAndHeader(ReCAPConstants.REQUEST_ITEM_QUEUE, json, ReCAPConstants.REQUEST_TYPE_QUEUE_HEADER, itemRequestInformation.getRequestType());
+            producer.sendBodyAndHeader(RecapConstants.REQUEST_ITEM_QUEUE, json, RecapCommonConstants.REQUEST_TYPE_QUEUE_HEADER, itemRequestInformation.getRequestType());
         } catch (JsonProcessingException e) {
                 logger.error(e.getMessage());
         }catch(Exception e){

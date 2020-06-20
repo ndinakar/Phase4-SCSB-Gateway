@@ -1,6 +1,7 @@
 package org.recap.controller;
 
-import org.recap.ReCAPConstants;
+import org.recap.RecapCommonConstants;
+import org.recap.RecapConstants;
 import org.recap.Service.RestHeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,7 +74,7 @@ public class AbstractController {
 
     public HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(ReCAPConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 
