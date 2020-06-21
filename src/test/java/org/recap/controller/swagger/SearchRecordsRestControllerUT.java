@@ -4,14 +4,17 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
-import org.recap.ReCAPConstants;
+import org.recap.RecapConstants;
 import org.recap.Service.RestHeaderService;
 import org.recap.model.SearchRecordsRequest;
 import org.recap.model.SearchRecordsResponse;
 import org.recap.model.SearchResultRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -19,7 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by hemalathas on 3/2/17.
@@ -63,7 +67,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         HttpEntity<SearchRecordsRequest> httpEntity = new HttpEntity<>(searchRecordsRequest, restHeaderService.getHttpHeaders());
         SearchRecordsResponse searchRecordsResponse = getSearchRecordsResponse();
         ResponseEntity<SearchRecordsResponse> responseEntity = new ResponseEntity<SearchRecordsResponse>(searchRecordsResponse,HttpStatus.OK);
-        Mockito.when(mockRestTemplate.exchange(scsbSolrClient+ ReCAPConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, httpEntity, SearchRecordsResponse.class)).thenReturn(responseEntity);
+        Mockito.when(mockRestTemplate.exchange(scsbSolrClient+ RecapConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, httpEntity, SearchRecordsResponse.class)).thenReturn(responseEntity);
         Mockito.when(searchRecordsRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(searchRecordsRestController.getRestHeaderService()).thenReturn(restHeaderService);
         Mockito.when(searchRecordsRestController.getScsbSolrClientUrl()).thenReturn(scsbSolrClient);
@@ -102,7 +106,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         HttpEntity request = new HttpEntity(restHeaderService.getHttpHeaders());
         List<SearchResultRow> searchResultRowList = new ArrayList<>();
         ResponseEntity<List> httpEntity = new ResponseEntity<List>(searchResultRowList,HttpStatus.OK);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + ReCAPConstants.URL_SEARCH_BY_PARAM)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + RecapConstants.URL_SEARCH_BY_PARAM)
                 .queryParam("fieldValue", "test")
                 .queryParam("fieldName", "test")
                 .queryParam("owningInstitutions", "PUL")

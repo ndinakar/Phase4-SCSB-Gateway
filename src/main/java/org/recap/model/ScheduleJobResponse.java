@@ -1,6 +1,7 @@
 package org.recap.model;
 
 import lombok.Data;
+
 import java.util.Date;
 
 /**
