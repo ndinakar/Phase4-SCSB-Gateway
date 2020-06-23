@@ -66,7 +66,7 @@ public class ScheduleJobsController extends  AbstractController {
         scheduleJobResponse.setMessage("Scheduler job response");
         scheduleJobResponse.setNextRunTime(new Date());
         try {
-        	logger.info("Inside my custom logger test service method : {}", scheduleJobResponse);
+        	logger.info("Inside the customLoggerTest method - ScheduleJobResponse : {}", scheduleJobResponse);
         } catch (Exception e) {
             logger.error(RecapCommonConstants.LOG_ERROR,e);
 
