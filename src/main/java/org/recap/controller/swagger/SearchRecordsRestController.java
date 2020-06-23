@@ -34,7 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/searchService")
-@Api(value="search", description="Search Records", position = 1)
+@Api(value="search")
 public class SearchRecordsRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchRecordsRestController.class);
