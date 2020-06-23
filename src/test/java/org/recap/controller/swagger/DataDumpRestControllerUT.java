@@ -66,7 +66,82 @@ public class DataDumpRestControllerUT extends BaseTestCase{
         Mockito.when(dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress)).thenCallRealMethod();
         ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress);
         assertNotNull(responseEntity1);
-        assertEquals(responseEntity1.getBody(),"Export process has started and we will send an email notification upon completion");
+        assertEquals("Export process has started and we will send an email notification upon completion",responseEntity1.getBody());
+    }
+
+    @Test
+    public void testDataDumpRestController_Exception(){
+        String institutionCodes = "PUL";
+        String requestingInstitutionCode = "CUL";
+        String fetchType = "1";
+        String outputFormat = "1";
+        String date = new Date().toString();
+        String collectionGroupIds = "1";
+        String transmissionType = "1";
+        String emailToAddress = "hemalatha.s@htcindia.com";
+        Map<String,String> inputMap = new HashMap<>();
+        Mockito.when(dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress)).thenCallRealMethod();
+        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress);
+        assertEquals(503,responseEntity1.getStatusCodeValue());
+    }
+
+
+
+    @Test
+    public void testexportDataDumpWithToDate(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("api_key","recap");
+        HttpEntity requestEntity = new HttpEntity(headers);
+        String institutionCodes = "PUL";
+        String requestingInstitutionCode = "CUL";
+        String fetchType = "1";
+        String outputFormat = "1";
+        String date = new Date().toString();
+        String toDate = new Date().toString();
+        String collectionGroupIds = "1";
+        String transmissionType = "1";
+        String emailToAddress = "hemalatha.s@htcindia.com";
+
+        Map<String,String> inputMap = new HashMap<>();
+        inputMap.put("institutionCodes",institutionCodes);
+        inputMap.put("requestingInstitutionCode",requestingInstitutionCode);
+        inputMap.put("fetchType",fetchType);
+        inputMap.put("outputFormat",outputFormat);
+        inputMap.put("date", date);
+        inputMap.put("toDate",toDate);
+        inputMap.put("collectionGroupIds",collectionGroupIds);
+        inputMap.put("transmissionType",transmissionType);
+        inputMap.put("emailToAddress",emailToAddress);
+
+        ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
+        Mockito.when(dataDumpRestController.getRestTemplate()).thenReturn(restTemplate);
+        Mockito.when(dataDumpRestController.getScsbEtlUrl()).thenReturn(scsbEtlUrl);
+        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, requestEntity, String.class, inputMap)).thenReturn(responseEntity);
+        Mockito.when(dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,fetchType,outputFormat, date,toDate,collectionGroupIds,transmissionType,emailToAddress)).thenCallRealMethod();
+        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress);
+        assertNotNull(responseEntity1);
+        assertEquals("Export process has started and we will send an email notification upon completion",responseEntity1.getBody());
+    }
+
+    @Test
+    public void testexportDataDumpWithToDate_Exception(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("api_key","recap");
+        HttpEntity requestEntity = new HttpEntity(headers);
+        String institutionCodes = "PUL";
+        String requestingInstitutionCode = "CUL";
+        String fetchType = "1";
+        String outputFormat = "1";
+        String date = new Date().toString();
+        String toDate = new Date().toString();
+        String collectionGroupIds = "1";
+        String transmissionType = "1";
+        String emailToAddress = "hemalatha.s@htcindia.com";
+        Map<String,String> inputMap = new HashMap<>();
+        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, requestEntity, String.class, inputMap)).thenReturn(null);
+        Mockito.when(dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,fetchType,outputFormat, date,toDate,collectionGroupIds,transmissionType,emailToAddress)).thenCallRealMethod();
+        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress);
+        assertEquals(503,responseEntity1.getStatusCodeValue());
     }
 
     @Test

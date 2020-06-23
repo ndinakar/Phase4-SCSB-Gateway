@@ -21,9 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Date;
-
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by rajeshbabuk on 13/1/17.
@@ -86,7 +84,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         assertNotNull(deaccessionItemResultsRow.getCgd());
         assertNotNull(deaccessionItemResultsRow.getDeaccessionDate());
         assertNotNull(deaccessionItemResultsRow.getDeaccessionNotes());
-        assertEquals(deaccessionItemResultsRow.getDeaccessionOwnInst(),"PUL");
+        assertEquals("PUL",deaccessionItemResultsRow.getDeaccessionOwnInst());
         assertNotNull(deaccessionItemResultsRow.getItemBarcode());
         assertNotNull(deaccessionItemResultsRow.getItemId());
         assertNotNull(deaccessionItemResultsRow.getTitle());
@@ -101,6 +99,14 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         assertNotNull(reportsRequest.getIncompletePageNumber());
         assertNotNull(reportsRequest.getIncompletePageSize());
         assertNotNull(reportsRequest.isExport());
+    }
+
+    @Test
+    public void accessionDeaccessionCounts_Exception() throws Exception {
+        ReportsRequest reportsRequest = new ReportsRequest();
+        Mockito.when(reportsRestController.accessionDeaccessionCounts(reportsRequest)).thenCallRealMethod();
+        ReportsResponse reportsResponse1 = reportsRestController.accessionDeaccessionCounts(reportsRequest);
+        assertNull(reportsResponse1.getMessage());
     }
 
     public DeaccessionItemResultsRow getDeaccessionItemResultsRow(){
@@ -134,6 +140,14 @@ public class ReportsRestControllerUT extends BaseControllerUT {
     }
 
     @Test
+    public void cgdItemCounts_Exception() throws Exception {
+        ReportsRequest reportsRequest = new ReportsRequest();
+        Mockito.when(reportsRestController.cgdItemCounts(reportsRequest)).thenCallRealMethod();
+        ReportsResponse reportsResponse1 = reportsRestController.cgdItemCounts(reportsRequest);
+        assertNull(reportsResponse1.getMessage());
+    }
+
+    @Test
     public void deaccessionResults() throws Exception {
         ReportsRequest reportsRequest = new ReportsRequest();
         reportsRequest.setAccessionDeaccessionFromDate("09/27/2016");
@@ -152,4 +166,40 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         assertNotNull(reportsResponse1);
     }
 
+    @Test
+    public void deaccessionResults_Exception() throws Exception {
+        ReportsRequest reportsRequest = new ReportsRequest();
+        Mockito.when(reportsRestController.deaccessionResults(reportsRequest)).thenCallRealMethod();
+        ReportsResponse reportsResponse1 = reportsRestController.deaccessionResults(reportsRequest);
+        assertNull(reportsResponse1.getMessage());
+    }
+
+    @Test
+    public void incompleteRecords() throws Exception {
+        ReportsRequest reportsRequest = new ReportsRequest();
+        reportsRequest.setDeaccessionOwningInstitution("PUL");
+        ReportsResponse reportsResponse = new ReportsResponse();
+        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse,HttpStatus.OK);
+        HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, restHeaderService.getHttpHeaders());
+        Mockito.when(mockRestTemplate.exchange(getScsbSolrClientUrl() + RecapConstants.URL_REPORTS_INCOMPLETE_RESULTS, HttpMethod.POST,httpEntity, ReportsResponse.class)).thenReturn(responseEntity);
+        Mockito.when(reportsRestController.getRestTemplate()).thenReturn(mockRestTemplate);
+        Mockito.when(reportsRestController.getScsbSolrClientUrl()).thenReturn(scsbSolrClientUrl);
+        Mockito.when(reportsRestController.getRestHeaderService()).thenReturn(restHeaderService);
+        Mockito.when(reportsRestController.incompleteRecords(reportsRequest)).thenCallRealMethod();
+        ReportsResponse reportsResponse1 = reportsRestController.incompleteRecords(reportsRequest);
+        assertNotNull(reportsResponse1);
+    }
+    @Test
+    public void incompleteRecords_Exception() throws Exception {
+        ReportsRequest reportsRequest = new ReportsRequest();
+        Mockito.when(reportsRestController.incompleteRecords(reportsRequest)).thenCallRealMethod();
+        ReportsResponse reportsResponse1 = reportsRestController.incompleteRecords(reportsRequest);
+        assertNull(reportsResponse1.getMessage());
+    }
+    @Test
+    public void testGetterServices(){
+        Mockito.when(reportsRestController.getScsbSolrClientUrl()).thenCallRealMethod();
+        assertNotEquals(reportsRestController.getScsbSolrClientUrl(),scsbSolrClientUrl);
+    }
 }

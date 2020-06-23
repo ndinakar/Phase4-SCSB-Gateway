@@ -136,7 +136,7 @@ public class SharedCollectionRestController {
             response = getRestTemplate().postForObject(getScsbSolrClientUrl() + "/sharedCollection/bibAvailabilityStatus", bibItemAvailabityStatusRequest, String.class);
         } catch (Exception exception) {
             logger.error(RecapCommonConstants.LOG_ERROR, exception);
-            return new ResponseEntity(RecapCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity(RecapCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         return new ResponseEntity(response, getHttpHeaders(), HttpStatus.OK);
     }

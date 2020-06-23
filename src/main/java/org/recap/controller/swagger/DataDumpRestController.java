@@ -16,11 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
@@ -32,7 +28,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/dataDump")
-@Api(value="dataDump", description="Export data dump", position = 1)
+@Api(value="dataDump")
 public class DataDumpRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(DataDumpRestController.class);
@@ -61,7 +57,7 @@ public class DataDumpRestController {
      * @param emailToAddress            the email to address
      * @return the response entity
      */
-    @RequestMapping(value="/exportDataDump", method = RequestMethod.GET)
+    @GetMapping("/exportDataDump")
     @ApiOperation(value = "exportDataDump",
             notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by HTC support.", nickname = "exportDataDump", position = 0)
     @ApiResponses(value = {@ApiResponse(code = 200, message = RecapConstants.DATADUMP_PROCESS_STARTED)})
@@ -111,7 +107,7 @@ public class DataDumpRestController {
      * @param emailToAddress            the email to address
      * @return the response entity
      */
-    @RequestMapping(value="/exportDataDumpWithToDate", method = RequestMethod.GET)
+    @GetMapping("/exportDataDumpWithToDate")
     @ApiOperation(value = "exportDataDump",
             notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by HTC support.", nickname = "exportDataDump", position = 0)
     @ApiResponses(value = {@ApiResponse(code = 200, message = RecapConstants.DATADUMP_PROCESS_STARTED)})
