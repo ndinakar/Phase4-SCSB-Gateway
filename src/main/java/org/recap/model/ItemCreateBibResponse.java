@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ItemCreateBibResponse extends AbstractResponseItem {
-    private String bibId;
+
     private String itemId;
 }
