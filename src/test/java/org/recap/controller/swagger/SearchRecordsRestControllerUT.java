@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by hemalathas on 3/2/17.
@@ -94,6 +93,14 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
     }
 
     @Test
+    public void testSearchRecordService_Exception(){
+        SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
+        Mockito.when(searchRecordsRestController.searchRecordsServiceGetParam(searchRecordsRequest)).thenCallRealMethod();
+        SearchRecordsResponse recordsResponse = searchRecordsRestController.searchRecordsServiceGetParam(searchRecordsRequest);
+        assertNull(recordsResponse.getErrorMessage());
+    }
+
+    @Test
     public void checkGetterServices(){
         Mockito.when(searchRecordsRestController.getRestTemplate()).thenCallRealMethod();
         Mockito.when(searchRecordsRestController.getScsbSolrClientUrl()).thenCallRealMethod();
@@ -124,6 +131,30 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         assertNotNull(searchResultRows);
 
     }
+
+    @Test
+    public void testSearchRecordServiceGet_Exception(){
+        HttpEntity request = new HttpEntity(restHeaderService.getHttpHeaders());
+        List<SearchResultRow> searchResultRowList = new ArrayList<>();
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + RecapConstants.URL_SEARCH_BY_PARAM)
+                .queryParam("fieldValue", "test")
+                .queryParam("fieldName", "test")
+                .queryParam("owningInstitutions", "PUL")
+                .queryParam("collectionGroupDesignations","Shared")
+                .queryParam("availability","Available")
+                .queryParam("materialTypes","Monograph")
+                .queryParam("useRestrictions","NoRestrictions")
+                .queryParam("pageSize", 10);
+        Mockito.when(mockRestTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, request, List.class)).thenReturn(null);
+        Mockito.when(searchRecordsRestController.getRestTemplate()).thenReturn(mockRestTemplate);
+        Mockito.when(searchRecordsRestController.getScsbSolrClientUrl()).thenReturn(scsbSolrClient);
+        Mockito.when(searchRecordsRestController.getRestHeaderService()).thenReturn(restHeaderService);
+        Mockito.when(searchRecordsRestController.searchRecordsServiceGet("test","test","PUL","Shared","Available","Monograph","NoRestrictions",10)).thenCallRealMethod();
+        List<SearchResultRow> searchResultRows= searchRecordsRestController.searchRecordsServiceGet("test","test","PUL","Shared","Available","Monograph","NoRestrictions",10);
+       // assertNotNull(searchResultRows);
+    }
+
+
 
     public SearchRecordsResponse getSearchRecordsResponse(){
         SearchRecordsResponse searchRecordsResponse = new SearchRecordsResponse();

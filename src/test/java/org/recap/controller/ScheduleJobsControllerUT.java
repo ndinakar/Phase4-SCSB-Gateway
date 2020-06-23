@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by rajeshbabuk on 20/4/17.
@@ -67,6 +67,14 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
         Mockito.when(scheduleJobsController.scheduleJob(scheduleJobRequest)).thenCallRealMethod();
         ScheduleJobResponse scheduleJobResponse1 = scheduleJobsController.scheduleJob(scheduleJobRequest);
         assertNotNull(scheduleJobResponse1);
+    }
+
+    @Test
+    public void testScheduleJob_Exception() throws Exception {
+        ScheduleJobRequest scheduleJobRequest = new ScheduleJobRequest();
+        Mockito.when(scheduleJobsController.scheduleJob(scheduleJobRequest)).thenCallRealMethod();
+        ScheduleJobResponse scheduleJobResponse1 = scheduleJobsController.scheduleJob(scheduleJobRequest);
+        assertNull(scheduleJobResponse1.getMessage());
     }
 
 }
