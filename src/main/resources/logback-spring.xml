@@ -5,8 +5,6 @@
 
         <springProperty scope="context" name="application_name" source="spring.application.name"/>
         
-    <!-- Log configuration for Docker profile -->
-    <springProfile name="docker">
         <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
             <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
                 <providers>
@@ -50,5 +48,5 @@
         <root level="INFO">
             <appender-ref ref="jsonConsoleAppender"/>
         </root>
-    </springProfile>
+
 </configuration>
