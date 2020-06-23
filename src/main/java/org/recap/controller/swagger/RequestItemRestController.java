@@ -167,7 +167,7 @@ public class RequestItemRestController {
         ObjectMapper objectMapper;
         ResponseEntity responseEntity = null;
         try {
-            logger.info("Item Request Information : {}",itemRequestInfo.toString());
+            logger.info("Item Request Information : {}",itemRequestInfo);
             itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
             responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
             statusCode = responseEntity.getStatusCode();
@@ -221,7 +221,7 @@ public class RequestItemRestController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
     public ResponseEntity validateItemRequest(@ApiParam(value = "Parameters to validate information prior to request", required = true, name = "requestItemJson") @RequestBody ItemRequestInformation itemRequestInfo) {
-        ResponseEntity responseEntity = null;
+        ResponseEntity responseEntity ;
         String response = null;
         try {
             responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + "requestItem/validateItemRequestInformations", itemRequestInfo, String.class);
@@ -319,7 +319,7 @@ public class RequestItemRestController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
     public AbstractResponseItem holdItemRequest(@ApiParam(value = "Parameters for placing a hold on the item in the ILS", required = true, name = "requestItemJson") @RequestBody ItemHoldRequest itemHoldRequest) {
-        ItemHoldResponse itemHoldResponse = null;
+        ItemHoldResponse itemHoldResponse = new ItemHoldResponse();
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
         String response = "";
         try {

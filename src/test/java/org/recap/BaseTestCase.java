@@ -7,7 +7,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = Main.class)
 @Rollback(false)
 public class BaseTestCase {
 
