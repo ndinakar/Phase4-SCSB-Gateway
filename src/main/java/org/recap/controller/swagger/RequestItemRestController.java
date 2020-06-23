@@ -1,18 +1,56 @@
 package org.recap.controller.swagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.camel.ProducerTemplate;
 import org.apache.commons.lang3.StringUtils;
-import org.recap.ReCAPConstants;
+import org.recap.RecapCommonConstants;
+import org.recap.RecapConstants;
 import org.recap.Service.RestHeaderService;
-import org.recap.model.*;
+import org.recap.model.AbstractResponseItem;
+import org.recap.model.BulkRequestInformation;
+import org.recap.model.BulkRequestResponse;
+import org.recap.model.CancelRequestResponse;
+import org.recap.model.ItemCheckInRequest;
+import org.recap.model.ItemCheckOutRequest;
+import org.recap.model.ItemCheckinResponse;
+import org.recap.model.ItemCheckoutResponse;
+import org.recap.model.ItemCreateBibRequest;
+import org.recap.model.ItemCreateBibResponse;
+import org.recap.model.ItemHoldCancelRequest;
+import org.recap.model.ItemHoldRequest;
+import org.recap.model.ItemHoldResponse;
+import org.recap.model.ItemInformationRequest;
+import org.recap.model.ItemInformationResponse;
+import org.recap.model.ItemRecalRequest;
+import org.recap.model.ItemRecallResponse;
+import org.recap.model.ItemRefileRequest;
+import org.recap.model.ItemRefileResponse;
+import org.recap.model.ItemRequestInformation;
+import org.recap.model.ItemResponseInformation;
+import org.recap.model.PatronInformationRequest;
+import org.recap.model.PatronInformationResponse;
+import org.recap.model.ReplaceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -116,7 +154,7 @@ public class RequestItemRestController {
      * @param itemRequestInfo the item request info
      * @return the item response information
      */
-    @RequestMapping(value = ReCAPConstants.REST_URL_REQUEST_ITEM, method = RequestMethod.POST)
+    @RequestMapping(value = RecapConstants.REST_URL_REQUEST_ITEM, method = RequestMethod.POST)
     @ApiOperation(value = "Request Item", notes = "The Request item API allows the user to raise a request (retrieve / recall / EDD) in SCSB for a valid item.", nickname = "requestItem")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -131,7 +169,7 @@ public class RequestItemRestController {
         try {
             logger.info("Item Request Information : {}",itemRequestInfo.toString());
             itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
-            responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
+            responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
             statusCode = responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
         } catch (HttpClientErrorException httpEx) {
@@ -148,10 +186,10 @@ public class RequestItemRestController {
                 for (int i = 0; i < itemBarcodes.size(); i++) {
                     itemRequestInfo.setItemBarcodes(Arrays.asList(itemBarcodes.get(i).toString().trim()));
                     String json = objectMapper.writeValueAsString(itemRequestInfo);
-                    getProducer().sendBodyAndHeader(ReCAPConstants.REQUEST_ITEM_QUEUE, json, ReCAPConstants.REQUEST_TYPE_QUEUE_HEADER, itemRequestInfo.getRequestType());
+                    getProducer().sendBodyAndHeader(RecapConstants.REQUEST_ITEM_QUEUE, json, RecapCommonConstants.REQUEST_TYPE_QUEUE_HEADER, itemRequestInfo.getRequestType());
                 }
                 bSuccess = true;
-                screenMessage = ReCAPConstants.REQUEST_MESSAGE_RECEVIED;
+                screenMessage = RecapCommonConstants.REQUEST_MESSAGE_RECEVIED;
             } else {
                 bSuccess = false;
             }
@@ -167,7 +205,7 @@ public class RequestItemRestController {
             itemResponseInformation.setRequestingInstitution(itemRequestInfo.getRequestingInstitution());
             logger.info("Message In Queue");
         } catch (Exception e) {
-            logger.error(ReCAPConstants.REQUEST_EXCEPTION, e);
+            logger.error(RecapCommonConstants.REQUEST_EXCEPTION, e);
         }
         return itemResponseInformation;
     }
@@ -177,7 +215,7 @@ public class RequestItemRestController {
      * @param itemRequestInfo the item request info
      * @return the response entity
      */
-    @RequestMapping(value = ReCAPConstants.REST_URL_VALIDATE_REQUEST_ITEM, method = RequestMethod.POST)
+    @RequestMapping(value = RecapConstants.REST_URL_VALIDATE_REQUEST_ITEM, method = RequestMethod.POST)
     @ApiOperation(value = "validateItemRequestInformations",
             notes = "The Validate item request API is an internal API call made by SCSB to validate the various parameters of the request item API call. This is to ensure only valid data is allowed to be processed even when the request comes through the request item API.", nickname = "validateItemRequestInformation")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -227,11 +265,11 @@ public class RequestItemRestController {
             ObjectMapper om = getObjectMapper();
             itemCheckoutResponse = om.readValue(response, ItemCheckoutResponse.class);
         } catch (RestClientException ex) {
-            logger.error(ReCAPConstants.REQUEST_EXCEPTION_REST, ex);
+            logger.error(RecapCommonConstants.REQUEST_EXCEPTION_REST, ex);
             itemCheckoutResponse = new ItemCheckoutResponse();
             itemCheckoutResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            logger.error(ReCAPConstants.REQUEST_EXCEPTION, ex);
+            logger.error(RecapCommonConstants.REQUEST_EXCEPTION, ex);
             itemCheckoutResponse = new ItemCheckoutResponse();
             itemCheckoutResponse.setScreenMessage(ex.getMessage());
         }
@@ -263,9 +301,9 @@ public class RequestItemRestController {
             ObjectMapper om = getObjectMapper();
             itemCheckinResponse = om.readValue(response, ItemCheckinResponse.class);
         } catch (RestClientException ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION_REST, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION_REST, ex);
         } catch (Exception ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION, ex);
         }
         return itemCheckinResponse;
     }
@@ -296,17 +334,17 @@ public class RequestItemRestController {
             itemRequestInfo.setAuthor(itemHoldRequest.getAuthor());
             itemRequestInfo.setCallNumber(itemHoldRequest.getCallNumber());
 
-            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_HOLD, itemRequestInfo, String.class);
+            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_HOLD, itemRequestInfo, String.class);
             response = responseEntity.getBody().toString();
             ObjectMapper om = getObjectMapper();
             itemHoldResponse = om.readValue(response, ItemHoldResponse.class);
         } catch (RestClientException ex) {
-            logger.error(ReCAPConstants.REQUEST_EXCEPTION_REST, ex);
-            logger.error(ReCAPConstants.REQUEST_EXCEPTION_REST + ex.getMessage());
+            logger.error(RecapCommonConstants.REQUEST_EXCEPTION_REST, ex);
+            logger.error(RecapCommonConstants.REQUEST_EXCEPTION_REST + ex.getMessage());
             itemHoldResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            logger.error(ReCAPConstants.REQUEST_EXCEPTION, ex);
-            logger.error(ReCAPConstants.REQUEST_EXCEPTION + ex.getMessage());
+            logger.error(RecapCommonConstants.REQUEST_EXCEPTION, ex);
+            logger.error(RecapCommonConstants.REQUEST_EXCEPTION + ex.getMessage());
             itemHoldResponse.setScreenMessage(ex.getMessage());
         }
         return itemHoldResponse;
@@ -340,13 +378,13 @@ public class RequestItemRestController {
             ObjectMapper om = getObjectMapper();
             itemHoldResponse = om.readValue(response, ItemHoldResponse.class);
         } catch (RestClientException ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION_REST, ex);
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION_REST + ex.getMessage());
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION_REST, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION_REST + ex.getMessage());
             itemHoldResponse =new ItemHoldResponse();
             itemHoldResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION, ex);
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION + ex.getMessage());
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION + ex.getMessage());
             itemHoldResponse = new ItemHoldResponse();
             itemHoldResponse.setScreenMessage(ex.getMessage());
         }
@@ -376,17 +414,17 @@ public class RequestItemRestController {
             itemRequestInfo.setRequestingInstitution(itemCreateBibRequest.getItemOwningInstitution());
             itemRequestInfo.setTitleIdentifier(itemCreateBibRequest.getTitleIdentifier());
 
-            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class);
+            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class);
             response = responseEntity.getBody().toString();
             ObjectMapper om = getObjectMapper();
             itemCreateBibResponse = om.readValue(response, ItemCreateBibResponse.class);
         } catch (RestClientException ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION_REST, ex);
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION_REST + ex.getMessage());
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION_REST, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION_REST + ex.getMessage());
             itemCreateBibResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION, ex);
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION + ex.getMessage());
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION + ex.getMessage());
             itemCreateBibResponse.setScreenMessage(ex.getMessage());
         }
         return itemCreateBibResponse;
@@ -410,14 +448,14 @@ public class RequestItemRestController {
             itemInformationRequest.setItemBarcodes(itemRequestInfo.getItemBarcodes());
             itemInformationRequest.setItemOwningInstitution(itemRequestInfo.getItemOwningInstitution());
             HttpEntity request = new HttpEntity(itemInformationRequest);
-            responseEntity = getRestTemplate().exchange(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_INFORMATION, org.springframework.http.HttpMethod.POST, request, ItemInformationResponse.class);
+            responseEntity = getRestTemplate().exchange(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_INFORMATION, org.springframework.http.HttpMethod.POST, request, ItemInformationResponse.class);
             itemInformationResponse = responseEntity.getBody();
         } catch (RestClientException ex) {
             getLogger().error("RestClient : ", ex);
             itemInformationResponse = new ItemInformationResponse();
             itemInformationResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            getLogger().error(ReCAPConstants.LOG_ERROR, ex);
+            getLogger().error(RecapCommonConstants.LOG_ERROR, ex);
             itemInformationResponse = new ItemInformationResponse();
             itemInformationResponse.setScreenMessage(ex.getMessage());
         }
@@ -447,17 +485,17 @@ public class RequestItemRestController {
             itemRequestInfo.setBibId(itemRecalRequest.getBibId());
             itemRequestInfo.setDeliveryLocation(itemRecalRequest.getPickupLocation());
 
-            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_ITEM_RECALL, itemRequestInfo, String.class);
+            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_RECALL, itemRequestInfo, String.class);
             response = responseEntity.getBody().toString();
             ObjectMapper om = getObjectMapper();
             itemRecallResponse = om.readValue(response, ItemRecallResponse.class);
         } catch (RestClientException ex) {
-            getLogger().error(ReCAPConstants.LOG_ERROR_REST_CLIENT, ex);
-            getLogger().error(ReCAPConstants.LOG_ERROR_REST_CLIENT + ex.getMessage());
+            getLogger().error(RecapConstants.LOG_ERROR_REST_CLIENT, ex);
+            getLogger().error(RecapConstants.LOG_ERROR_REST_CLIENT + ex.getMessage());
             itemRecallResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            getLogger().error(ReCAPConstants.LOG_ERROR, ex);
-            getLogger().error(ReCAPConstants.LOG_ERROR + ex.getMessage());
+            getLogger().error(RecapCommonConstants.LOG_ERROR, ex);
+            getLogger().error(RecapCommonConstants.LOG_ERROR + ex.getMessage());
             itemRecallResponse.setScreenMessage(ex.getMessage());
         }
         return itemRecallResponse;
@@ -482,14 +520,14 @@ public class RequestItemRestController {
             itemRequestInformation.setPatronBarcode(patronInformationRequest.getPatronIdentifier());
             itemRequestInformation.setItemOwningInstitution(patronInformationRequest.getItemOwningInstitution());
             HttpEntity request = new HttpEntity(itemRequestInformation);
-            responseEntity = getRestTemplate().exchange(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_PATRON_INFORMATION, HttpMethod.POST, request, PatronInformationResponse.class);
+            responseEntity = getRestTemplate().exchange(getScsbCircUrl() + RecapConstants.URL_REQUEST_PATRON_INFORMATION, HttpMethod.POST, request, PatronInformationResponse.class);
             patronInformation = responseEntity.getBody();
         } catch (RestClientException ex) {
-            getLogger().error(ReCAPConstants.LOG_ERROR_REST_CLIENT, ex);
+            getLogger().error(RecapConstants.LOG_ERROR_REST_CLIENT, ex);
             patronInformation = new PatronInformationResponse();
             patronInformation.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            getLogger().error(ReCAPConstants.LOG_ERROR, ex);
+            getLogger().error(RecapCommonConstants.LOG_ERROR, ex);
             patronInformation = new PatronInformationResponse();
             patronInformation.setScreenMessage(ex.getMessage());
         }
@@ -512,7 +550,7 @@ public class RequestItemRestController {
         HttpEntity<ItemRefileResponse> responseEntity;
         HttpEntity request = new HttpEntity(itemRefileRequest);
         logger.info("Refile request received for the barcodes : {} where request id's are : {}",itemRefileRequest.getItemBarcodes(),itemRefileRequest.getRequestIds());
-        responseEntity = getRestTemplate().exchange(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_RE_FILE, HttpMethod.POST, request, ItemRefileResponse.class);
+        responseEntity = getRestTemplate().exchange(getScsbCircUrl() + RecapConstants.URL_REQUEST_RE_FILE, HttpMethod.POST, request, ItemRefileResponse.class);
         itemRefileResponse = responseEntity.getBody();
         logger.info("Item Refile Response : {}",itemRefileResponse.getScreenMessage());
         return itemRefileResponse;
@@ -531,7 +569,7 @@ public class RequestItemRestController {
     public CancelRequestResponse cancelRequest(@ApiParam(value = "Parameters for canceling a request on the Item", required = true, name = "requestId") @RequestParam Integer requestId) {
         CancelRequestResponse cancelRequestResponse;
         HttpEntity request = new HttpEntity<>(getRestHeaderService().getHttpHeaders());
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_CANCEL).queryParam("requestId", requestId);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbCircUrl() + RecapConstants.URL_REQUEST_CANCEL).queryParam("requestId", requestId);
         HttpEntity<CancelRequestResponse> responseEntity = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.POST, request, CancelRequestResponse.class);
         cancelRequestResponse = responseEntity.getBody();
         return cancelRequestResponse;
@@ -547,11 +585,11 @@ public class RequestItemRestController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
     public BulkRequestResponse bulkRequest(@ApiParam(value = "Parameters for initiating bulk request", required = true, name = "bulkRequestId") @RequestParam Integer bulkRequestId) {
-        getProducer().sendBody(ReCAPConstants.BULK_REQUEST_ITEM_QUEUE, bulkRequestId);
+        getProducer().sendBody(RecapCommonConstants.BULK_REQUEST_ITEM_QUEUE, bulkRequestId);
         BulkRequestResponse bulkRequestResponse = new BulkRequestResponse();
         bulkRequestResponse.setBulkRequestId(bulkRequestId);
         bulkRequestResponse.setSuccess(true);
-        bulkRequestResponse.setScreenMessage(ReCAPConstants.BULK_REQUEST_MESSAGE_RECEIVED);
+        bulkRequestResponse.setScreenMessage(RecapConstants.BULK_REQUEST_MESSAGE_RECEIVED);
         return bulkRequestResponse;
     }
 
@@ -588,9 +626,9 @@ public class RequestItemRestController {
             ResponseEntity<ItemRefileResponse> responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + "requestItem/refileItemInILS", itemRequestInfo, ItemRefileResponse.class);
             itemRefileResponse = responseEntity.getBody();
         } catch (RestClientException ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION_REST, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION_REST, ex);
         } catch (Exception ex) {
-            getLogger().error(ReCAPConstants.REQUEST_EXCEPTION, ex);
+            getLogger().error(RecapCommonConstants.REQUEST_EXCEPTION, ex);
         }
         return itemRefileResponse;
     }
@@ -608,17 +646,17 @@ public class RequestItemRestController {
     @ResponseBody
     public ResponseEntity replaceRequestToLAS(@ApiParam(value = "Parameters to replace the request", required = true, name = "replaceRequest") @RequestBody ReplaceRequest replaceRequest) {
         try {
-            Map<String, String> resultMap = getRestTemplate().postForObject(getScsbCircUrl() + ReCAPConstants.URL_REQUEST_REPLACE, replaceRequest, Map.class);
+            Map<String, String> resultMap = getRestTemplate().postForObject(getScsbCircUrl() + RecapConstants.URL_REQUEST_REPLACE, replaceRequest, Map.class);
             return new ResponseEntity(resultMap, getHttpHeaders(), HttpStatus.OK);
         } catch (Exception ex) {
-            logger.error(ReCAPConstants.LOG_ERROR, ex);
-            return new ResponseEntity(ReCAPConstants.SCSB_CIRC_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
+            logger.error(RecapCommonConstants.LOG_ERROR, ex);
+            return new ResponseEntity(RecapConstants.SCSB_CIRC_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
     private HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(ReCAPConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 

@@ -5,11 +5,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.ReCAPConstants;
+import org.recap.RecapCommonConstants;
+import org.recap.RecapConstants;
 import org.recap.Service.RestHeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -59,16 +63,16 @@ public class UpdateCgdRestControllerUT extends BaseControllerUT {
         String newCollectionGroupDesignation = "Private";
         String cgdChangeNotes = "Notes";
         String username = "guest";
-        ResponseEntity<String> responseEntity = new ResponseEntity<String>(ReCAPConstants.SUCCESS,HttpStatus.OK);
+        ResponseEntity<String> responseEntity = new ResponseEntity<String>(RecapCommonConstants.SUCCESS,HttpStatus.OK);
         updateCgdRestController.setScsbSolrClientUrl(getScsbSolrClientUrl());
         HttpEntity requestEntity = new HttpEntity<>(restHeaderService.getHttpHeaders());
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + ReCAPConstants.URL_UPDATE_CGD)
-                .queryParam(ReCAPConstants.CGD_UPDATE_ITEM_BARCODE, itemBarcode)
-                .queryParam(ReCAPConstants.OWNING_INSTITUTION, owningInstitution)
-                .queryParam(ReCAPConstants.OLD_CGD, oldCollectionGroupDesignation)
-                .queryParam(ReCAPConstants.NEW_CGD, newCollectionGroupDesignation)
-                .queryParam(ReCAPConstants.CGD_CHANGE_NOTES, cgdChangeNotes)
-                .queryParam(ReCAPConstants.USER_NAME, username);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + RecapConstants.URL_UPDATE_CGD)
+                .queryParam(RecapCommonConstants.CGD_UPDATE_ITEM_BARCODE, itemBarcode)
+                .queryParam(RecapConstants.OWNING_INSTITUTION, owningInstitution)
+                .queryParam(RecapCommonConstants.OLD_CGD, oldCollectionGroupDesignation)
+                .queryParam(RecapCommonConstants.NEW_CGD, newCollectionGroupDesignation)
+                .queryParam(RecapCommonConstants.CGD_CHANGE_NOTES, cgdChangeNotes)
+                .queryParam(RecapCommonConstants.USER_NAME, username);
         Mockito.when(mockRestTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class)).thenReturn(responseEntity);
         Mockito.when(updateCgdRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(updateCgdRestController.getScsbSolrClientUrl()).thenReturn(scsbSolrClient);
@@ -76,7 +80,7 @@ public class UpdateCgdRestControllerUT extends BaseControllerUT {
         Mockito.when(updateCgdRestController.updateCgdForItem(itemBarcode,owningInstitution,oldCollectionGroupDesignation,newCollectionGroupDesignation,cgdChangeNotes, username)).thenCallRealMethod();
         String response = updateCgdRestController.updateCgdForItem(itemBarcode,owningInstitution,oldCollectionGroupDesignation,newCollectionGroupDesignation,cgdChangeNotes, username);
         assertNotNull(response);
-        assertEquals(response,ReCAPConstants.SUCCESS);
+        assertEquals(response, RecapCommonConstants.SUCCESS);
     }
 
 }

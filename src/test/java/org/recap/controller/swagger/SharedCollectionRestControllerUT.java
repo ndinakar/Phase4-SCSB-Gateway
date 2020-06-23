@@ -1,12 +1,12 @@
 package org.recap.controller.swagger;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.ReCAPConstants;
+import org.recap.RecapCommonConstants;
+import org.recap.RecapConstants;
 import org.recap.controller.BaseControllerUT;
 import org.recap.model.AccessionRequest;
 import org.recap.model.BibItemAvailabityStatusRequest;
@@ -21,7 +21,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -221,7 +227,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         deAccessionRequest.setDeAccessionItems(Arrays.asList(deAccessionItem));
         deAccessionRequest.setUsername("Test");
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put(itemBarcode, ReCAPConstants.SUCCESS);
+        resultMap.put(itemBarcode, RecapCommonConstants.SUCCESS);
         Mockito.when(mockRestTemplate.postForObject(getScsbCircUrl() + "/sharedCollection/deAccession",deAccessionRequest, Map.class)).thenReturn(resultMap);
         Mockito.when(sharedCollectionRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(sharedCollectionRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
@@ -232,7 +238,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         assertNotNull(responseMap);
         String status = responseMap.get(itemBarcode);
         assertNotNull(status);
-        assertEquals(status, ReCAPConstants.SUCCESS);
+        assertEquals(status, RecapCommonConstants.SUCCESS);
         assertNotNull(deAccessionItem.getItemBarcode());
         assertNotNull(deAccessionItem.getDeliveryLocation());
         assertNotNull(deAccessionRequest.getDeAccessionItems());
@@ -246,13 +252,13 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         accessionRequest.setCustomerCode("PB");
         accessionRequest.setItemBarcode("32101095533293");
         accessionRequestList.add(accessionRequest);
-        Mockito.when(mockRestTemplate.postForObject(getScsbSolrClientUrl() + "sharedCollection/accessionBatch",accessionRequestList, String.class)).thenReturn(ReCAPConstants.SUCCESS);
+        Mockito.when(mockRestTemplate.postForObject(getScsbSolrClientUrl() + "sharedCollection/accessionBatch",accessionRequestList, String.class)).thenReturn(RecapCommonConstants.SUCCESS);
         Mockito.when(sharedCollectionRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(sharedCollectionRestController.getScsbSolrClientUrl()).thenReturn(scsbSolrClientUrl);
         Mockito.when(sharedCollectionRestController.accessionBatch(accessionRequestList)).thenCallRealMethod();
         ResponseEntity responseEntity = sharedCollectionRestController.accessionBatch(accessionRequestList);
         assertNotNull(responseEntity);
-        assertEquals(ReCAPConstants.SUCCESS,responseEntity.getBody());
+        assertEquals(RecapCommonConstants.SUCCESS,responseEntity.getBody());
         assertNotNull(accessionRequest.getCustomerCode());
         assertNotNull(accessionRequest.getItemBarcode());
     }

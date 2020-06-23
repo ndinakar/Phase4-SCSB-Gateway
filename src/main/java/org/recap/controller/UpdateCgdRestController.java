@@ -1,17 +1,16 @@
 package org.recap.controller;
 
-import org.recap.ReCAPConstants;
-import org.recap.Service.RestHeaderService;
+import org.recap.RecapCommonConstants;
+import org.recap.RecapConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -19,47 +18,9 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/updateCgdService")
-public class UpdateCgdRestController {
+public class UpdateCgdRestController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateCgdRestController.class);
-
-    @Value("${scsb.solr.client.url}")
-    private String scsbSolrClient;
-
-
-    @Autowired
-    RestHeaderService restHeaderService;
-
-    public RestHeaderService getRestHeaderService(){
-        return restHeaderService;
-    }
-
-    /**
-     * Gets rest template.
-     *
-     * @return the rest template
-     */
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
-
-    /**
-     * Gets scsb solr client url.
-     *
-     * @return the scsb solr client url
-     */
-    public String getScsbSolrClientUrl() {
-        return scsbSolrClient;
-    }
-
-    /**
-     * Sets scsb solr client url.
-     *
-     * @param scsbSolrClientUrl the scsb solr client url
-     */
-    public void setScsbSolrClientUrl(String scsbSolrClientUrl) {
-        this.scsbSolrClient = scsbSolrClientUrl;
-    }
 
     /**
      * This method will call scsb-solr-client microservice to update CGD for an item in scsb database and scsb solr.
@@ -77,19 +38,19 @@ public class UpdateCgdRestController {
         try {
             HttpEntity requestEntity = new HttpEntity<>(getRestHeaderService().getHttpHeaders());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbSolrClientUrl() + ReCAPConstants.URL_UPDATE_CGD)
-                    .queryParam(ReCAPConstants.CGD_UPDATE_ITEM_BARCODE, itemBarcode)
-                    .queryParam(ReCAPConstants.OWNING_INSTITUTION, owningInstitution)
-                    .queryParam(ReCAPConstants.OLD_CGD, oldCollectionGroupDesignation)
-                    .queryParam(ReCAPConstants.NEW_CGD, newCollectionGroupDesignation)
-                    .queryParam(ReCAPConstants.CGD_CHANGE_NOTES, cgdChangeNotes)
-                    .queryParam(ReCAPConstants.USER_NAME, userName);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbSolrClientUrl() + RecapConstants.URL_UPDATE_CGD)
+                    .queryParam(RecapCommonConstants.CGD_UPDATE_ITEM_BARCODE, itemBarcode)
+                    .queryParam(RecapConstants.OWNING_INSTITUTION, owningInstitution)
+                    .queryParam(RecapCommonConstants.OLD_CGD, oldCollectionGroupDesignation)
+                    .queryParam(RecapCommonConstants.NEW_CGD, newCollectionGroupDesignation)
+                    .queryParam(RecapCommonConstants.CGD_CHANGE_NOTES, cgdChangeNotes)
+                    .queryParam(RecapCommonConstants.USER_NAME, userName);
 
             ResponseEntity<String> responseEntity = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
             statusResponse = responseEntity.getBody();
         } catch (Exception e) {
-            logger.error(ReCAPConstants.LOG_ERROR,e);
-            statusResponse = ReCAPConstants.FAILURE + "-" + e.getMessage();
+            logger.error(RecapCommonConstants.LOG_ERROR,e);
+            statusResponse = RecapCommonConstants.FAILURE + "-" + e.getMessage();
         }
         return statusResponse;
     }
