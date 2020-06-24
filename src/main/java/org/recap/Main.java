@@ -2,10 +2,7 @@ package org.recap;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-
-import brave.sampler.Sampler;
 
 /**
  * The main class is used to launch the spring boot application.
@@ -21,5 +18,5 @@ public class Main {
      */
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
-    }   
+    }
 }
