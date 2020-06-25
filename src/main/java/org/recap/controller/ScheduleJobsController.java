@@ -1,5 +1,7 @@
 package org.recap.controller;
 
+import java.util.Date;
+
 import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
 import org.recap.model.ScheduleJobRequest;
@@ -54,6 +56,20 @@ public class ScheduleJobsController extends  AbstractController {
         } catch (Exception e) {
             logger.error(RecapCommonConstants.LOG_ERROR,e);
             scheduleJobResponse.setMessage(e.getMessage());
+        }
+        return scheduleJobResponse;
+    }
+    
+    @RequestMapping(value="/logger-test", method = RequestMethod.GET)
+    public ScheduleJobResponse customLoggerTest() {
+        ScheduleJobResponse scheduleJobResponse = new ScheduleJobResponse();
+        scheduleJobResponse.setMessage("Scheduler job response");
+        scheduleJobResponse.setNextRunTime(new Date());
+        try {
+        	logger.info("Inside the customLoggerTest method - ScheduleJobResponse : {}", scheduleJobResponse);
+        } catch (Exception e) {
+            logger.error(RecapCommonConstants.LOG_ERROR,e);
+
         }
         return scheduleJobResponse;
     }
