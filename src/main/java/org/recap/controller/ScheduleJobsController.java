@@ -3,7 +3,6 @@ package org.recap.controller;
 import java.util.Date;
 
 import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
 import org.recap.model.ScheduleJobRequest;
 import org.recap.model.ScheduleJobResponse;
 import org.slf4j.Logger;
@@ -14,7 +13,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -45,7 +45,7 @@ public class ScheduleJobsController extends  AbstractController {
      * @param scheduleJobRequest the schedule job request
      * @return the schedule job response
      */
-    @RequestMapping(value="/scheduleJob", method = RequestMethod.POST)
+    @PostMapping(value="/scheduleJob")
     public ScheduleJobResponse scheduleJob(@RequestBody ScheduleJobRequest scheduleJobRequest) {
         ScheduleJobResponse scheduleJobResponse = new ScheduleJobResponse();
         try {
@@ -60,7 +60,7 @@ public class ScheduleJobsController extends  AbstractController {
         return scheduleJobResponse;
     }
     
-    @RequestMapping(value="/logger-test", method = RequestMethod.GET)
+    @GetMapping(value="/logger-test")
     public ScheduleJobResponse customLoggerTest() {
         ScheduleJobResponse scheduleJobResponse = new ScheduleJobResponse();
         scheduleJobResponse.setMessage("Scheduler job response");

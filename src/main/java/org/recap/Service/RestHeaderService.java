@@ -1,7 +1,6 @@
 package org.recap.Service;
 
 import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
 import org.recap.spring.SwaggerAPIProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,8 +14,8 @@ public class RestHeaderService {
 
     public HttpHeaders getHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set(RecapCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
+        headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
     }
 }

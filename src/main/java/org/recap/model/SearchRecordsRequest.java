@@ -3,7 +3,6 @@ package org.recap.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
