@@ -44,7 +44,7 @@ public class ItemCheckinResponseUT extends BaseTestCase {
         itemCheckinResponse.setSecurityInhibit("test");
         itemCheckinResponse.setCurrencyType("test");
 
-        assertNotNull(itemCheckinResponse.getAlert());
+        assertNotNull(itemCheckinResponse.isAlert());
         assertNotNull(itemCheckinResponse.getPermanentLocation());
         assertNotNull(itemCheckinResponse.getSortBin());
         assertNotNull(itemCheckinResponse.getCollectionCode());
@@ -53,8 +53,8 @@ public class ItemCheckinResponseUT extends BaseTestCase {
         assertNotNull(itemCheckinResponse.getAlertType());
         assertNotNull(itemCheckinResponse.getHoldPatronId());
         assertNotNull(itemCheckinResponse.getHoldPatronName());
-        assertNotNull(itemCheckinResponse.getMagneticMedia());
-        assertNotNull(itemCheckinResponse.getResensitize());
+        assertNotNull(itemCheckinResponse.isMagneticMedia());
+        assertNotNull(itemCheckinResponse.isResensitize());
         assertNotNull(itemCheckinResponse.getTransactionDate());
         assertNotNull(itemCheckinResponse.getInstitutionID());
         assertNotNull(itemCheckinResponse.getPatronIdentifier());

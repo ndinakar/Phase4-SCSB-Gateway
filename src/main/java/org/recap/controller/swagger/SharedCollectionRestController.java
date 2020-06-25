@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
+import org.recap.controller.AbstractController;
 import org.recap.model.AccessionRequest;
 import org.recap.model.BibItemAvailabityStatusRequest;
 import org.recap.model.ItemAvailabityStatusRequest;
@@ -17,8 +18,6 @@ import org.recap.model.transfer.TransferRequest;
 import org.recap.model.transfer.TransferResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +36,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,30 +46,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sharedCollection")
 @Api(value = "sharedCollection")
-public class SharedCollectionRestController {
+public class SharedCollectionRestController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(SharedCollectionRestController.class);
-
-    @Value("${scsb.solr.client.url}")
-    private String scsbSolrClientUrl;
-
-    @Value("${scsb.circ.url}")
-    private String scsbCircUrl;
-
-    /**
-     * Gets scsb circ url.
-     *
-     * @return the scsb circ url
-     */
-    public String getScsbCircUrl() {
-        return scsbCircUrl;
-    }
 
     /**
      * Gets rest template.
      *
      * @return the rest template
      */
+    @Override
     public RestTemplate getRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters()
@@ -79,19 +63,9 @@ public class SharedCollectionRestController {
         return restTemplate;
     }
 
-    /**
-     * Gets scsb solr client url.
-     *
-     * @return the scsb solr client url
-     */
-    public String getScsbSolrClientUrl() {
-        return scsbSolrClientUrl;
-    }
-
     public LinkedMultiValueMap getLinkedMultiValueMap(){
         return new LinkedMultiValueMap<>();
     }
-
 
     /**
      * This method will call scsb-solr-client microservice to get item availability status in scsb.
@@ -99,7 +73,7 @@ public class SharedCollectionRestController {
      * @param itemAvailabityStatus the item availabity status
      * @return the response entity
      */
-    @RequestMapping(value = "/itemAvailabilityStatus", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/itemAvailabilityStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "itemAvailabilityStatus",
             notes = "The Item availability status API returns the availability status of the item in SCSB. It is likely to be used in partner ILS' Discovery systems to retrieve and display item statuses.", nickname = "itemAvailabilityStatus")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -125,7 +99,7 @@ public class SharedCollectionRestController {
      * @param bibItemAvailabityStatusRequest the bib item availabity status request
      * @return the response entity
      */
-    @RequestMapping(value = "/bibAvailabilityStatus", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/bibAvailabilityStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "bibAvailabilityStatus",
             notes = "Bib availability status API returns the availability statuses of items associated with the bibliographic record. Since it returns availability statuses of all items associated with a bib, it is likely to be used in partner ILS' Discovery systems to retrieve and display multiple items and their statuses in case of serials and multi volume monographs.", nickname = "bibAvailabilityStatus")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),@ApiResponse(code = 503, message = "Service Not Available")})
@@ -147,7 +121,7 @@ public class SharedCollectionRestController {
      * @param deAccessionRequest the de accession request
      * @return the response entity
      */
-    @RequestMapping(value = "/deaccession", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/deaccession", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "deaccession",
             notes = "The Deaccession API is an internal call made by SCSB to remove a record. Deaccession will only be done through the UI by users who are authorized to perform the operation. Deaccessioning an item would mark the record as removed (deleted) in the SCSB database.", nickname = "deaccession")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -166,7 +140,7 @@ public class SharedCollectionRestController {
      * @param accessionRequestList the accession request list
      * @return the response entity
      */
-    @RequestMapping(value = "/accessionBatch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/accessionBatch", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "accessionBatch",
             notes = "Accession batch is similar to the accession API except that accession batch API accepts multiple item barcodes in a single request call. The Accession batch process is a deferred process to reduce performance bottlenecks. The barcodes and customer codes are stored in SCSB DB and is processed as per schedule of the Accession job (usually, nightly). After processing, a report on the barcodes that were processed is prepared and stored at the FTP location.", nickname = "accessionBatch")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -191,7 +165,7 @@ public class SharedCollectionRestController {
      * @param accessionRequestList the accession request list
      * @return the response entity
      */
-    @RequestMapping(value = "/accession", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/accession", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "accession",
             notes = "The Accession API (also known as Ongoing Accession) is used to add item records to SCSB whenever there is a new item added to the ReCAP facility. GFA LAS calls this API as part of the accession workflow with the customer code and item barcode.", nickname = "accession")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -232,7 +206,7 @@ public class SharedCollectionRestController {
      * @param inputRecords the input records
      * @return the response entity
      */
-    @RequestMapping(value = "/submitCollection", method = RequestMethod.POST)
+    @PostMapping(value = "/submitCollection")
     @ApiOperation(value = "submitCollection",
             notes = "Submit collection API is a REST service where users can provide MARC content in either SCSB XML or MARC XML formats and update the underlying record in SCSB. After the successful completion of the API, a report is sent.", nickname = "submitCollection")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -267,7 +241,7 @@ public class SharedCollectionRestController {
      * @param transferRequest the input records
      * @return the response entity
      */
-    @RequestMapping(value = "/transferHoldingsAndItems", method = RequestMethod.POST)
+    @PostMapping(value = "/transferHoldingsAndItems")
     @ApiOperation(value = "transferHoldingsAndItems",
             notes = "TransferHoldingsAndItems API is a REST service where users can provide source and destination of " +
                     "the holdings and item for transfer", nickname = "transferHoldingsAndItems")
@@ -285,11 +259,5 @@ public class SharedCollectionRestController {
             responseEntity = new ResponseEntity(RecapConstants.TRANSFER_INTERNAL_ERROR, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         return responseEntity;
-    }
-
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
-        return responseHeaders;
     }
 }

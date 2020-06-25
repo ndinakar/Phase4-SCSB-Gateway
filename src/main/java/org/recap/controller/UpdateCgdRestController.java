@@ -8,7 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,7 +32,7 @@ public class UpdateCgdRestController extends AbstractController {
      * @param cgdChangeNotes                the cgd change notes
      * @return the string
      */
-    @RequestMapping(value="/updateCgd", method = RequestMethod.GET)
+    @GetMapping(value="/updateCgd")
     public String updateCgdForItem(@RequestParam String itemBarcode, @RequestParam String owningInstitution, @RequestParam String oldCollectionGroupDesignation, @RequestParam String newCollectionGroupDesignation, @RequestParam String cgdChangeNotes, @RequestParam String userName) {
         String statusResponse = null;
         try {

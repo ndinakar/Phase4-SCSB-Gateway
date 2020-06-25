@@ -16,5 +16,6 @@ public class ItemHoldResponse extends BaseResponseItem {
     private String pickupLocation;
     private String queuePosition;
     private String trackingId;
+    private String bibId;
 
 }

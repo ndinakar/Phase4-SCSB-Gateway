@@ -5,14 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
-import org.recap.spring.SwaggerAPIProvider;
+import org.recap.controller.AbstractController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,22 +26,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/dataDump")
 @Api(value="dataDump")
-public class DataDumpRestController {
+public class DataDumpRestController extends AbstractController  {
 
     private static final Logger logger = LoggerFactory.getLogger(DataDumpRestController.class);
 
-    @Value("${scsb.etl.url}")
-    private String scsbEtlUrl;
-
-    public String getScsbEtlUrl() {
-        return scsbEtlUrl;
-    }
-
-    public RestTemplate getRestTemplate(){
-        return new RestTemplate();
-    }
-
-    /**
+   /**
      * This method is the entry point to start data export process and passes to request to the scsb-etl microservice.
      *
      * @param institutionCodes          the institution codes
@@ -73,23 +59,14 @@ public class DataDumpRestController {
     ){
         RestTemplate restTemplate = getRestTemplate();
         Map<String,String> inputMap = new HashMap<>();
-        inputMap.put("institutionCodes",institutionCodes);
-        inputMap.put("requestingInstitutionCode",requestingInstitutionCode);
-        inputMap.put("fetchType",fetchType);
-        inputMap.put("outputFormat",outputFormat);
-        inputMap.put("date",date);
-        inputMap.put("collectionGroupIds",collectionGroupIds);
-        inputMap.put("transmissionType",transmissionType);
-        inputMap.put("emailToAddress",emailToAddress);
+        setInputMapValues(inputMap, institutionCodes, requestingInstitutionCode, fetchType, outputFormat, date, collectionGroupIds, transmissionType, emailToAddress);
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("api_key", SwaggerAPIProvider.getInstance().getSwaggerApiKey());
-            HttpEntity requestEntity = new HttpEntity(headers);
+            HttpEntity requestEntity = getSwaggerHttpEntity();
             ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, requestEntity, String.class, inputMap);
             return new ResponseEntity(response.getBody(), getHttpHeaders(), getHttpStatus(response.getBody()));
         } catch (Exception exception) {
             logger.error("error-->",exception);
-            return new ResponseEntity("Scsb Etl Service is Unavailable.", getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<>("Scsb Etl Service is Unavailable.", getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
@@ -124,19 +101,10 @@ public class DataDumpRestController {
     ){
         RestTemplate restTemplate = getRestTemplate();
         Map<String,String> inputMap = new HashMap<>();
-        inputMap.put("institutionCodes",institutionCodes);
-        inputMap.put("requestingInstitutionCode",requestingInstitutionCode);
-        inputMap.put("fetchType",fetchType);
-        inputMap.put("outputFormat",outputFormat);
-        inputMap.put("date",date);
+        setInputMapValues(inputMap, institutionCodes, requestingInstitutionCode, fetchType, outputFormat, date, collectionGroupIds, transmissionType, emailToAddress);
         inputMap.put("toDate",toDate);
-        inputMap.put("collectionGroupIds",collectionGroupIds);
-        inputMap.put("transmissionType",transmissionType);
-        inputMap.put("emailToAddress",emailToAddress);
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("api_key", SwaggerAPIProvider.getInstance().getSwaggerApiKey());
-            HttpEntity requestEntity = new HttpEntity(headers);
+            HttpEntity requestEntity = getSwaggerHttpEntity();
             ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, requestEntity, String.class, inputMap);
             return new ResponseEntity(response.getBody(), getHttpHeaders(), getHttpStatus(response.getBody()));
         } catch (Exception exception) {
@@ -145,17 +113,24 @@ public class DataDumpRestController {
         }
     }
 
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
-        return responseHeaders;
-    }
-
     private HttpStatus getHttpStatus(String message){
         if(message.equals(RecapConstants.DATADUMP_PROCESS_STARTED) || message.equals(RecapConstants.DATADUMP_NO_RECORD) || message.contains(RecapConstants.XML)){
             return HttpStatus.OK;
         }else{
             return HttpStatus.BAD_REQUEST;
         }
+    }
+
+    private void setInputMapValues(Map<String,String> inputMap, String institutionCodes, String requestingInstitutionCode, String fetchType,
+                                   String outputFormat, String date, String collectionGroupIds, String transmissionType, String emailToAddress)
+    {
+        inputMap.put("institutionCodes",institutionCodes);
+        inputMap.put("requestingInstitutionCode",requestingInstitutionCode);
+        inputMap.put("fetchType",fetchType);
+        inputMap.put("outputFormat",outputFormat);
+        inputMap.put("date",date);
+        inputMap.put("collectionGroupIds",collectionGroupIds);
+        inputMap.put("transmissionType",transmissionType);
+        inputMap.put("emailToAddress",emailToAddress);
     }
 }

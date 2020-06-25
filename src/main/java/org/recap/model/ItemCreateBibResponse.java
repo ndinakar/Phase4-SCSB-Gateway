@@ -11,4 +11,5 @@ import lombok.Setter;
 public class ItemCreateBibResponse extends AbstractResponseItem {
 
     private String itemId;
+    private String bibId;
 }

@@ -1,13 +1,12 @@
 package org.recap.controller;
 
 import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class DeAccessionRestController extends AbstractController{
      * @param deAccessionRequest the de accession request
      * @return the map
      */
-    @RequestMapping(value = "/deaccession", method = RequestMethod.POST)
+    @PostMapping(value = "/deaccession")
     public Map<String, String> deAccession(@RequestBody String deAccessionRequest) {
         Map<String, String> resultMap = new HashMap<>();
         try {

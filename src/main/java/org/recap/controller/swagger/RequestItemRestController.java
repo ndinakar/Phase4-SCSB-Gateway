@@ -10,7 +10,7 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
-import org.recap.Service.RestHeaderService;
+import org.recap.controller.AbstractController;
 import org.recap.model.AbstractResponseItem;
 import org.recap.model.BulkRequestInformation;
 import org.recap.model.BulkRequestResponse;
@@ -38,16 +38,14 @@ import org.recap.model.ReplaceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,7 +56,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -68,40 +65,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/requestItem")
 @Api(value = "requestItem")
-public class RequestItemRestController {
+public class RequestItemRestController extends AbstractController  {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestItemRestController.class);
 
-    @Value("${scsb.circ.url}")
-    private String scsbCircUrl;
-
-    @Autowired
-    RestHeaderService restHeaderService;
-
     @Autowired
     private ProducerTemplate producer;
-
-    public RestHeaderService getRestHeaderService(){
-        return restHeaderService;
-    }
-
-    /**
-     * Gets scsb circ url.
-     *
-     * @return the scsb circ url
-     */
-    public String getScsbCircUrl() {
-        return scsbCircUrl;
-    }
-
-    /**
-     * Gets rest template.
-     *
-     * @return the rest template
-     */
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
 
     /**
      * Gets producer.
@@ -154,7 +123,7 @@ public class RequestItemRestController {
      * @param itemRequestInfo the item request info
      * @return the item response information
      */
-    @RequestMapping(value = RecapConstants.REST_URL_REQUEST_ITEM, method = RequestMethod.POST)
+    @PostMapping(value = RecapConstants.REST_URL_REQUEST_ITEM)
     @ApiOperation(value = "Request Item", notes = "The Request item API allows the user to raise a request (retrieve / recall / EDD) in SCSB for a valid item.", nickname = "requestItem")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -215,7 +184,7 @@ public class RequestItemRestController {
      * @param itemRequestInfo the item request info
      * @return the response entity
      */
-    @RequestMapping(value = RecapConstants.REST_URL_VALIDATE_REQUEST_ITEM, method = RequestMethod.POST)
+    @PostMapping(value = RecapConstants.REST_URL_VALIDATE_REQUEST_ITEM)
     @ApiOperation(value = "validateItemRequestInformations",
             notes = "The Validate item request API is an internal API call made by SCSB to validate the various parameters of the request item API call. This is to ensure only valid data is allowed to be processed even when the request comes through the request item API.", nickname = "validateItemRequestInformation")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -246,7 +215,7 @@ public class RequestItemRestController {
      * @param itemCheckOutRequest the item check out request
      * @return the item checkout response
      */
-    @RequestMapping(value = "/checkoutItem", method = RequestMethod.POST)
+    @PostMapping(value = "/checkoutItem")
     @ApiOperation(value = "checkoutItem",
             notes = "The Check-out item API call is an internal call made by SCSB as part of the request API call.", nickname = "checkoutItem")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -281,7 +250,7 @@ public class RequestItemRestController {
      * @param itemCheckInRequest the item check in request
      * @return the abstract response item
      */
-    @RequestMapping(value = "/checkinItem", method = RequestMethod.POST)
+    @PostMapping(value = "/checkinItem")
     @ApiOperation(value = "checkinItem",
             notes = "The Check-in item API is an internal call made by SCSB as part of the refile and accession API calls.", nickname = "checkinItem")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -313,7 +282,7 @@ public class RequestItemRestController {
      * @param itemHoldRequest the item hold request
      * @return the abstract response item
      */
-    @RequestMapping(value = "/holdItem", method = RequestMethod.POST)
+    @PostMapping(value = "/holdItem")
     @ApiOperation(value = "holdItem",
             notes = "The Hold item API call is an internal call made by SCSB to the partner's ILS to place a hold request as part of the request API workflow.", nickname = "holdItem")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -333,9 +302,7 @@ public class RequestItemRestController {
             itemRequestInfo.setTitleIdentifier(itemHoldRequest.getTitle());
             itemRequestInfo.setAuthor(itemHoldRequest.getAuthor());
             itemRequestInfo.setCallNumber(itemHoldRequest.getCallNumber());
-
-            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_HOLD, itemRequestInfo, String.class);
-            response = responseEntity.getBody().toString();
+            response = getResponse(itemRequestInfo, RecapConstants.URL_REQUEST_ITEM_HOLD);
             ObjectMapper om = getObjectMapper();
             itemHoldResponse = om.readValue(response, ItemHoldResponse.class);
         } catch (RestClientException ex) {
@@ -355,7 +322,7 @@ public class RequestItemRestController {
      * @param itemHoldCancelRequest the item hold cancel request
      * @return the abstract response item
      */
-    @RequestMapping(value = "/cancelHoldItem", method = RequestMethod.POST)
+    @PostMapping(value = "/cancelHoldItem")
     @ApiOperation(value = "cancelHoldItem",
             notes = "This internal call cancels a hold request in the partner ILS as part of the Cancel Request API.", nickname = "cancelHoldItem")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -397,7 +364,7 @@ public class RequestItemRestController {
      * @param itemCreateBibRequest the item create bib request
      * @return the abstract response item
      */
-    @RequestMapping(value = "/createBib", method = RequestMethod.POST)
+    @PostMapping(value = "/createBib")
     @ApiOperation(value = "createBib",
             notes = "The Create bibliographic record API is an internal call made by SCSB to partner ILS as part of the request API for cross partner borrowing. Usually when an item owned by another partner is requesting, the requesting institution will not have the metadata of the item that is being requested. In order to place the hold for the patron against the item, the Create bib record API creates a temporary record against which the hold can be placed and subsequent charge and discharge processes can be done.", nickname = "createBib")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -413,9 +380,7 @@ public class RequestItemRestController {
             itemRequestInfo.setItemOwningInstitution(itemCreateBibRequest.getItemOwningInstitution());
             itemRequestInfo.setRequestingInstitution(itemCreateBibRequest.getItemOwningInstitution());
             itemRequestInfo.setTitleIdentifier(itemCreateBibRequest.getTitleIdentifier());
-
-            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class);
-            response = responseEntity.getBody().toString();
+            response = getResponse(itemRequestInfo, RecapConstants.URL_REQUEST_ITEM_CREATEBIB);
             ObjectMapper om = getObjectMapper();
             itemCreateBibResponse = om.readValue(response, ItemCreateBibResponse.class);
         } catch (RestClientException ex) {
@@ -436,7 +401,7 @@ public class RequestItemRestController {
      * @param itemRequestInfo the item request info
      * @return the abstract response item
      */
-    @RequestMapping(value = "/itemInformation", method = RequestMethod.POST)
+    @PostMapping(value = "/itemInformation")
     @ApiOperation(value = "itemInformation", notes = "The Item information API call is made internally by SCSB as part of the request API call.", nickname = "itemInformation")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -468,7 +433,7 @@ public class RequestItemRestController {
      * @param itemRecalRequest the item recal request
      * @return the abstract response item
      */
-    @RequestMapping(value = "/recall", method = RequestMethod.POST)
+    @PostMapping(value = "/recall")
     @ApiOperation(value = "recall",
             notes = "The Recall API is used internally by SCSB during request API calls with request type RECALL.", nickname = "RecallItem")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -484,9 +449,7 @@ public class RequestItemRestController {
             itemRequestInfo.setPatronBarcode(itemRecalRequest.getPatronIdentifier());
             itemRequestInfo.setBibId(itemRecalRequest.getBibId());
             itemRequestInfo.setDeliveryLocation(itemRecalRequest.getPickupLocation());
-
-            ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + RecapConstants.URL_REQUEST_ITEM_RECALL, itemRequestInfo, String.class);
-            response = responseEntity.getBody().toString();
+            response = getResponse(itemRequestInfo, RecapConstants.URL_REQUEST_ITEM_RECALL);
             ObjectMapper om = getObjectMapper();
             itemRecallResponse = om.readValue(response, ItemRecallResponse.class);
         } catch (RestClientException ex) {
@@ -507,7 +470,7 @@ public class RequestItemRestController {
      * @param patronInformationRequest the patron information request
      * @return the patron information response
      */
-    @RequestMapping(value = "/patronInformation", method = RequestMethod.POST)
+    @PostMapping(value = "/patronInformation")
     @ApiOperation(value = "patronInformation", notes = "The Patron information API is used internally by SCSB as part of the request API.", nickname = "patronInformation")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -540,7 +503,7 @@ public class RequestItemRestController {
      * @param itemRefileRequest the item refile request
      * @return the item refile response
      */
-    @RequestMapping(value = "/refile", method = RequestMethod.POST)
+    @PostMapping(value = "/refile")
     @ApiOperation(value = "refile", notes = "The Refile item API is called when ReCAP staff refile the iitem into LAS, and LAS will call SCSB with the details of the refile.", nickname = "Re-File")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -562,7 +525,7 @@ public class RequestItemRestController {
      * @param requestId the request id
      * @return the cancel request response
      */
-    @RequestMapping(value = "/cancelRequest", method = RequestMethod.POST)
+    @PostMapping(value = "/cancelRequest")
     @ApiOperation(value = "cancelRequest", notes = "The Cancel Request API will be used by both partners and ReCAP users to cancel a request placed through SCSB. Partners will incorporate the API into their discovery systems to provide the patrons a way to cancel requests that have been raised by them. ReCAP users would use it through the SCSB UI to cancel requests that are difficult to process.", nickname = "cancelRequest")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -580,7 +543,7 @@ public class RequestItemRestController {
      * @param bulkRequestId
      * @return
      */
-    @RequestMapping(value = "/bulkRequest", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/bulkRequest", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "bulkRequest", notes = "The Bulk Request API is internally called by SCSB UI which will be probably initiated by LAS users.", nickname = "bulkRequest")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -599,9 +562,9 @@ public class RequestItemRestController {
      * @return
      */
     @ApiIgnore
-    @RequestMapping(value = "/patronValidationBulkRequest", method = RequestMethod.POST)
+    @PostMapping(value = "/patronValidationBulkRequest")
     public Boolean patronValidation(@RequestBody BulkRequestInformation bulkRequestInformation){
-        return new RestTemplate().postForEntity(scsbCircUrl + "/requestItem/patronValidationBulkRequest", bulkRequestInformation, Boolean.class).getBody();
+        return new RestTemplate().postForEntity(getScsbCircUrl() + "/requestItem/patronValidationBulkRequest", bulkRequestInformation, Boolean.class).getBody();
     }
 
     /**
@@ -611,7 +574,7 @@ public class RequestItemRestController {
      * @return
      */
     @ApiIgnore
-    @RequestMapping(value = "/refileItemInILS", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/refileItemInILS", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "refileItemInILS",
             notes = "The Refile item API is an internal call made by SCSB as part of the refile and accession API calls.", nickname = "refileItemInILS")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
@@ -640,7 +603,7 @@ public class RequestItemRestController {
      * @return the string response
      */
     @ApiIgnore
-    @RequestMapping(value = "/replaceRequest", method = RequestMethod.POST)
+    @PostMapping(value = "/replaceRequest")
     @ApiOperation(value = "replaceRequest", notes = "Resubmit the failed requests to LAS", nickname = "Replace Request")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
@@ -654,10 +617,11 @@ public class RequestItemRestController {
         }
     }
 
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
-        return responseHeaders;
+    private String getResponse(ItemRequestInformation itemRequestInfo, String urlConstant)
+    {
+        ResponseEntity responseEntity = getRestTemplate().postForEntity(getScsbCircUrl() + urlConstant,
+                itemRequestInfo, String.class);
+        return responseEntity.getBody().toString();
     }
 
 }
