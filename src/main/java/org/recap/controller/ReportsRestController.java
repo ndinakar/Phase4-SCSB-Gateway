@@ -11,7 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -21,26 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/reportsService")
 public class ReportsRestController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UpdateCgdRestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportsRestController.class);
 
     /**
      * This method will call scsb-solr-client microservice to get total counts of accessioned and deaccessioned items in scsb.
-     * @param reportsRequest the reports request
+     * @param reportsRequest the reporostts request
      * @return the reports response
      */
-    @RequestMapping(value="/accessionDeaccessionCounts", method = RequestMethod.POST)
+    @PostMapping(value="/accessionDeaccessionCounts")
     public ReportsResponse accessionDeaccessionCounts(@RequestBody ReportsRequest reportsRequest) {
-        ReportsResponse reportsResponse = new ReportsResponse();
-        try {
-            HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, getRestHeaderService().getHttpHeaders());
-
-            ResponseEntity<ReportsResponse> responseEntity = getRestTemplate().exchange(getScsbSolrClientUrl() + RecapConstants.URL_REPORTS_ACCESSION_DEACCESSION_COUNTS, HttpMethod.POST, httpEntity, ReportsResponse.class);
-            reportsResponse = responseEntity.getBody();
-        } catch (Exception e) {
-            logger.error(RecapCommonConstants.LOG_ERROR,e);
-            reportsResponse.setMessage(e.getMessage());
-        }
-        return reportsResponse;
+        return responseData(reportsRequest, RecapConstants.URL_REPORTS_ACCESSION_DEACCESSION_COUNTS);
     }
 
     /**
@@ -48,20 +38,10 @@ public class ReportsRestController extends AbstractController {
      * @param reportsRequest the reports request
      * @return the reports response
      */
-    @RequestMapping(value="/cgdItemCounts", method = RequestMethod.POST)
+    @PostMapping(value="/cgdItemCounts")
     public ReportsResponse cgdItemCounts(@RequestBody ReportsRequest reportsRequest) {
-        ReportsResponse reportsResponse = new ReportsResponse();
-        try {
-            HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, getRestHeaderService().getHttpHeaders());
-
-            ResponseEntity<ReportsResponse> responseEntity = getRestTemplate().exchange(getScsbSolrClientUrl() + RecapConstants.URL_REPORTS_CGD_ITEM_COUNTS, HttpMethod.POST, httpEntity, ReportsResponse.class);
-            reportsResponse = responseEntity.getBody();
-        } catch (Exception e) {
-            logger.error(RecapCommonConstants.LOG_ERROR,e);
-            reportsResponse.setMessage(e.getMessage());
-        }
-        return reportsResponse;
-    }
+        return responseData(reportsRequest, RecapConstants.URL_REPORTS_CGD_ITEM_COUNTS);
+   }
 
     /**
      * This method will call scsb-solr-client microservice to get the items which are deaccessioned in scsb.
@@ -69,19 +49,9 @@ public class ReportsRestController extends AbstractController {
      * @param reportsRequest the reports request
      * @return the reports response
      */
-    @RequestMapping(value="/deaccessionResults", method = RequestMethod.POST)
+    @PostMapping(value="/deaccessionResults")
     public ReportsResponse deaccessionResults(@RequestBody ReportsRequest reportsRequest) {
-        ReportsResponse reportsResponse = new ReportsResponse();
-        try {
-            HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, getRestHeaderService().getHttpHeaders());
-
-            ResponseEntity<ReportsResponse> responseEntity = getRestTemplate().exchange(getScsbSolrClientUrl() + RecapConstants.URL_REPORTS_DEACCESSION_RESULTS, HttpMethod.POST, httpEntity, ReportsResponse.class);
-            reportsResponse = responseEntity.getBody();
-        } catch (Exception e) {
-            logger.error(RecapCommonConstants.LOG_ERROR,e);
-            reportsResponse.setMessage(e.getMessage());
-        }
-        return reportsResponse;
+        return responseData(reportsRequest, RecapConstants.URL_REPORTS_DEACCESSION_RESULTS);
     }
 
     /**
@@ -90,12 +60,18 @@ public class ReportsRestController extends AbstractController {
      * @param reportsRequest the reports request
      * @return the reports response
      */
-    @RequestMapping(value="/incompleteRecords", method = RequestMethod.POST)
+    @PostMapping(value="/incompleteRecords")
     public ReportsResponse incompleteRecords(@RequestBody ReportsRequest reportsRequest) {
+        return responseData(reportsRequest, RecapConstants.URL_REPORTS_INCOMPLETE_RESULTS);
+    }
+
+    private ReportsResponse responseData(ReportsRequest reportsRequest, String countsUrl)
+    {
         ReportsResponse reportsResponse = new ReportsResponse();
         try {
             HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, getRestHeaderService().getHttpHeaders());
-            ResponseEntity<ReportsResponse> responseEntity = getRestTemplate().exchange(getScsbSolrClientUrl() + RecapConstants.URL_REPORTS_INCOMPLETE_RESULTS, HttpMethod.POST, httpEntity, ReportsResponse.class);
+
+            ResponseEntity<ReportsResponse> responseEntity = getRestTemplate().exchange(getScsbSolrClientUrl() + countsUrl, HttpMethod.POST, httpEntity, ReportsResponse.class);
             reportsResponse = responseEntity.getBody();
         } catch (Exception e) {
             logger.error(RecapCommonConstants.LOG_ERROR,e);

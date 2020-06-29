@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationContext;
  */
 public class HelperUtil {
 
+    private HelperUtil() {}
+
     /**
      * Gets bean for the given type.
      *
