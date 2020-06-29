@@ -6,23 +6,21 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.recap.RecapConstants;
-import org.recap.Service.RestHeaderService;
+import org.recap.controller.AbstractController;
 import org.recap.model.SearchRecordsRequest;
 import org.recap.model.SearchRecordsResponse;
 import org.recap.model.SearchResultRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -35,38 +33,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/searchService")
 @Api(value="search")
-public class SearchRecordsRestController {
+public class SearchRecordsRestController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchRecordsRestController.class);
-
-    @Value("${scsb.solr.client.url}")
-    private String scsbSolrClient;
-
-
-    @Autowired
-    RestHeaderService restHeaderService;
-
-    public RestHeaderService getRestHeaderService(){
-        return restHeaderService;
-    }
-
-    /**
-     * Gets rest template.
-     *
-     * @return the rest template
-     */
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
-
-    /**
-     * Gets scsb solr client url.
-     *
-     * @return the scsb solr client url
-     */
-    public String getScsbSolrClientUrl() {
-        return scsbSolrClient;
-    }
 
     /**
      * This method will call scsb-solr-client microservice to search books based on the given search records request parameter and returns a list of search result row.
@@ -74,7 +43,7 @@ public class SearchRecordsRestController {
      * @param searchRecordsRequest the search records request
      * @return the search records response
      */
-    @RequestMapping(value="/search", method = RequestMethod.POST)
+    @PostMapping(value="/search")
     @ApiOperation(value = "search",notes = "The Search API allows the end user to search the SCSB database for bibliographic records using different fields. It takes in a JSON formatted request as input and allows pagination.", nickname = "search", position = 0, consumes="application/json")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful Search")})
     public SearchRecordsResponse searchRecordsServiceGetParam(@ApiParam(value = "Parameters to search a record in SCSB", required = true, name = "searchRecordsRequest")@RequestBody SearchRecordsRequest searchRecordsRequest) {
@@ -106,7 +75,7 @@ public class SearchRecordsRestController {
      * @return the list
      */
     @ApiIgnore
-    @RequestMapping(value="/searchByParam", method = RequestMethod.GET)
+    @GetMapping(value="/searchByParam")
     @ApiOperation(value = "searchParam",notes = "The Search by param API allows the end user to search the SCSB database for bibliographic records using the parameters listed.", nickname = "search", position = 0)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful Search")})
     public List<SearchResultRow> searchRecordsServiceGet(

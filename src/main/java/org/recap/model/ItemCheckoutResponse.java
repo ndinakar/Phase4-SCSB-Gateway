@@ -9,9 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ItemCheckoutResponse extends BaseResponseItem {
-    private Boolean Renewal;
+    private Boolean renewal;
     private Boolean magneticMedia;
-    private Boolean Desensitize;
+    private Boolean desensitize;
     private String dueDate;
     private String feeType ;
     private String securityInhibit;
@@ -19,5 +19,6 @@ public class ItemCheckoutResponse extends BaseResponseItem {
     private String feeAmount;
     private String mediaType;
     private boolean processed;
+    private String bibId;
 
 }

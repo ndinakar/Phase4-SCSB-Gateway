@@ -1,8 +1,10 @@
 package org.recap.model.transfer;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class BaseSourceDestination {
 
     private String owningInstitutionBibId;

@@ -12,10 +12,6 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-
 /**
  * @author Sheik Sahib on 5/28/20
  */
@@ -27,25 +23,19 @@ abstract class SwaggerConfigBase implements WebMvcConfigurer {
     protected static String NOT_FOUND_ERROR_MESSAGE = "Not Found";
     protected static String BAD_REQUEST_ERROR_MESSAGE = "Bad Request";
 
-    private final ResponseMessage INTERNAL_SERVER_ERROR_RESPONSE_MESSAGE =
-            new ResponseMessageBuilder().code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message(INTERNAL_SERVER_ERROR_MESSAGE).responseModel(new ModelRef(ERROR_INFORMATION_CLASS)).build();
+    private final ResponseMessage INTERNAL_SERVER_ERROR_RESPONSE_MESSAGE = setResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR_MESSAGE);
 
-    private final ResponseMessage GONE_ERROR_RESPONSE_MESSAGE =
-            new ResponseMessageBuilder().code(HttpStatus.GONE.value()).message(GONE_ERROR_MESSAGE)
-                    .responseModel(new ModelRef(ERROR_INFORMATION_CLASS)).build();
+    private final ResponseMessage GONE_ERROR_RESPONSE_MESSAGE = setResponseMessage(HttpStatus.GONE.value(), GONE_ERROR_MESSAGE);
 
-    private final ResponseMessage NOT_FOUND_RESPONSE_MESSAGE =
-            new ResponseMessageBuilder().code(HttpStatus.NOT_FOUND.value()).message(NOT_FOUND_ERROR_MESSAGE)
-                    .responseModel(new ModelRef(ERROR_INFORMATION_CLASS)).build();
+    private final ResponseMessage NOT_FOUND_RESPONSE_MESSAGE = setResponseMessage(HttpStatus.NOT_FOUND.value(), NOT_FOUND_ERROR_MESSAGE);
 
-    private final ResponseMessage BAD_REQUEST_RESPONSE_MESSAGE =
-            new ResponseMessageBuilder().code(HttpStatus.BAD_REQUEST.value()).message(BAD_REQUEST_ERROR_MESSAGE)
-                    .responseModel(new ModelRef(ERROR_INFORMATION_CLASS)).build();
+    private final ResponseMessage BAD_REQUEST_RESPONSE_MESSAGE = setResponseMessage(HttpStatus.BAD_REQUEST.value(), BAD_REQUEST_ERROR_MESSAGE);
 
+/*
     private final List<ResponseMessage> RESPONSE_MESSAGE_LIST =
             newArrayList(INTERNAL_SERVER_ERROR_RESPONSE_MESSAGE, GONE_ERROR_RESPONSE_MESSAGE, NOT_FOUND_RESPONSE_MESSAGE,
                     BAD_REQUEST_RESPONSE_MESSAGE);
+*/
 
     @Autowired
     private TypeResolver typeResolver;
@@ -58,5 +48,9 @@ abstract class SwaggerConfigBase implements WebMvcConfigurer {
     @Bean
     @Required
     protected abstract ApiInfo apiInfo();
+    private ResponseMessage setResponseMessage(int messageCode, String messageValue)
+    {
+        return new ResponseMessageBuilder().code(messageCode).message(messageValue).responseModel(new ModelRef(ERROR_INFORMATION_CLASS)).build();
+   }
 }
 
