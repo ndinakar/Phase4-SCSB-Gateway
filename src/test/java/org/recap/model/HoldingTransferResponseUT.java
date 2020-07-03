@@ -2,9 +2,10 @@ package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
-import org.recap.config.SwaggerInterceptor;
-import org.recap.model.transfer.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.recap.model.transfer.Destination;
+import org.recap.model.transfer.HoldingTransferResponse;
+import org.recap.model.transfer.HoldingsTransferRequest;
+import org.recap.model.transfer.Source;
 
 import static org.junit.Assert.assertNotNull;
 

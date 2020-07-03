@@ -1,7 +1,7 @@
 package org.recap.controller;
 
 import org.recap.RecapCommonConstants;
-import org.recap.Service.RestHeaderService;
+import org.recap.service.RestHeaderService;
 import org.recap.spring.SwaggerAPIProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

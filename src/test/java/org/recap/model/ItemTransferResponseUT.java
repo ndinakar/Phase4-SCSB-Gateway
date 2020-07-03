@@ -2,10 +2,10 @@ package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
-import org.recap.model.transfer.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.recap.model.transfer.ItemDestination;
+import org.recap.model.transfer.ItemSource;
+import org.recap.model.transfer.ItemTransferRequest;
+import org.recap.model.transfer.ItemTransferResponse;
 
 import static org.junit.Assert.assertNotNull;
 
