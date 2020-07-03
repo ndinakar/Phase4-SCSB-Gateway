@@ -15,8 +15,30 @@ import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
 import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
-import org.recap.Service.RestHeaderService;
-import org.recap.model.*;
+import org.recap.model.AbstractResponseItem;
+import org.recap.model.BulkRequestResponse;
+import org.recap.model.CancelRequestResponse;
+import org.recap.model.ItemCheckInRequest;
+import org.recap.model.ItemCheckOutRequest;
+import org.recap.model.ItemCheckinResponse;
+import org.recap.model.ItemCheckoutResponse;
+import org.recap.model.ItemCreateBibRequest;
+import org.recap.model.ItemCreateBibResponse;
+import org.recap.model.ItemHoldCancelRequest;
+import org.recap.model.ItemHoldRequest;
+import org.recap.model.ItemHoldResponse;
+import org.recap.model.ItemInformationRequest;
+import org.recap.model.ItemInformationResponse;
+import org.recap.model.ItemRecalRequest;
+import org.recap.model.ItemRecallResponse;
+import org.recap.model.ItemRefileRequest;
+import org.recap.model.ItemRefileResponse;
+import org.recap.model.ItemRequestInformation;
+import org.recap.model.ItemResponseInformation;
+import org.recap.model.PatronInformationRequest;
+import org.recap.model.PatronInformationResponse;
+import org.recap.model.ReplaceRequest;
+import org.recap.service.RestHeaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +57,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**

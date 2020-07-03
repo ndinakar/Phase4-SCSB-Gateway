@@ -5,7 +5,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
 import org.recap.RecapConstants;
-import org.recap.Service.RestHeaderService;
+import org.recap.service.RestHeaderService;
 import org.recap.model.SearchRecordsRequest;
 import org.recap.model.SearchRecordsResponse;
 import org.recap.model.SearchResultRow;
@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by hemalathas on 3/2/17.

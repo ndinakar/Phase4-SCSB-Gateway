@@ -7,10 +7,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
-import org.recap.Service.RestHeaderService;
 import org.recap.model.ReportsResponse;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.service.RestHeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -21,7 +21,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Date;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by rajeshbabuk on 13/1/17.

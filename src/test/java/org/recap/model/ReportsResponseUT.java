@@ -3,6 +3,7 @@ package org.recap.model;
 import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.model.search.IncompleteReportResultsRow;
 
 import java.util.Arrays;
 import java.util.Date;
