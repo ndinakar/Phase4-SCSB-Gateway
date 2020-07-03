@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
-import org.recap.Service.RestHeaderService;
+import org.recap.service.RestHeaderService;
 import org.recap.model.ScheduleJobRequest;
 import org.recap.model.ScheduleJobResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by rajeshbabuk on 20/4/17.
