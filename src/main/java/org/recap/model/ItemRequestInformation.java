@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by hemalathas on 1/11/16.
@@ -19,6 +20,9 @@ public class ItemRequestInformation {
     private String requestingInstitution = ""; // PUL, CUL, NYPL
     private String requestType = ""; // Retrieval,EDD, Hold, Recall, Borrow Direct
     private String deliveryLocation = "";
+    public String getDeliveryLocation() {
+        return Optional.ofNullable(deliveryLocation).orElse("");
+    }
     private String requestNotes = "";
     private String trackingId; // NYPL - trackingId
     private String author; // NYPL - author
