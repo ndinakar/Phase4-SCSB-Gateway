@@ -21,7 +21,7 @@ public class ItemRequestInformation {
     private String requestType = ""; // Retrieval,EDD, Hold, Recall, Borrow Direct
     private String deliveryLocation = "";
     public String getDeliveryLocation() {
-        return Optional.ofNullable(deliveryLocation).orElse("test");
+        return Optional.ofNullable(deliveryLocation).orElse("");
     }
     private String requestNotes = "";
     private String trackingId; // NYPL - trackingId
