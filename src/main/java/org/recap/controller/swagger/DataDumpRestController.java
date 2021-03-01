@@ -60,7 +60,7 @@ public class DataDumpRestController extends AbstractController  {
                                          @ApiParam(value = "Type of format - Marc xml (use 0) or SCSB xml (use 1), for deleted records only json format (use 2)",required=true, name = "outputFormat") @RequestParam String outputFormat,
                                          @ApiParam(value = "Get updates to middleware collection since the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "date") @RequestParam(required = false) String date,
                                          @ApiParam(value = "Data can be requested by Collection Group ID, either Shared (use 1) or Open (use 2) or Private (use 3). Default is Shared and Open, can use 1,2,3 as well.", name = "collectionGroupIds") @RequestParam(required=false) String collectionGroupIds,
-                                         @ApiParam(value = "Type of transmission - for FTP use 0, for HTTP response use 1. Default is FTP.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
+                                         @ApiParam(value = "Type of transmission - for S3 use 0, for HTTP response use 1. Default is S3.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
                                          @ApiParam(value = "Email address to whom email will be sent upon completion" , name = "emailToAddress")@RequestParam(required=false) String emailToAddress,
                                          @ApiIgnore @RequestParam(required=false) String userName
     ){
@@ -99,13 +99,13 @@ public class DataDumpRestController extends AbstractController  {
     @ResponseBody
     public ResponseEntity exportDataDumpWithToDate(@ApiParam(value = "${swagger.values.institutionCodes}" , required = true, name = "institutionCodes") @RequestParam String institutionCodes,
                                          @ApiParam(value = "${swagger.values.requestingInstitutionCode}",required=true, name = "requestingInstitutionCode") @RequestParam String requestingInstitutionCode,
-                                         @ApiParam(value = "${swagger.values.imsDepositoryCodes}" , required = true , name = "imsDepositoryCodes") @RequestParam String imsDepositoryCodes,
+                                         @ApiParam(value = "${swagger.values.imsDepositoryCodes}" ,name = "imsDepositoryCodes") @RequestParam(required=false) String imsDepositoryCodes,
                                          @ApiParam(value = "Type of export - Incremental (use 1) or Deleted (use 2)" , required = true , name = "fetchType") @RequestParam String fetchType,
                                          @ApiParam(value = "Type of format - Marc xml (use 0) or SCSB xml (use 1), for deleted records only json format (use 2)",required=true, name = "outputFormat") @RequestParam String outputFormat,
                                          @ApiParam(value = "Get updates to middleware collection since the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "date") @RequestParam(required = false) String date,
                                          @ApiParam(value = "Get updates to middleware collection until the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "toDate") @RequestParam(required = false) String toDate,
                                          @ApiParam(value = "Data can be requested by Collection Group ID, either Shared (use 1) or Open (use 2). Default is both, can use 1,2 as well.", name = "collectionGroupIds") @RequestParam(required=false) String collectionGroupIds,
-                                         @ApiParam(value = "Type of transmission - for FTP use 0, for HTTP response use 1. Default is FTP.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
+                                         @ApiParam(value = "Type of transmission - for S3 use 0, for HTTP response use 1. Default is S3.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
                                          @ApiParam(value = "Email address to whom email will be sent upon completion" , name = "emailToAddress")@RequestParam(required=false) String emailToAddress,
                                                    @ApiIgnore @RequestParam(required=false) String userName
     ){
