@@ -55,20 +55,21 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     String imsDepositoryCodes = "RECAP";
     String emailToAddress = "hemalatha.s@htcindia.com";
     String toDate = new Date().toString();
+    String userName = "UT";
 
     @Test
     public void testDataDumpRestController(){
         Map<String, String> inputMap = getInputMap();
         ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
-        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(responseEntity);
-        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress);
+        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(responseEntity);
+        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress,userName);
         assertNotNull(responseEntity1);
         assertEquals("Export process has started and we will send an email notification upon completion",responseEntity1.getBody());
     }
 
     @Test
     public void testDataDumpRestController_Exception(){
-        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress);
+        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress,userName);
         assertEquals("Scsb Etl Service is Unavailable.",responseEntity1.getBody());
     }
 
@@ -77,8 +78,8 @@ public class DataDumpRestControllerUT extends BaseTestCase{
         Map<String,String> inputMap = getInputMap();
         inputMap.put("toDate",toDate);
         ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
-        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(responseEntity);
-        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress);
+        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(responseEntity);
+        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress,userName);
         assertNotNull(responseEntity1);
         assertEquals("Export process has started and we will send an email notification upon completion",responseEntity1.getBody());
     }
@@ -87,8 +88,8 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     @Test
     public void testexportDataDumpWithToDate_Exception(){
         Map<String,String> inputMap = new HashMap<>();
-        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(null);
-        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress);
+        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(null);
+        ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress,userName);
         assertEquals("Scsb Etl Service is Unavailable.",responseEntity1.getBody());
     }
 
