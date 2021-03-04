@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
 import org.recap.RecapCommonConstants;
 import org.recap.RecapConstants;
+import org.recap.spring.SwaggerAPIProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -61,7 +62,8 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     public void testDataDumpRestController(){
         Map<String, String> inputMap = getInputMap();
         ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
-        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(responseEntity);
+        HttpEntity requestEntity = getSwaggerHttpEntity();
+        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap)).thenReturn(responseEntity);
         ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress,userName);
         assertNotNull(responseEntity1);
         assertEquals("Export process has started and we will send an email notification upon completion",responseEntity1.getBody());
@@ -78,7 +80,8 @@ public class DataDumpRestControllerUT extends BaseTestCase{
         Map<String,String> inputMap = getInputMap();
         inputMap.put("toDate",toDate);
         ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
-        Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, getHttpEntity(), String.class, inputMap)).thenReturn(responseEntity);
+        HttpEntity requestEntity = getSwaggerHttpEntity();
+        Mockito.when(restTemplate.exchange(scsbEtlUrl +"dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap)).thenReturn(responseEntity);
         ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress,userName);
         assertNotNull(responseEntity1);
         assertEquals("Export process has started and we will send an email notification upon completion",responseEntity1.getBody());
@@ -97,13 +100,14 @@ public class DataDumpRestControllerUT extends BaseTestCase{
         Map<String,String> inputMap = new HashMap<>();
         inputMap.put("institutionCodes",institutionCodes);
         inputMap.put("requestingInstitutionCode",requestingInstitutionCode);
-        inputMap.put("imsDepositoryCodes",imsDepositoryCodes);
         inputMap.put("fetchType",fetchType);
         inputMap.put("outputFormat",outputFormat);
         inputMap.put("date",date);
         inputMap.put("collectionGroupIds",collectionGroupIds);
         inputMap.put("transmissionType",transmissionType);
         inputMap.put("emailToAddress",emailToAddress);
+        inputMap.put("imsDepositoryCodes",imsDepositoryCodes);
+        inputMap.put("userName",userName);
         return inputMap;
     }
 
@@ -117,6 +121,16 @@ public class DataDumpRestControllerUT extends BaseTestCase{
         HttpHeaders headers = new HttpHeaders();
         headers.set("api_key","recap");
         return new HttpEntity(headers);
+    }
+
+    public HttpEntity getSwaggerHttpEntity(){
+        return new HttpEntity<>(getSwaggerHeaders());
+    }
+
+    public static HttpHeaders getSwaggerHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(RecapCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
+        return headers;
     }
 
 }
