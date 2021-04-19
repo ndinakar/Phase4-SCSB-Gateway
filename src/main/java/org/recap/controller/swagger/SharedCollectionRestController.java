@@ -125,7 +125,7 @@ public class SharedCollectionRestController extends AbstractController {
             notes = "The Deaccession API is an internal call made by SCSB to remove a record. Deaccession will only be done through the UI by users who are authorized to perform the operation. Deaccessioning an item would mark the record as removed (deleted) in the SCSB database.", nickname = "deaccession")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
-    public ResponseEntity deAccession(@ApiParam(value = "Provide item barcodes to be deaccessioned, separated by comma", required = true, name = "itemBarcodes") @RequestBody DeAccessionRequest deAccessionRequest) {
+    public ResponseEntity deAccession(@ApiParam(value = "Provide item barcodes to be deaccessioned, separated by comma and User Name", required = true, name = "ItemBarcodes and User Name") @RequestBody DeAccessionRequest deAccessionRequest) {
         try {
             Map<String, String> resultMap = getRestTemplate().postForObject(getScsbCircUrl() + "/sharedCollection/deAccession", deAccessionRequest, Map.class);
             return new ResponseEntity<>(resultMap, getHttpHeaders(), HttpStatus.OK);
