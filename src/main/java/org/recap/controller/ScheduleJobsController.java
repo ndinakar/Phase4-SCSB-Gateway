@@ -2,7 +2,7 @@ package org.recap.controller;
 
 import java.util.Date;
 
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.model.ScheduleJobRequest;
 import org.recap.model.ScheduleJobResponse;
 import org.slf4j.Logger;
@@ -51,10 +51,10 @@ public class ScheduleJobsController extends  AbstractController {
         try {
             HttpEntity<ScheduleJobRequest> httpEntity = new HttpEntity<>(scheduleJobRequest, getRestHeaderService().getHttpHeaders());
 
-            ResponseEntity<ScheduleJobResponse> responseEntity = restTemplate.exchange(getScsbScheduleUrl() + RecapCommonConstants.URL_SCHEDULE_JOBS, HttpMethod.POST, httpEntity, ScheduleJobResponse.class);
+            ResponseEntity<ScheduleJobResponse> responseEntity = restTemplate.exchange(getScsbScheduleUrl() + ScsbCommonConstants.URL_SCHEDULE_JOBS, HttpMethod.POST, httpEntity, ScheduleJobResponse.class);
             scheduleJobResponse = responseEntity.getBody();
         } catch (Exception e) {
-            logger.error(RecapCommonConstants.LOG_ERROR,e);
+            logger.error(ScsbCommonConstants.LOG_ERROR,e);
             scheduleJobResponse.setMessage(e.getMessage());
         }
         return scheduleJobResponse;
@@ -68,7 +68,7 @@ public class ScheduleJobsController extends  AbstractController {
         try {
         	logger.info("Inside the customLoggerTest method - ScheduleJobResponse : {}", scheduleJobResponse);
         } catch (Exception e) {
-            logger.error(RecapCommonConstants.LOG_ERROR,e);
+            logger.error(ScsbCommonConstants.LOG_ERROR,e);
 
         }
         return scheduleJobResponse;

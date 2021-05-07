@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +39,7 @@ public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
 
     @Test
     public void encryptEmailAddress() throws Exception {
-        ResponseEntity<String> exchange=new ResponseEntity<>(RecapCommonConstants.SUCCESS, HttpStatus.OK);
+        ResponseEntity<String> exchange=new ResponseEntity<>(ScsbCommonConstants.SUCCESS, HttpStatus.OK);
         Mockito.when(mockRestTemplate.exchange(scsbCircUrl + "/encryptEmailAddress/startEncryptEmailAddress", HttpMethod.GET, getHttpEntity(), String.class)).thenReturn(exchange);
         ResponseEntity responseEntity=encryptEmailAddressRestController.encryptEmailAddress();
         assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
@@ -56,7 +56,7 @@ public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
     }
     public HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(ScsbCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 }

@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
-import org.recap.RecapConstants;
+import org.recap.ScsbConstants;
 import org.recap.service.RestHeaderService;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.SearchRecordsResponse;
@@ -103,7 +103,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         HttpEntity request = new HttpEntity(restHeaderService.getHttpHeaders());
         List<SearchResultRow> searchResultRowList = new ArrayList<>();
         ResponseEntity<List> httpEntity = new ResponseEntity<List>(searchResultRowList,HttpStatus.OK);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + RecapConstants.URL_SEARCH_BY_PARAM)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + ScsbConstants.URL_SEARCH_BY_PARAM)
                 .queryParam("fieldValue", "test")
                 .queryParam("fieldName", "test")
                 .queryParam("owningInstitutions", "PUL")
@@ -121,7 +121,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
     @Test
     public void testSearchRecordServiceGet_Exception(){
         HttpEntity request = new HttpEntity(restHeaderService.getHttpHeaders());
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + RecapConstants.URL_SEARCH_BY_PARAM)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + ScsbConstants.URL_SEARCH_BY_PARAM)
                 .queryParam("fieldValue", "test")
                 .queryParam("fieldName", "test")
                 .queryParam("owningInstitutions", "PUL")

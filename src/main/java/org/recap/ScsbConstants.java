@@ -3,7 +3,7 @@ package org.recap;
 /**
  * Created by premkb on 19/8/16.
  */
-public final class RecapConstants {
+public final class ScsbConstants {
 
 
     public static final String INVALID_REQUEST_INSTITUTION = "Enter valid RequestingInstitution";
@@ -56,6 +56,6 @@ public final class RecapConstants {
 
     public static final String BULK_REQUEST_MESSAGE_RECEIVED = "Bulk request process initiated.";
 
-    private RecapConstants() {
+    private ScsbConstants() {
     }
 }

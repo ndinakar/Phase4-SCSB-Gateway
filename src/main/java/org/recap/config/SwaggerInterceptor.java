@@ -1,6 +1,7 @@
 package org.recap.config;
 
 import org.apache.commons.lang3.StringUtils;
+import org.recap.ScsbCommonConstants;
 import org.recap.util.HelperUtil;
 import org.recap.util.MD5EncoderUtil;
 import org.springframework.core.env.Environment;
@@ -42,7 +43,7 @@ public class SwaggerInterceptor implements HandlerInterceptor {
             throws Exception {
         boolean continueExport = false;
         String date = new Date().toString();
-        String key = request.getHeader("api_key");
+        String key = request.getHeader(ScsbCommonConstants.API_KEY);
         if (key != null && matchingWithInstitutionKeys(key)) {
             continueExport = true;
         } else {

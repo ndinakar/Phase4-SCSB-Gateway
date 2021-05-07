@@ -1,6 +1,6 @@
 package org.recap.controller;
 
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -34,7 +34,7 @@ public class DeAccessionRestController extends AbstractController{
             HttpEntity<String> requestEntity = new HttpEntity<>(deAccessionRequest, getRestHeaderService().getHttpHeaders());
             resultMap = restTemplate.postForObject(getScsbCircUrl() + "/sharedCollection/deAccession", requestEntity, Map.class);
         } catch (Exception ex) {
-            logger.error(RecapCommonConstants.LOG_ERROR,ex);
+            logger.error(ScsbCommonConstants.LOG_ERROR,ex);
         }
         return resultMap;
     }

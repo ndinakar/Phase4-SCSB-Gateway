@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 import org.recap.BaseTestCase;
-import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
+import org.recap.ScsbCommonConstants;
+import org.recap.ScsbConstants;
 import org.recap.model.SearchRecordsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,14 +68,14 @@ public class PurgeRestControllerUT extends BaseTestCase{
     @Test
     public void testPurgeEmailAddress(){
         ResponseEntity responseEntity1 = new ResponseEntity(getValue(), HttpStatus.OK);
-        Mockito.when(restTemplate.exchange(scsbCoreUrl+ RecapConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class)).thenReturn(responseEntity1);
+        Mockito.when(restTemplate.exchange(scsbCoreUrl+ ScsbConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class)).thenReturn(responseEntity1);
         ResponseEntity responseEntity = purgeRestController.purgeEmailAddress();
         assertNotNull(responseEntity);
     }
 
     @Test
     public void testPurgeEmailAddressException(){
-        Mockito.when(restTemplate.exchange(getScsbCircUrl()+ RecapConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class)).thenThrow(new NullPointerException("Exception occured"));
+        Mockito.when(restTemplate.exchange(getScsbCircUrl()+ ScsbConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class)).thenThrow(new NullPointerException("Exception occured"));
         ResponseEntity responseEntity = purgeRestController.purgeEmailAddress();
         assertNotNull(responseEntity);
     }
@@ -83,7 +83,7 @@ public class PurgeRestControllerUT extends BaseTestCase{
     @Test
     public void testPurgeExceptionRequests() {
         Map responseMap = new HashMap();
-        responseMap.put(RecapCommonConstants.STATUS, RecapCommonConstants.SUCCESS);
+        responseMap.put(ScsbCommonConstants.STATUS, ScsbCommonConstants.SUCCESS);
         ResponseEntity<Map> responseEntity1 = new ResponseEntity<>(responseMap, HttpStatus.OK);
         Mockito.doReturn(responseEntity1).when(restTemplate).exchange(
                 ArgumentMatchers.anyString(),
@@ -97,8 +97,8 @@ public class PurgeRestControllerUT extends BaseTestCase{
     @Test
     public void testPurgeExceptionRequestsException() {
         Map responseMap = new HashMap();
-        responseMap.put(RecapCommonConstants.STATUS, RecapCommonConstants.SUCCESS);
-        Mockito.when(restTemplate.exchange(getScsbCircUrl() + RecapConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET, requestEntity, Map.class)).thenThrow(new NullPointerException("Exception occured"));
+        responseMap.put(ScsbCommonConstants.STATUS, ScsbCommonConstants.SUCCESS);
+        Mockito.when(restTemplate.exchange(getScsbCircUrl() + ScsbConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET, requestEntity, Map.class)).thenThrow(new NullPointerException("Exception occured"));
         ResponseEntity responseEntity = purgeRestController.purgeExceptionRequests();
         assertNotNull(responseEntity);
     }
@@ -112,7 +112,7 @@ public class PurgeRestControllerUT extends BaseTestCase{
 
     private HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(ScsbCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 

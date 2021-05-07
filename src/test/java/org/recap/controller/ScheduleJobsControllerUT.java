@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
+import org.recap.ScsbCommonConstants;
+import org.recap.ScsbConstants;
 import org.recap.service.RestHeaderService;
 import org.recap.model.ScheduleJobRequest;
 import org.recap.model.ScheduleJobResponse;
@@ -56,8 +56,8 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
     @Test
     public void testScheduleJob() {
         ScheduleJobRequest scheduleJobRequest = new ScheduleJobRequest();
-        scheduleJobRequest.setJobName(RecapCommonConstants.PURGE_EXCEPTION_REQUESTS);
-        scheduleJobRequest.setScheduleType(RecapConstants.SCHEDULE);
+        scheduleJobRequest.setJobName(ScsbCommonConstants.PURGE_EXCEPTION_REQUESTS);
+        scheduleJobRequest.setScheduleType(ScsbConstants.SCHEDULE);
         ScheduleJobResponse scheduleJobResponse = new ScheduleJobResponse();
         scheduleJobResponse.setMessage("Scheduled");
         ResponseEntity<ScheduleJobResponse> responseEntity = new ResponseEntity<>(scheduleJobResponse, HttpStatus.OK);

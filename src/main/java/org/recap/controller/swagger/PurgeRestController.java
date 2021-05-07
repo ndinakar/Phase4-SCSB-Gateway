@@ -4,7 +4,7 @@ package org.recap.controller.swagger;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.recap.RecapConstants;
+import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class PurgeRestController extends AbstractController {
         Map response = null;
         try{
             HttpEntity requestEntity = getHttpEntity();
-            responseEntity = restTemplate.exchange(getScsbCoreUrl()+ RecapConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class);
+            responseEntity = restTemplate.exchange(getScsbCoreUrl()+ ScsbConstants.REST_URL_PURGE_EMAIL_ADDRESS, HttpMethod.GET,requestEntity,Map.class);
             response = responseEntity.getBody();
         }catch(Exception e){
             getLogger().error("Exception",e);
@@ -70,7 +70,7 @@ public class PurgeRestController extends AbstractController {
         Map response = null;
         try {
             HttpEntity requestEntity = getHttpEntity();
-            ResponseEntity<Map> responseEntity = restTemplate.exchange(getScsbCoreUrl() + RecapConstants.REST_URL_PURGE_EXCEPTION_REQUESTS, HttpMethod.GET, requestEntity, Map.class);
+            ResponseEntity<Map> responseEntity = restTemplate.exchange(getScsbCoreUrl() + ScsbConstants.REST_URL_PURGE_EXCEPTION_REQUESTS, HttpMethod.GET, requestEntity, Map.class);
             response = responseEntity.getBody();
         } catch (Exception e) {
             getLogger().error("Exception", e);
