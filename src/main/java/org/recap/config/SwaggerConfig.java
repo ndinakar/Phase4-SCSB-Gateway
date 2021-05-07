@@ -80,7 +80,7 @@ public class SwaggerConfig extends SwaggerConfigBase {
                 SecurityContext.builder().securityReferences(newArrayList(securityReference)).build());
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.scsb.controller.swagger"))
+                .apis(RequestHandlerSelectors.basePackage("org.recap.controller.swagger"))
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/")
