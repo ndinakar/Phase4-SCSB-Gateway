@@ -2,7 +2,7 @@ package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.model.transfer.Destination;
 import org.recap.model.transfer.HoldingTransferResponse;
 import org.recap.model.transfer.HoldingsTransferRequest;
@@ -15,8 +15,8 @@ public class HoldingTransferResponseUT extends BaseTestCase {
 
     @Test
     public void holdingTransferResponse(){
-        HoldingTransferResponse holdingTransferResponse = new HoldingTransferResponse(RecapCommonConstants.SUCCESS,getHoldingsTransferRequest());
-        assertEquals(RecapCommonConstants.SUCCESS,holdingTransferResponse.getMessage());
+        HoldingTransferResponse holdingTransferResponse = new HoldingTransferResponse(ScsbCommonConstants.SUCCESS,getHoldingsTransferRequest());
+        assertEquals(ScsbCommonConstants.SUCCESS,holdingTransferResponse.getMessage());
         assertNotNull(holdingTransferResponse.getHoldingsTransferRequest());
      }
 

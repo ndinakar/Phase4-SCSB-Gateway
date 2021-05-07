@@ -2,7 +2,7 @@ package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.model.transfer.ItemDestination;
 import org.recap.model.transfer.ItemSource;
 import org.recap.model.transfer.ItemTransferRequest;
@@ -19,8 +19,8 @@ public class ItemTransferResponseUT extends BaseTestCase {
 
     @Test
     public void itemTransferResponse(){
-        ItemTransferResponse itemTransferResponse = new ItemTransferResponse(RecapCommonConstants.SUCCESS,getItemTransferRequest());
-        assertEquals(RecapCommonConstants.SUCCESS,itemTransferResponse.getMessage());
+        ItemTransferResponse itemTransferResponse = new ItemTransferResponse(ScsbCommonConstants.SUCCESS,getItemTransferRequest());
+        assertEquals(ScsbCommonConstants.SUCCESS,itemTransferResponse.getMessage());
         assertNotNull(new ItemTransferResponse());
         assertNotNull(itemTransferResponse.getItemTransferRequest());
     }

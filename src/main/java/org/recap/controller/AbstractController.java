@@ -1,6 +1,6 @@
 package org.recap.controller;
 
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.service.RestHeaderService;
 import org.recap.spring.SwaggerAPIProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +91,7 @@ public class AbstractController {
 
     public HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(ScsbCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 
@@ -101,7 +101,7 @@ public class AbstractController {
 
     public static HttpHeaders getSwaggerHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(RecapCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
+        headers.set(ScsbCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
         return headers;
     }
 

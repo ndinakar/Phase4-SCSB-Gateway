@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
 import org.recap.model.search.DeaccessionItemResultsRow;
@@ -71,7 +71,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         reportsRequest.setExport(true);
         DeaccessionItemResultsRow deaccessionItemResultsRow = getDeaccessionItemResultsRow();
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         reportsResponse.setDeaccessionItemResultsRows(Arrays.asList(deaccessionItemResultsRow));
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
@@ -114,7 +114,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         reportsRequest.setOwningInstitutions(Arrays.asList("CUL", "PUL", "NYPL"));
         reportsRequest.setCollectionGroupDesignations(Arrays.asList("Private", "Open", "Shared"));
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
                 ArgumentMatchers.anyString(),
@@ -138,7 +138,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         reportsRequest.setAccessionDeaccessionToDate("01/27/2017");
         reportsRequest.setDeaccessionOwningInstitution("PUL");
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
                 ArgumentMatchers.anyString(),
@@ -160,7 +160,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         ReportsRequest reportsRequest = new ReportsRequest();
         reportsRequest.setDeaccessionOwningInstitution("PUL");
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
                 ArgumentMatchers.anyString(),

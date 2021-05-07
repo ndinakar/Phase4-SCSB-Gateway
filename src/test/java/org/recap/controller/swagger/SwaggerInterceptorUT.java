@@ -3,7 +3,6 @@ package org.recap.controller.swagger;
 
 
 import org.junit.Test;
-import org.junit.internal.runners.statements.Fail;
 import org.recap.BaseTestCase;
 import org.recap.config.SwaggerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class SwaggerInterceptorUT extends BaseTestCase {
 
     @Test
     public void testPreHandle() throws Exception {
-        httpServletRequest.setAttribute("api_key","recap");
+        httpServletRequest.setAttribute("api_key","scsb");
         boolean continueExport = swaggerInterceptor.preHandle(httpServletRequest,httpServletResponse,new Object());
         assertTrue(!continueExport);
     }
