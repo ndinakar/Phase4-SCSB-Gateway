@@ -50,7 +50,7 @@ public class DataDumpRestController extends AbstractController  {
      */
     @GetMapping("/exportDataDump")
     @ApiOperation(value = "exportDataDump",
-            notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by HTC support.", nickname = "exportDataDump", position = 0)
+            notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by support institution team.", nickname = "exportDataDump", position = 0)
     @ApiResponses(value = {@ApiResponse(code = 200, message = ScsbConstants.DATADUMP_PROCESS_STARTED)})
     @ResponseBody
     public ResponseEntity exportDataDump(@ApiParam(value = "${swagger.values.institutionCodes}" , required = true, name = "institutionCodes") @RequestParam String institutionCodes,
@@ -94,7 +94,7 @@ public class DataDumpRestController extends AbstractController  {
      */
     @GetMapping("/exportDataDumpWithToDate")
     @ApiOperation(value = "exportDataDump",
-            notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by HTC support.", nickname = "exportDataDump", position = 0)
+            notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by support institution team.", nickname = "exportDataDump", position = 0)
     @ApiResponses(value = {@ApiResponse(code = 200, message = ScsbConstants.DATADUMP_PROCESS_STARTED)})
     @ResponseBody
     public ResponseEntity exportDataDumpWithToDate(@ApiParam(value = "${swagger.values.institutionCodes}" , required = true, name = "institutionCodes") @RequestParam String institutionCodes,

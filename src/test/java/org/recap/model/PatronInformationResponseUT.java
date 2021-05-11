@@ -18,7 +18,7 @@ public class PatronInformationResponseUT extends BaseTestCase {
         PatronInformationResponse patronInformationResponse = new PatronInformationResponse();
         patronInformationResponse.setPatronIdentifier("455835644");
         patronInformationResponse.setPatronName("john");
-        patronInformationResponse.setEmail("hemalatha.s@htcindia.com");
+        patronInformationResponse.setEmail("test@email.com");
         patronInformationResponse.setBirthDate(new Date().toString());
         patronInformationResponse.setPhone("9874563210");
         patronInformationResponse.setPermanentLocation("PB");

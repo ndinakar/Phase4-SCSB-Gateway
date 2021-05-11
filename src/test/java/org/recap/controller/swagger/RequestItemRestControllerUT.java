@@ -160,7 +160,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         itemRequestInformation.setItemOwningInstitution(institutionPUL);
         itemRequestInformation.setRequestType("EDD");
         itemRequestInformation.setRequestingInstitution(requestingInstitution);
-        itemRequestInformation.setEmailAddress("hemalatha.s@htcindia.com");
+        itemRequestInformation.setEmailAddress("test@email.com");
         itemRequestInformation.setPatronBarcode("45678915");
         itemRequestInformation.setDeliveryLocation("PB");
         itemRequestInformation.setStartPage("I");
@@ -171,7 +171,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
     @Test
     public void testRequestWithInvalidRequestingInst() {
         ResponseEntity responseEntity = new ResponseEntity(ScsbConstants.INVALID_REQUEST_INSTITUTION+"\n", HttpStatus.OK);
-        ItemRequestInformation itemRequestInformation = getItemRequestInformation("45678915","Borrow Direct","PULd","hemalatha.s@htcindia.com");
+        ItemRequestInformation itemRequestInformation = getItemRequestInformation("45678915","Borrow Direct","PULd","test@email.com");
         itemRequestInformation.setItemOwningInstitution(institutionCUL);
         Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + "requestItem/validateItemRequestInformations", itemRequestInformation, String.class)).thenReturn(responseEntity);
         ResponseEntity responseEntity1 = requestItemRestController.validateItemRequest(itemRequestInformation);
@@ -182,7 +182,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
     @Test
     public void testRequestParameterWithInvalidPatronBarcode() {
         ResponseEntity responseEntity = new ResponseEntity("Patron barcode not found", HttpStatus.OK);
-        ItemRequestInformation itemRequestInformation = getItemRequestInformation("g75dfgsf","Borrow Direct",institutionPUL,"hemalatha.s@htcindia.com");
+        ItemRequestInformation itemRequestInformation = getItemRequestInformation("g75dfgsf","Borrow Direct",institutionPUL,"test@email.com");
         Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + "requestItem/validateItemRequestInformations", itemRequestInformation, String.class)).thenReturn(responseEntity);
         ResponseEntity responseEntity1 = requestItemRestController.validateItemRequest(itemRequestInformation);
         assertNotNull(responseEntity1);
@@ -192,7 +192,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
     @Test
     public void testRequestParameterWithEDDRequestType() {
         ResponseEntity responseEntity = new ResponseEntity(ScsbConstants.START_PAGE_AND_END_PAGE_REQUIRED+"\n", HttpStatus.OK);
-        ItemRequestInformation itemRequestInformation = getItemRequestInformation("45678915","EDD",institutionPUL,"hemalatha.s@htcindia.com");
+        ItemRequestInformation itemRequestInformation = getItemRequestInformation("45678915","EDD",institutionPUL,"test@email.com");
         Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + "requestItem/validateItemRequestInformations", itemRequestInformation, String.class)).thenReturn(responseEntity);
         ResponseEntity responseEntity1 = requestItemRestController.validateItemRequest(itemRequestInformation);
         assertNotNull(responseEntity1);
@@ -808,7 +808,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         patronInformationResponse.setPickupLocation("PB");
         patronInformationResponse.setDueDate(new Date().toString());
         patronInformationResponse.setExpirationDate(new Date().toString());
-        patronInformationResponse.setEmail("hemalatha.s@htcindia.com");
+        patronInformationResponse.setEmail("test@email.com");
         patronInformationResponse.setScreenMessage("Patron validated successfully.");
         return patronInformationResponse;
     }
