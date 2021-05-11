@@ -54,7 +54,7 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     String collectionGroupIds = "1";
     String transmissionType = "1";
     String imsDepositoryCodes = "RECAP";
-    String emailToAddress = "hemalatha.s@htcindia.com";
+    String emailToAddress = "test@email.com";
     String toDate = new Date().toString();
     String userName = "UT";
 
