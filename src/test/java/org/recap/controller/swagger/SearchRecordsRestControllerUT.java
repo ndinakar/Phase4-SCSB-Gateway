@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
+import org.recap.PropertyKeyConstants;
 import org.recap.ScsbConstants;
 import org.recap.service.RestHeaderService;
 import org.recap.model.search.SearchRecordsRequest;
@@ -37,7 +38,7 @@ import static org.junit.Assert.assertNull;
  */
 public class SearchRecordsRestControllerUT extends BaseTestCase{
 
-    @Value("${scsb.solr.doc.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_SOLR_DOC_URL + "}")
     String scsbSolrClient;
 
     @Mock

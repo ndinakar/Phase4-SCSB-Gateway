@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
+import org.recap.PropertyKeyConstants;
 import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.spring.SwaggerAPIProvider;
@@ -37,7 +38,7 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     @Mock
     RestTemplate restTemplate;
 
-    @Value("${scsb.etl.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_ETL_URL + "}")
     private String scsbEtlUrl;
 
     @Before
