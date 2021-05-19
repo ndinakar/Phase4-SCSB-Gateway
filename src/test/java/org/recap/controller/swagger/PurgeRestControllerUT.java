@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 import org.recap.BaseTestCase;
+import org.recap.PropertyKeyConstants;
 import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.model.SearchRecordsResponse;
@@ -35,10 +36,10 @@ public class PurgeRestControllerUT extends BaseTestCase{
     @InjectMocks
     PurgeRestController purgeRestController;
 
-    @Value("${scsb.circ.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_CIRC_URL + "}")
     String scsbCircUrl;
 
-    @Value("${scsb.core.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_CORE_URL + "}")
     private String scsbCoreUrl;
 
     public String getScsbCircUrl() {
