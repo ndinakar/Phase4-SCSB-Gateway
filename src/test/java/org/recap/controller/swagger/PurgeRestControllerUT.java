@@ -1,7 +1,7 @@
 package org.recap.controller.swagger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.recap.BaseTestCase;
 import org.recap.PropertyKeyConstants;
@@ -23,8 +23,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by hemalathas on 10/4/17.
@@ -57,7 +57,7 @@ public class PurgeRestControllerUT extends BaseTestCase{
     RestTemplate restTemplate;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(purgeRestController,"scsbCircUrl",scsbCircUrl);

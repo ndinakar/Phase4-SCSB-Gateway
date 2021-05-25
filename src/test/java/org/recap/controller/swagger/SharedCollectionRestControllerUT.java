@@ -1,7 +1,7 @@
 package org.recap.controller.swagger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -41,10 +41,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by chenchulakshmig on 14/10/16.
@@ -64,7 +63,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
     @Mock
     private RestTemplate mockRestTemplate;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(sharedCollectionRestController,"scsbCoreUrl",scsbCoreUrl);

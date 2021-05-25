@@ -1,7 +1,7 @@
 package org.recap.controller.swagger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by hemalathas on 17/7/17.
@@ -41,7 +41,7 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     @Value("${" + PropertyKeyConstants.SCSB_ETL_URL + "}")
     private String scsbEtlUrl;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(dataDumpRestController,"scsbEtlUrl",scsbEtlUrl);

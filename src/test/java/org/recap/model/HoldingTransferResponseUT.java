@@ -1,6 +1,6 @@
 package org.recap.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
 import org.recap.ScsbCommonConstants;
 import org.recap.model.transfer.Destination;
@@ -8,8 +8,8 @@ import org.recap.model.transfer.HoldingTransferResponse;
 import org.recap.model.transfer.HoldingsTransferRequest;
 import org.recap.model.transfer.Source;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class HoldingTransferResponseUT extends BaseTestCase {
 
