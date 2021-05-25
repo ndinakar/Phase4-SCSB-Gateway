@@ -1,7 +1,7 @@
 package org.recap.controller;
 
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
@@ -10,7 +10,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MessageRestControllerUT extends BaseTestCase {
 

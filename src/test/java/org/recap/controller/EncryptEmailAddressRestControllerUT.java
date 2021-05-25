@@ -1,7 +1,7 @@
 package org.recap.controller;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
 
@@ -32,7 +32,7 @@ public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
     @Value("${" + PropertyKeyConstants.SCSB_CIRC_URL + "}")
     String scsbCircUrl;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(encryptEmailAddressRestController,"scsbCircUrl",scsbCircUrl);
