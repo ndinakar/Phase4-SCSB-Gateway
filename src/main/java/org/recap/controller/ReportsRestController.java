@@ -4,10 +4,12 @@ import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
+import org.recap.model.submitCollection.SubmitCollectionReprot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,6 +67,18 @@ public class ReportsRestController extends AbstractController {
     @PostMapping(value = "/incompleteRecords")
     public ReportsResponse incompleteRecords(@RequestBody ReportsRequest reportsRequest) {
         return responseData(reportsRequest, ScsbConstants.URL_REPORTS_INCOMPLETE_RESULTS);
+    }
+
+    /**
+     *
+     * @param submitCollectionReprot
+     * @return SubmitCollection Report
+     */
+    @PostMapping("/submitCollection")
+    public ResponseEntity<SubmitCollectionReprot> submitCollectionReprot(@RequestBody SubmitCollectionReprot submitCollectionReprot){
+        HttpEntity<SubmitCollectionReprot> httpEntity = new HttpEntity<>(submitCollectionReprot, getRestHeaderService().getHttpHeaders());
+        ResponseEntity<SubmitCollectionReprot> submitCollectionReprotResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_SUBMIT_COLLECTION_REPORT,HttpMethod.POST,httpEntity,SubmitCollectionReprot.class);
+        return  new ResponseEntity<>(submitCollectionReprotResponseEntity.getBody(), HttpStatus.OK);
     }
 
     private ReportsResponse responseData(ReportsRequest reportsRequest, String countsUrl) {
