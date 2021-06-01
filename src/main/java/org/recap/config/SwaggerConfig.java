@@ -61,9 +61,9 @@ public class SwaggerConfig extends SwaggerConfigBase {
         environmentList.remove("${com.pgac.env.loc}");
         environmentList.remove("${com.pgac.env.instance}");
 
-        String title = "ReCAP APIs";
+        String title = "SCSB APIs";
 
-        return new ApiInfoBuilder().title(title).description("APIs to interact with ReCAP middleware are RESTful and need an API_KEY for any call to be invoked. Further NCIP protocols are also supported.")
+        return new ApiInfoBuilder().title(title).description("APIs to interact with SCSB middleware are RESTful and need an API_KEY for any call to be invoked. Further NCIP protocols are also supported.")
                 .version("1.0.0")
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html").build();

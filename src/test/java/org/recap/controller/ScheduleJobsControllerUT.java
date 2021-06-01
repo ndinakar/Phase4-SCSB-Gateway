@@ -1,14 +1,15 @@
 package org.recap.controller;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
+import org.recap.PropertyKeyConstants;
+import org.recap.ScsbCommonConstants;
+import org.recap.ScsbConstants;
 import org.recap.service.RestHeaderService;
 import org.recap.model.ScheduleJobRequest;
 import org.recap.model.ScheduleJobResponse;
@@ -19,16 +20,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created by rajeshbabuk on 20/4/17.
  */
 public class ScheduleJobsControllerUT extends BaseControllerUT {
 
-    @Value("${scsb.batch.schedule.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_BATCH_SCHEDULE_URL + "}")
     String scsbScheduleUrl;
 
     @Mock
@@ -48,7 +49,7 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
         this.scsbScheduleUrl = scsbScheduleUrl;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
@@ -56,8 +57,8 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
     @Test
     public void testScheduleJob() {
         ScheduleJobRequest scheduleJobRequest = new ScheduleJobRequest();
-        scheduleJobRequest.setJobName(RecapCommonConstants.PURGE_EXCEPTION_REQUESTS);
-        scheduleJobRequest.setScheduleType(RecapConstants.SCHEDULE);
+        scheduleJobRequest.setJobName(ScsbCommonConstants.PURGE_EXCEPTION_REQUESTS);
+        scheduleJobRequest.setScheduleType(ScsbConstants.SCHEDULE);
         ScheduleJobResponse scheduleJobResponse = new ScheduleJobResponse();
         scheduleJobResponse.setMessage("Scheduled");
         ResponseEntity<ScheduleJobResponse> responseEntity = new ResponseEntity<>(scheduleJobResponse, HttpStatus.OK);

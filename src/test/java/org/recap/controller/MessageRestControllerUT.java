@@ -1,7 +1,7 @@
 package org.recap.controller;
 
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
@@ -10,7 +10,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MessageRestControllerUT extends BaseTestCase {
 
@@ -23,7 +23,7 @@ public class MessageRestControllerUT extends BaseTestCase {
     @Test
     public void getValue() throws Exception {
         JSONObject json=new JSONObject();
-        Mockito.when(propertyUtil.getPropertyByInstitution(Mockito.anyString())).thenReturn(json);
+        Mockito.when(propertyUtil.getPropertyByInstitution(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(json);
         ReflectionTestUtils.setField(MessageRestController,"propertyUtil",propertyUtil);
         Mockito.when(MessageRestController.getValue("PUL")).thenCallRealMethod();
         Map<String, Object> response= MessageRestController.getValue("PUL");

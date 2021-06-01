@@ -1,12 +1,12 @@
 package org.recap.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
 
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by hemalathas on 24/3/17.
@@ -18,7 +18,7 @@ public class PatronInformationResponseUT extends BaseTestCase {
         PatronInformationResponse patronInformationResponse = new PatronInformationResponse();
         patronInformationResponse.setPatronIdentifier("455835644");
         patronInformationResponse.setPatronName("john");
-        patronInformationResponse.setEmail("hemalatha.s@htcindia.com");
+        patronInformationResponse.setEmail("test@email.com");
         patronInformationResponse.setBirthDate(new Date().toString());
         patronInformationResponse.setPhone("9874563210");
         patronInformationResponse.setPermanentLocation("PB");

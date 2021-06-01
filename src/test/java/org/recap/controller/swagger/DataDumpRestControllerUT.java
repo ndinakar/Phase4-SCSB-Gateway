@@ -1,14 +1,15 @@
 package org.recap.controller.swagger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
-import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
+import org.recap.PropertyKeyConstants;
+import org.recap.ScsbCommonConstants;
+import org.recap.ScsbConstants;
 import org.recap.spring.SwaggerAPIProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -23,8 +24,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by hemalathas on 17/7/17.
@@ -37,10 +38,10 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     @Mock
     RestTemplate restTemplate;
 
-    @Value("${scsb.etl.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_ETL_URL + "}")
     private String scsbEtlUrl;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(dataDumpRestController,"scsbEtlUrl",scsbEtlUrl);
@@ -54,14 +55,14 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     String collectionGroupIds = "1";
     String transmissionType = "1";
     String imsDepositoryCodes = "RECAP";
-    String emailToAddress = "hemalatha.s@htcindia.com";
+    String emailToAddress = "test@email.com";
     String toDate = new Date().toString();
     String userName = "UT";
 
     @Test
     public void testDataDumpRestController(){
         Map<String, String> inputMap = getInputMap();
-        ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(ScsbConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
         HttpEntity requestEntity = getSwaggerHttpEntity();
         Mockito.when(restTemplate.exchange(scsbEtlUrl + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap)).thenReturn(responseEntity);
         ResponseEntity responseEntity1 = dataDumpRestController.exportDataDump(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat,date,collectionGroupIds,transmissionType,emailToAddress,userName);
@@ -79,7 +80,7 @@ public class DataDumpRestControllerUT extends BaseTestCase{
     public void testexportDataDumpWithToDate(){
         Map<String,String> inputMap = getInputMap();
         inputMap.put("toDate",toDate);
-        ResponseEntity responseEntity = new ResponseEntity(RecapConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
+        ResponseEntity responseEntity = new ResponseEntity(ScsbConstants.DATADUMP_PROCESS_STARTED, HttpStatus.OK);
         HttpEntity requestEntity = getSwaggerHttpEntity();
         Mockito.when(restTemplate.exchange(scsbEtlUrl +"dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap)).thenReturn(responseEntity);
         ResponseEntity responseEntity1 = dataDumpRestController.exportDataDumpWithToDate(institutionCodes,requestingInstitutionCode,imsDepositoryCodes,fetchType,outputFormat, date, toDate,collectionGroupIds,transmissionType,emailToAddress,userName);
@@ -113,13 +114,13 @@ public class DataDumpRestControllerUT extends BaseTestCase{
 
     public HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(ScsbCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 
     private HttpEntity getHttpEntity() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("api_key","recap");
+        headers.set("api_key","scsb");
         return new HttpEntity(headers);
     }
 
@@ -129,7 +130,7 @@ public class DataDumpRestControllerUT extends BaseTestCase{
 
     public static HttpHeaders getSwaggerHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(RecapCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
+        headers.set(ScsbCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
         return headers;
     }
 

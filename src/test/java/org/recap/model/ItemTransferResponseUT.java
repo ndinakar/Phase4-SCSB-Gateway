@@ -1,15 +1,15 @@
 package org.recap.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
-import org.recap.RecapCommonConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.model.transfer.ItemDestination;
 import org.recap.model.transfer.ItemSource;
 import org.recap.model.transfer.ItemTransferRequest;
 import org.recap.model.transfer.ItemTransferResponse;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by Anitha on 13/6/20.
@@ -19,8 +19,8 @@ public class ItemTransferResponseUT extends BaseTestCase {
 
     @Test
     public void itemTransferResponse(){
-        ItemTransferResponse itemTransferResponse = new ItemTransferResponse(RecapCommonConstants.SUCCESS,getItemTransferRequest());
-        assertEquals(RecapCommonConstants.SUCCESS,itemTransferResponse.getMessage());
+        ItemTransferResponse itemTransferResponse = new ItemTransferResponse(ScsbCommonConstants.SUCCESS,getItemTransferRequest());
+        assertEquals(ScsbCommonConstants.SUCCESS,itemTransferResponse.getMessage());
         assertNotNull(new ItemTransferResponse());
         assertNotNull(itemTransferResponse.getItemTransferRequest());
     }

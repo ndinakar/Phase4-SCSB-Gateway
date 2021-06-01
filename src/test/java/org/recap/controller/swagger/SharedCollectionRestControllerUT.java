@@ -1,12 +1,13 @@
 package org.recap.controller.swagger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
+import org.recap.PropertyKeyConstants;
+import org.recap.ScsbCommonConstants;
+import org.recap.ScsbConstants;
 import org.recap.controller.BaseControllerUT;
 import org.recap.model.accession.AccessionModelRequest;
 import org.recap.model.accession.AccessionRequest;
@@ -17,7 +18,6 @@ import org.recap.model.deaccession.DeAccessionRequest;
 import org.recap.model.transfer.Destination;
 import org.recap.model.transfer.HoldingTransferResponse;
 import org.recap.model.transfer.HoldingsTransferRequest;
-import org.recap.model.transfer.ItemSource;
 import org.recap.model.transfer.Source;
 import org.recap.model.transfer.TransferRequest;
 import org.recap.model.transfer.TransferResponse;
@@ -41,30 +41,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by chenchulakshmig on 14/10/16.
  */
 public class SharedCollectionRestControllerUT extends BaseControllerUT {
 
-    @Value("${scsb.solr.doc.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_SOLR_DOC_URL + "}")
     String scsbSolrClientUrl;
 
-    @Value("${scsb.circ.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_CIRC_URL + "}")
     String scsbCircUrl;
 
-    @Value("${scsb.core.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_CORE_URL + "}")
     private String scsbCoreUrl;
 
 
     @Mock
     private RestTemplate mockRestTemplate;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(sharedCollectionRestController,"scsbCoreUrl",scsbCoreUrl);
@@ -232,7 +231,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         Mockito.when(sharedCollectionRestController.itemAvailabilityStatus(itemAvailabityStatus)).thenCallRealMethod();
         ResponseEntity responseEntity1 = sharedCollectionRestController.itemAvailabilityStatus(itemAvailabityStatus);
         assertNotNull(responseEntity1);
-        assertEquals(RecapCommonConstants.ITEM_BARCDE_DOESNOT_EXIST,responseEntity1.getBody());
+        assertEquals(ScsbCommonConstants.ITEM_BARCDE_DOESNOT_EXIST,responseEntity1.getBody());
         assertNotNull(itemAvailabityStatus.getBarcodes());
     }
 
@@ -241,7 +240,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         ItemAvailabityStatusRequest itemAvailabityStatus = new ItemAvailabityStatusRequest();
         Mockito.when(sharedCollectionRestController.itemAvailabilityStatus(itemAvailabityStatus)).thenCallRealMethod();
         ResponseEntity responseEntity1 = sharedCollectionRestController.itemAvailabilityStatus(itemAvailabityStatus);
-        assertEquals(RecapCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE,responseEntity1.getBody());
+        assertEquals(ScsbCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE,responseEntity1.getBody());
     }
 
     @Test
@@ -266,7 +265,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         BibItemAvailabityStatusRequest bibItemAvailabityStatusRequest = new BibItemAvailabityStatusRequest();
         Mockito.when(sharedCollectionRestController.bibAvailabilityStatus(bibItemAvailabityStatusRequest)).thenCallRealMethod();
         ResponseEntity responseEntity = sharedCollectionRestController.bibAvailabilityStatus(bibItemAvailabityStatusRequest);
-        assertEquals(RecapCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE,responseEntity.getBody());
+        assertEquals(ScsbCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE,responseEntity.getBody());
     }
 
     @Test
@@ -280,7 +279,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         deAccessionRequest.setDeAccessionItems(Arrays.asList(deAccessionItem));
         deAccessionRequest.setUsername("Test");
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put(itemBarcode, RecapCommonConstants.SUCCESS);
+        resultMap.put(itemBarcode, ScsbCommonConstants.SUCCESS);
         Mockito.when(mockRestTemplate.postForObject(getScsbCircUrl() + "/sharedCollection/deAccession",deAccessionRequest, Map.class)).thenReturn(resultMap);
         Mockito.when(sharedCollectionRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(sharedCollectionRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
@@ -291,7 +290,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         assertNotNull(responseMap);
         String status = responseMap.get(itemBarcode);
         assertNotNull(status);
-        assertEquals(RecapCommonConstants.SUCCESS,status);
+        assertEquals(ScsbCommonConstants.SUCCESS,status);
         assertNotNull(deAccessionItem.getItemBarcode());
         assertNotNull(deAccessionItem.getDeliveryLocation());
         assertNotNull(deAccessionRequest.getDeAccessionItems());
@@ -303,7 +302,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
         Mockito.when(sharedCollectionRestController.deAccession(deAccessionRequest)).thenCallRealMethod();
         ResponseEntity responseEntity1 = sharedCollectionRestController.deAccession(deAccessionRequest);
-        assertEquals(RecapConstants.SCSB_CIRC_SERVICE_UNAVAILABLE,responseEntity1.getBody());
+        assertEquals(ScsbConstants.SCSB_CIRC_SERVICE_UNAVAILABLE,responseEntity1.getBody());
     }
 
     @Test
@@ -315,13 +314,13 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         accessionRequestList.add(accessionRequest);
         AccessionModelRequest accessionModelRequest=new AccessionModelRequest();
         accessionModelRequest.setAccessionRequests(accessionRequestList);
-        Mockito.when(mockRestTemplate.postForObject(getScsbCoreUrl() + "sharedCollection/accessionBatch",accessionModelRequest, String.class)).thenReturn(RecapCommonConstants.SUCCESS);
+        Mockito.when(mockRestTemplate.postForObject(getScsbCoreUrl() + "sharedCollection/accessionBatch",accessionModelRequest, String.class)).thenReturn(ScsbCommonConstants.SUCCESS);
         Mockito.when(sharedCollectionRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(sharedCollectionRestController.getScsbCoreUrl()).thenReturn(scsbCoreUrl);
         Mockito.when(sharedCollectionRestController.accessionBatch(accessionModelRequest)).thenCallRealMethod();
         ResponseEntity responseEntity = sharedCollectionRestController.accessionBatch(accessionModelRequest);
         assertNotNull(responseEntity);
-        assertEquals(RecapCommonConstants.SUCCESS,responseEntity.getBody());
+        assertEquals(ScsbCommonConstants.SUCCESS,responseEntity.getBody());
         assertNotNull(accessionRequest.getCustomerCode());
         assertNotNull(accessionRequest.getItemBarcode());
     }
@@ -333,7 +332,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         accessionModelRequest.setAccessionRequests(accessionRequestList);
         Mockito.when(sharedCollectionRestController.accessionBatch(accessionModelRequest)).thenCallRealMethod();
         ResponseEntity responseEntity = sharedCollectionRestController.accessionBatch(accessionModelRequest);
-        assertEquals(RecapCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE,responseEntity.getBody());
+        assertEquals(ScsbCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE,responseEntity.getBody());
     }
 
     @Test
@@ -371,7 +370,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         List<LinkedHashMap> linkedHashMapList = new ArrayList<>();
         LinkedHashMap linkedHashMap = new LinkedHashMap();
         linkedHashMap.put("itemBarcode","32101095533293");
-        linkedHashMap.put("message",RecapConstants.ONGOING_ACCESSION_LIMIT_EXCEED_MESSAGE);
+        linkedHashMap.put("message", ScsbConstants.ONGOING_ACCESSION_LIMIT_EXCEED_MESSAGE);
         linkedHashMapList.add(linkedHashMap);
         AccessionModelRequest accessionModelRequest=new AccessionModelRequest();
         accessionModelRequest.setAccessionRequests(accessionRequestList);
@@ -391,7 +390,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         List<AccessionRequest> accessionRequestList = new ArrayList<>();
         AccessionModelRequest accessionModelRequest=new AccessionModelRequest();
         accessionModelRequest.setAccessionRequests(accessionRequestList);
-        Mockito.when(mockRestTemplate.postForObject(getScsbCoreUrl() + "sharedCollection/accession",accessionModelRequest, List.class)).thenThrow(new ResourceAccessException(RecapCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE));
+        Mockito.when(mockRestTemplate.postForObject(getScsbCoreUrl() + "sharedCollection/accession",accessionModelRequest, List.class)).thenThrow(new ResourceAccessException(ScsbCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE));
         Mockito.when(sharedCollectionRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(sharedCollectionRestController.getScsbCoreUrl()).thenReturn(scsbCoreUrl);
         Mockito.when(sharedCollectionRestController.accession(accessionModelRequest)).thenCallRealMethod();
@@ -436,7 +435,7 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         List<LinkedHashMap> linkedHashMapList = new ArrayList<>();
         LinkedHashMap linkedHashMap = new LinkedHashMap();
         linkedHashMap.put("itemBarcode","32101068878931");
-        linkedHashMap.put("message",RecapConstants.SUBMIT_COLLECTION_INTERNAL_ERROR);
+        linkedHashMap.put("message", ScsbConstants.SUBMIT_COLLECTION_INTERNAL_ERROR);
         linkedHashMapList.add(linkedHashMap);
         MultiValueMap<String,Object> requestParameter = new LinkedMultiValueMap();
 

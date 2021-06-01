@@ -1,13 +1,14 @@
 package org.recap.controller;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.RecapCommonConstants;
+import org.recap.PropertyKeyConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
 import org.recap.model.search.DeaccessionItemResultsRow;
@@ -21,16 +22,16 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created by rajeshbabuk on 13/1/17.
  */
 public class ReportsRestControllerUT extends BaseControllerUT {
 
-    @Value("${scsb.solr.doc.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_SOLR_DOC_URL + "}")
     String scsbSolrClientUrl;
 
     @Mock
@@ -42,7 +43,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
     @Mock
     private RestHeaderService restHeaderService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
@@ -71,7 +72,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         reportsRequest.setExport(true);
         DeaccessionItemResultsRow deaccessionItemResultsRow = getDeaccessionItemResultsRow();
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         reportsResponse.setDeaccessionItemResultsRows(Arrays.asList(deaccessionItemResultsRow));
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
@@ -114,7 +115,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         reportsRequest.setOwningInstitutions(Arrays.asList("CUL", "PUL", "NYPL"));
         reportsRequest.setCollectionGroupDesignations(Arrays.asList("Private", "Open", "Shared"));
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
                 ArgumentMatchers.anyString(),
@@ -138,7 +139,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         reportsRequest.setAccessionDeaccessionToDate("01/27/2017");
         reportsRequest.setDeaccessionOwningInstitution("PUL");
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
                 ArgumentMatchers.anyString(),
@@ -160,7 +161,7 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         ReportsRequest reportsRequest = new ReportsRequest();
         reportsRequest.setDeaccessionOwningInstitution("PUL");
         ReportsResponse reportsResponse = new ReportsResponse();
-        reportsResponse.setMessage(RecapCommonConstants.SUCCESS);
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
         ResponseEntity<ReportsResponse> responseEntity = new ResponseEntity<ReportsResponse>(reportsResponse, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
                 ArgumentMatchers.anyString(),

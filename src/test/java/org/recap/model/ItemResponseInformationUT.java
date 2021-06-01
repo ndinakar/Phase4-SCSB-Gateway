@@ -1,12 +1,12 @@
 package org.recap.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
 
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by hemalathas on 24/3/17.
@@ -25,7 +25,7 @@ public class ItemResponseInformationUT extends BaseTestCase{
         itemResponseInformation.setExpirationDate(new Date().toString());
         itemResponseInformation.setScreenMessage("test");
         itemResponseInformation.setSuccess(true);
-        itemResponseInformation.setEmailAddress("hemalatha.s@htcindia.com");
+        itemResponseInformation.setEmailAddress("test@email.com");
         itemResponseInformation.setTitleIdentifier("test");
 
         assertNotNull(itemResponseInformation.getPatronBarcode());

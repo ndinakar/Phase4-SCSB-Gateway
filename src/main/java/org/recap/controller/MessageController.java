@@ -15,7 +15,7 @@ class MessageRestController {
     PropertyUtil propertyUtil;
     @GetMapping("/{institutionCode}")
     public Map<String, Object> getValue(@PathVariable("institutionCode") String institutionCode) {
-    JSONObject json  = propertyUtil.getPropertyByInstitution(institutionCode);
+    JSONObject json  = propertyUtil.getPropertyByInstitution(institutionCode, false);
     return json.toMap();
 }
     @GetMapping("/test")

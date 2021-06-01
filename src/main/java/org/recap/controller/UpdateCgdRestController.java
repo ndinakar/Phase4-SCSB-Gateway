@@ -1,7 +1,7 @@
 package org.recap.controller;
 
-import org.recap.RecapCommonConstants;
-import org.recap.RecapConstants;
+import org.recap.ScsbCommonConstants;
+import org.recap.ScsbConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -38,19 +38,19 @@ public class UpdateCgdRestController extends AbstractController {
         try {
             HttpEntity requestEntity = new HttpEntity<>(getRestHeaderService().getHttpHeaders());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbSolrClientUrl() + RecapConstants.URL_UPDATE_CGD)
-                    .queryParam(RecapCommonConstants.CGD_UPDATE_ITEM_BARCODE, itemBarcode)
-                    .queryParam(RecapConstants.OWNING_INSTITUTION, owningInstitution)
-                    .queryParam(RecapCommonConstants.OLD_CGD, oldCollectionGroupDesignation)
-                    .queryParam(RecapCommonConstants.NEW_CGD, newCollectionGroupDesignation)
-                    .queryParam(RecapCommonConstants.CGD_CHANGE_NOTES, cgdChangeNotes)
-                    .queryParam(RecapCommonConstants.USER_NAME, userName);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbSolrClientUrl() + ScsbConstants.URL_UPDATE_CGD)
+                    .queryParam(ScsbCommonConstants.CGD_UPDATE_ITEM_BARCODE, itemBarcode)
+                    .queryParam(ScsbConstants.OWNING_INSTITUTION, owningInstitution)
+                    .queryParam(ScsbCommonConstants.OLD_CGD, oldCollectionGroupDesignation)
+                    .queryParam(ScsbCommonConstants.NEW_CGD, newCollectionGroupDesignation)
+                    .queryParam(ScsbCommonConstants.CGD_CHANGE_NOTES, cgdChangeNotes)
+                    .queryParam(ScsbCommonConstants.USER_NAME, userName);
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
             statusResponse = responseEntity.getBody();
         } catch (Exception e) {
-            logger.error(RecapCommonConstants.LOG_ERROR,e);
-            statusResponse = RecapCommonConstants.FAILURE + "-" + e.getMessage();
+            logger.error(ScsbCommonConstants.LOG_ERROR,e);
+            statusResponse = ScsbCommonConstants.FAILURE + "-" + e.getMessage();
         }
         return statusResponse;
     }

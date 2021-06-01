@@ -2,8 +2,7 @@ package org.recap.controller.swagger;
 
 
 
-import org.junit.Test;
-import org.junit.internal.runners.statements.Fail;
+import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
 import org.recap.config.SwaggerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.recap.util.MD5EncoderUtil;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -33,7 +32,7 @@ public class SwaggerInterceptorUT extends BaseTestCase {
 
     @Test
     public void testPreHandle() throws Exception {
-        httpServletRequest.setAttribute("api_key","recap");
+        httpServletRequest.setAttribute("api_key","scsb");
         boolean continueExport = swaggerInterceptor.preHandle(httpServletRequest,httpServletResponse,new Object());
         assertTrue(!continueExport);
     }

@@ -1,6 +1,7 @@
 package org.recap.controller;
 
-import org.recap.RecapCommonConstants;
+import org.recap.PropertyKeyConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.service.RestHeaderService;
 import org.recap.spring.SwaggerAPIProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,16 @@ import java.util.Date;
 @Component
 public class AbstractController {
 
-    @Value("${scsb.circ.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_CIRC_URL + "}")
     private String scsbCircUrl;
 
-    @Value("${scsb.solr.doc.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_SOLR_DOC_URL + "}")
     private String scsbSolrClient;
 
-    @Value("${scsb.etl.datadump.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_ETL_DATADUMP_URL + "}")
     private String scsbEtlUrl;
 
-    @Value("${scsb.core.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_CORE_URL + "}")
     private String scsbCoreUrl;
 
 
@@ -91,7 +92,7 @@ public class AbstractController {
 
     public HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(ScsbCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 
@@ -101,7 +102,7 @@ public class AbstractController {
 
     public static HttpHeaders getSwaggerHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(RecapCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
+        headers.set(ScsbCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
         return headers;
     }
 

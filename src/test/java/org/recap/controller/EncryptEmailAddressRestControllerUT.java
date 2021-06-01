@@ -1,12 +1,13 @@
 package org.recap.controller;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.recap.RecapCommonConstants;
+import org.recap.PropertyKeyConstants;
+import org.recap.ScsbCommonConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
 
@@ -28,10 +29,10 @@ public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
     @Mock
     private RestTemplate mockRestTemplate;
 
-    @Value("${scsb.circ.url}")
+    @Value("${" + PropertyKeyConstants.SCSB_CIRC_URL + "}")
     String scsbCircUrl;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(encryptEmailAddressRestController,"scsbCircUrl",scsbCircUrl);
@@ -39,7 +40,7 @@ public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
 
     @Test
     public void encryptEmailAddress() throws Exception {
-        ResponseEntity<String> exchange=new ResponseEntity<>(RecapCommonConstants.SUCCESS, HttpStatus.OK);
+        ResponseEntity<String> exchange=new ResponseEntity<>(ScsbCommonConstants.SUCCESS, HttpStatus.OK);
         Mockito.when(mockRestTemplate.exchange(scsbCircUrl + "/encryptEmailAddress/startEncryptEmailAddress", HttpMethod.GET, getHttpEntity(), String.class)).thenReturn(exchange);
         ResponseEntity responseEntity=encryptEmailAddressRestController.encryptEmailAddress();
         assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
@@ -56,7 +57,7 @@ public class EncryptEmailAddressRestControllerUT extends BaseControllerUT{
     }
     public HttpHeaders getHttpHeaders() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(RecapCommonConstants.RESPONSE_DATE, new Date().toString());
+        responseHeaders.add(ScsbCommonConstants.RESPONSE_DATE, new Date().toString());
         return responseHeaders;
     }
 }

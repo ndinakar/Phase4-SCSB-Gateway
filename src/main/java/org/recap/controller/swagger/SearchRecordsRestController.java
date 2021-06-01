@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.recap.RecapConstants;
+import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
 import org.recap.model.SearchRecordsResponse;
 import org.recap.model.SearchResultRow;
@@ -51,7 +51,7 @@ public class SearchRecordsRestController extends AbstractController {
         try {
             HttpEntity<SearchRecordsRequest> httpEntity = new HttpEntity<>(searchRecordsRequest, getRestHeaderService().getHttpHeaders());
 
-            ResponseEntity<SearchRecordsResponse> responseEntity = restTemplate.exchange(getScsbSolrClientUrl() + RecapConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, httpEntity, SearchRecordsResponse.class);
+            ResponseEntity<SearchRecordsResponse> responseEntity = restTemplate.exchange(getScsbSolrClientUrl() + ScsbConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, httpEntity, SearchRecordsResponse.class);
             searchRecordsResponse = responseEntity.getBody();
         } catch (Exception e) {
             logger.error("error--.",e);
@@ -93,7 +93,7 @@ public class SearchRecordsRestController extends AbstractController {
         List<SearchResultRow> searchResultRows = null;
         try {
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbSolrClientUrl() + RecapConstants.URL_SEARCH_BY_PARAM)
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbSolrClientUrl() + ScsbConstants.URL_SEARCH_BY_PARAM)
                     .queryParam("fieldValue", fieldValue)
                     .queryParam("fieldName", fieldName)
                     .queryParam("owningInstitutions", owningInstitutions)
