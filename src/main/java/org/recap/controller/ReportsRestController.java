@@ -4,7 +4,7 @@ import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
-import org.recap.model.submitCollection.SubmitCollectionReprot;
+import org.recap.model.submitCollection.SubmitCollectionReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -75,9 +75,9 @@ public class ReportsRestController extends AbstractController {
      * @return SubmitCollection Report
      */
     @PostMapping("/submitCollection")
-    public ResponseEntity<SubmitCollectionReprot> submitCollectionReprot(@RequestBody SubmitCollectionReprot submitCollectionReprot){
-        HttpEntity<SubmitCollectionReprot> httpEntity = new HttpEntity<>(submitCollectionReprot, getRestHeaderService().getHttpHeaders());
-        ResponseEntity<SubmitCollectionReprot> submitCollectionReprotResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_SUBMIT_COLLECTION_REPORT,HttpMethod.POST,httpEntity,SubmitCollectionReprot.class);
+    public ResponseEntity<SubmitCollectionReport> submitCollectionReprot(@RequestBody SubmitCollectionReport submitCollectionReprot){
+        HttpEntity<SubmitCollectionReport> httpEntity = new HttpEntity<>(submitCollectionReprot, getRestHeaderService().getHttpHeaders());
+        ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_SUBMIT_COLLECTION_REPORT,HttpMethod.POST,httpEntity,SubmitCollectionReport.class);
         return  new ResponseEntity<>(submitCollectionReprotResponseEntity.getBody(), HttpStatus.OK);
     }
 
