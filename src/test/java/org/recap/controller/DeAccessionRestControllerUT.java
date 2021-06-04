@@ -1,6 +1,5 @@
 package org.recap.controller;
 
-import io.swagger.models.HttpMethod;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -17,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created by Anithav on 13/06/20.
@@ -50,11 +48,10 @@ public class DeAccessionRestControllerUT extends BaseControllerUT{
         ReflectionTestUtils.setField(deAccessionRestController,"scsbCircUrl",scsbCircUrl);
         Map<String, String> responseEntity = new HashMap<>();
         Mockito.doReturn(responseEntity).when(mockRestTemplate).postForObject( ArgumentMatchers.anyString(),
-                ArgumentMatchers.any(HttpMethod.class),
                 ArgumentMatchers.any(),
                 ArgumentMatchers.<Class<Map>>any());
         Map<String, String> responseEntity1  = deAccessionRestController.deAccession("te");
-        assertNull(responseEntity1);
+        assertNotNull(responseEntity1);
     }
 
     @Test
