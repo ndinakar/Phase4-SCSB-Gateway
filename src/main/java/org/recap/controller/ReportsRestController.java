@@ -80,6 +80,17 @@ public class ReportsRestController extends AbstractController {
         ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_SUBMIT_COLLECTION_REPORT,HttpMethod.POST,httpEntity,SubmitCollectionReport.class);
         return  new ResponseEntity<>(submitCollectionReprotResponseEntity.getBody(), HttpStatus.OK);
     }
+    /**
+     *
+     * @param submitCollectionReprot
+     * @return SubmitCollection Report
+     */
+    @PostMapping("/accessionReports")
+    public ResponseEntity<SubmitCollectionReport> accessionReport(@RequestBody SubmitCollectionReport submitCollectionReprot){
+        HttpEntity<SubmitCollectionReport> httpEntity = new HttpEntity<>(submitCollectionReprot, getRestHeaderService().getHttpHeaders());
+        ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_ACCESSION_EXCEPTION_REPORT,HttpMethod.POST,httpEntity,SubmitCollectionReport.class);
+        return  new ResponseEntity<>(submitCollectionReprotResponseEntity.getBody(), HttpStatus.OK);
+    }
 
     private ReportsResponse responseData(ReportsRequest reportsRequest, String countsUrl) {
         ReportsResponse reportsResponse = new ReportsResponse();

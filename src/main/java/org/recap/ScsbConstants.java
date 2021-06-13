@@ -21,6 +21,7 @@ public final class ScsbConstants {
     public static final String URL_REQUEST_CANCEL = "cancelRequest/cancel";
     public static final String URL_REQUEST_REPLACE = "requestItem/replaceRequest";
     public static  final String URL_SUBMIT_COLLECTION_REPORT = "/reportGeneration/submitCollectionReport";
+    public static  final String URL_ACCESSION_EXCEPTION_REPORT = "/reportGeneration/accessionException";
     public static final String REST_URL_REQUEST_ITEM = "/requestItem";
     public static final String REST_URL_VALIDATE_REQUEST_ITEM = "/validateItemRequestInformations";
 
