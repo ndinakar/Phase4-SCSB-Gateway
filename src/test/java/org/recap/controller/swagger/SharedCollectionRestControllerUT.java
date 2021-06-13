@@ -2,6 +2,7 @@ package org.recap.controller.swagger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -442,7 +443,10 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         Mockito.when(sharedCollectionRestController.getRestTemplate()).thenReturn(mockRestTemplate);
         Mockito.when(sharedCollectionRestController.getScsbCoreUrl()).thenReturn(scsbCoreUrl);
         Mockito.when(sharedCollectionRestController.getLinkedMultiValueMap()).thenCallRealMethod();
-        Mockito.when(mockRestTemplate.postForObject(getScsbCoreUrl() + "sharedCollection/submitCollection",requestParameter, List.class)).thenReturn(linkedHashMapList);
+      //  Mockito.when(mockRestTemplate.postForObject(getScsbCoreUrl() + "sharedCollection/submitCollection",requestParameter, List.class)).thenReturn(linkedHashMapList);
+        Mockito.doReturn(linkedHashMapList).when(mockRestTemplate).postForObject( ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<List>>any());
         Mockito.when(sharedCollectionRestController.submitCollection(inputRecords,"PUL",false)).thenCallRealMethod();
         ResponseEntity responseEntity = sharedCollectionRestController.submitCollection(inputRecords,"PUL",false);
         assertNotNull(responseEntity);
@@ -518,7 +522,6 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
         Mockito.when(sharedCollectionRestController.getRestTemplate()).thenCallRealMethod();
         Mockito.when(sharedCollectionRestController.getScsbSolrClientUrl()).thenCallRealMethod();
         Mockito.when(sharedCollectionRestController.getScsbCircUrl()).thenCallRealMethod();
-        Mockito.when(sharedCollectionRestController.getLinkedMultiValueMap()).thenCallRealMethod();
         assertNotEquals(sharedCollectionRestController.getRestTemplate(),mockRestTemplate);
         assertNotEquals(sharedCollectionRestController.getScsbSolrClientUrl(),scsbSolrClientUrl);
         assertNotEquals(sharedCollectionRestController.getScsbCircUrl(),scsbCircUrl);
