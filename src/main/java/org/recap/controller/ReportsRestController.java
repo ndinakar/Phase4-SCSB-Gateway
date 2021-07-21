@@ -4,6 +4,7 @@ import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
+import org.recap.model.reports.TitleMatchedReport;
 import org.recap.model.submitCollection.SubmitCollectionReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +91,40 @@ public class ReportsRestController extends AbstractController {
         HttpEntity<SubmitCollectionReport> httpEntity = new HttpEntity<>(submitCollectionReprot, getRestHeaderService().getHttpHeaders());
         ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_ACCESSION_EXCEPTION_REPORT,HttpMethod.POST,httpEntity,SubmitCollectionReport.class);
         return  new ResponseEntity<>(submitCollectionReprotResponseEntity.getBody(), HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param titleMatchedReport
+     * @return List of TitleMatchedReports
+     */
+    @PostMapping("/titleMatchCount")
+    public ResponseEntity<TitleMatchedReport> titleMatchCount(@RequestBody TitleMatchedReport titleMatchedReport){
+        HttpEntity<TitleMatchedReport> httpEntity = new HttpEntity<>(titleMatchedReport, getRestHeaderService().getHttpHeaders());
+        ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_TITLE_MATCH_COUNT,HttpMethod.POST,httpEntity,TitleMatchedReport.class);
+        return  new ResponseEntity<>(titleMatchedReportResponseEntity.getBody(), HttpStatus.OK);
+    }
+    /**
+     *
+     * @param titleMatchedReport
+     * @return List of TitleMatchedReports
+     */
+    @PostMapping("/titleMatchReport")
+    public ResponseEntity<TitleMatchedReport> titleMatchReport(@RequestBody TitleMatchedReport titleMatchedReport){
+        HttpEntity<TitleMatchedReport> httpEntity = new HttpEntity<>(titleMatchedReport, getRestHeaderService().getHttpHeaders());
+        ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_TITLE_MATCH_REPORT,HttpMethod.POST,httpEntity,TitleMatchedReport.class);
+        return  new ResponseEntity<>(titleMatchedReportResponseEntity.getBody(), HttpStatus.OK);
+    }
+    /**
+     *
+     * @param titleMatchedReport
+     * @return List of TitleMatchedReports
+     */
+    @PostMapping("/titleMatchReportExport")
+    public ResponseEntity<TitleMatchedReport> titleMatchReportExport(@RequestBody TitleMatchedReport titleMatchedReport){
+        HttpEntity<TitleMatchedReport> httpEntity = new HttpEntity<>(titleMatchedReport, getRestHeaderService().getHttpHeaders());
+        ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_TITLE_MATCH_REPORT_EXPORT,HttpMethod.POST,httpEntity,TitleMatchedReport.class);
+        return  new ResponseEntity<>(titleMatchedReportResponseEntity.getBody(), HttpStatus.OK);
     }
 
     private ReportsResponse responseData(ReportsRequest reportsRequest, String countsUrl) {
