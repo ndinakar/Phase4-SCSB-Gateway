@@ -30,4 +30,4 @@ Download the Project , navigate inside project folder and build the project usin
 
 User the below command to Run the Docker
 
-**sudo docker run --name phase4-scsb-gateway -v /data:/recap-vol --label collect_logs_with_filebeat="true" --label decode_log_event_to_json_object="true"  -p 9093:9093 -e "ENV=-Dorg.apache.activemq.SERIALIZABLE_PACKAGES="*"  -Dspring.cloud.config.uri=http://phase4-scsb-config-server:8888 "  --network=scsb  -d phase4-scsb-gateway **
+**sudo docker run --name phase4-scsb-gateway -v /data:/recap-vol --label collect_logs_with_filebeat="true" --label decode_log_event_to_json_object="true"  -p 9093:9093 -e "ENV=-Dorg.apache.activemq.SERIALIZABLE_PACKAGES="*"  -Dspring.cloud.config.uri=http://phase4-scsb-config-server:8888 "  --network=scsb  -d phase4-scsb-gateway**
