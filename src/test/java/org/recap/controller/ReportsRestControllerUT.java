@@ -12,6 +12,7 @@ import org.recap.ScsbCommonConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.model.submitCollection.SubmitCollectionReport;
 import org.recap.service.RestHeaderService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -42,6 +43,9 @@ public class ReportsRestControllerUT extends BaseControllerUT {
 
     @Mock
     private RestHeaderService restHeaderService;
+
+    @Mock
+    SubmitCollectionReport submitCollectionReprot;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -167,7 +171,8 @@ public class ReportsRestControllerUT extends BaseControllerUT {
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.any(HttpMethod.class),
                 ArgumentMatchers.any(),
-                ArgumentMatchers.<Class<ReportsResponse>>any()); ReportsResponse reportsResponse1 = reportsRestController.incompleteRecords(reportsRequest);
+                ArgumentMatchers.<Class<ReportsResponse>>any());
+        ReportsResponse reportsResponse1 = reportsRestController.incompleteRecords(reportsRequest);
         assertNotNull(reportsResponse1);
     }
 
@@ -176,5 +181,29 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         ReportsRequest reportsRequest = new ReportsRequest();
         ReportsResponse reportsResponse1 = reportsRestController.incompleteRecords(reportsRequest);
         assertNull(reportsResponse1.getMessage());
+    }
+
+    @Test
+    public void submitCollectionReprot() {
+        ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity=new ResponseEntity<SubmitCollectionReport>(submitCollectionReprot,HttpStatus.OK);
+        Mockito.doReturn(submitCollectionReprotResponseEntity).when(mockRestTemplate).exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(HttpMethod.class),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<ReportsResponse>>any());
+        ResponseEntity responseEntity1 = reportsRestController.submitCollectionReprot(submitCollectionReprot);
+        assertNotNull(responseEntity1);
+    }
+
+    @Test
+    public void accessionReport() {
+        ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity=new ResponseEntity<SubmitCollectionReport>(submitCollectionReprot,HttpStatus.OK);
+        Mockito.doReturn(submitCollectionReprotResponseEntity).when(mockRestTemplate).exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(HttpMethod.class),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<ReportsResponse>>any());
+        ResponseEntity responseEntity1 = reportsRestController.accessionReport(submitCollectionReprot);
+        assertNotNull(responseEntity1);
     }
 }
