@@ -32,4 +32,5 @@ public class SearchResultRow extends AbstractSearchResultRow {
     private String deliveryLocation;
     private String requestType;
     private String requestNotes;
+    private String matchingIdentifier;
 }
