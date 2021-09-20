@@ -25,6 +25,7 @@ public final class ScsbConstants {
     public static  final String URL_TITLE_MATCH_COUNT = "/reportGeneration/titleMatchCount";
     public static  final String URL_TITLE_MATCH_REPORT = "/reportGeneration/titleMatchReport";
     public static  final String URL_TITLE_MATCH_REPORT_EXPORT = "/reportGeneration/titleMatchReportExport";
+    public static  final String URL_TITLE_MATCH_REPORT_EXPORT_S3 = "/reportGeneration/title-match-report-export-s3";
     public static final String REST_URL_REQUEST_ITEM = "/requestItem";
     public static final String REST_URL_VALIDATE_REQUEST_ITEM = "/validateItemRequestInformations";
 

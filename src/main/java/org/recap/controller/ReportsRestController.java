@@ -127,6 +127,18 @@ public class ReportsRestController extends AbstractController {
         return  new ResponseEntity<>(titleMatchedReportResponseEntity.getBody(), HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param titleMatchedReport
+     * @return List of TitleMatchedReports
+     */
+    @PostMapping("/title-match-report-export-s3")
+    public ResponseEntity<TitleMatchedReport> titleMatchReportExportS3(@RequestBody TitleMatchedReport titleMatchedReport){
+        HttpEntity<TitleMatchedReport> httpEntity = new HttpEntity<>(titleMatchedReport, getRestHeaderService().getHttpHeaders());
+        ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity = restTemplate.exchange(getScsbSolrClientUrl()+ScsbConstants.URL_TITLE_MATCH_REPORT_EXPORT_S3,HttpMethod.POST,httpEntity,TitleMatchedReport.class);
+        return  new ResponseEntity<>(titleMatchedReportResponseEntity.getBody(), HttpStatus.OK);
+    }
+
     private ReportsResponse responseData(ReportsRequest reportsRequest, String countsUrl) {
         ReportsResponse reportsResponse = new ReportsResponse();
         try {
