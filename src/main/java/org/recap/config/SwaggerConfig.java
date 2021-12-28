@@ -20,6 +20,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.UiConfiguration;
+import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class SwaggerConfig extends SwaggerConfigBase {
     public UiConfiguration uiConfig() {
         String[] list = {"get", "post", "put", "delete"};
         String validatorUrl = null;
-        return new UiConfiguration(validatorUrl, list);
+        return UiConfigurationBuilder.builder().validatorUrl(validatorUrl).supportedSubmitMethods(list).build();
     }
 
     /**
