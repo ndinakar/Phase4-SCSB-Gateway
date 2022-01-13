@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.ProducerTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.ScsbCommonConstants;
@@ -36,7 +37,6 @@ import org.recap.model.PatronInformationRequest;
 import org.recap.model.PatronInformationResponse;
 import org.recap.model.ReplaceRequest;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -62,12 +62,13 @@ import java.util.Map;
 /**
  * Created by hemalathas on 1/11/16.
  */
+@Slf4j
 @RestController
 @RequestMapping("/requestItem")
 @Api(value = "requestItem")
 public class RequestItemRestController extends AbstractController  {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestItemRestController.class);
+
 
     @Autowired
     private ProducerTemplate producer;
@@ -115,7 +116,7 @@ public class RequestItemRestController extends AbstractController  {
      * @return the logger
      */
     public Logger getLogger() {
-        return logger;
+        return log;
     }
 
     /**
@@ -136,13 +137,13 @@ public class RequestItemRestController extends AbstractController  {
         ObjectMapper objectMapper;
         ResponseEntity responseEntity = null;
         try {
-            logger.info("Item Request Information : {}",itemRequestInfo);
+            log.info("Item Request Information : {}",itemRequestInfo);
             itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
             statusCode = responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
         } catch (HttpClientErrorException httpEx) {
-            logger.error("error-->", httpEx);
+            log.error("error-->", httpEx);
             statusCode = httpEx.getStatusCode();
             screenMessage = httpEx.getResponseBodyAsString();
         }
@@ -172,9 +173,9 @@ public class RequestItemRestController extends AbstractController  {
             itemResponseInformation.setPatronBarcode(itemRequestInfo.getPatronBarcode());
             itemResponseInformation.setRequestType(itemRequestInfo.getRequestType());
             itemResponseInformation.setRequestingInstitution(itemRequestInfo.getRequestingInstitution());
-            logger.info("Message In Queue");
+            log.info("Message In Queue");
         } catch (Exception e) {
-            logger.error(ScsbCommonConstants.REQUEST_EXCEPTION, e);
+            log.error(ScsbCommonConstants.REQUEST_EXCEPTION, e);
         }
         return itemResponseInformation;
     }
@@ -196,13 +197,13 @@ public class RequestItemRestController extends AbstractController  {
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/validateItemRequestInformations", itemRequestInfo, String.class);
             response = (String) responseEntity.getBody();
         } catch (HttpClientErrorException httpEx) {
-            logger.error("error-->", httpEx);
+            log.error("error-->", httpEx);
             HttpStatus statusCode = httpEx.getStatusCode();
             String responseBodyAsString = httpEx.getResponseBodyAsString();
             return new ResponseEntity<>(responseBodyAsString, getHttpHeaders(), statusCode);
         } catch (Exception ex) {
-            logger.error("scsbCircUrl", ex);
-            logger.debug("scsbCircUrl : ".concat(getScsbCircUrl()));
+            log.error("scsbCircUrl", ex);
+            log.debug("scsbCircUrl : ".concat(getScsbCircUrl()));
             responseEntity = new ResponseEntity<>("Scsb circ Service is Unavailable.", getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
             return responseEntity;
         }
@@ -234,11 +235,11 @@ public class RequestItemRestController extends AbstractController  {
             ObjectMapper om = getObjectMapper();
             itemCheckoutResponse = om.readValue(response, ItemCheckoutResponse.class);
         } catch (RestClientException ex) {
-            logger.error(ScsbCommonConstants.REQUEST_EXCEPTION_REST, ex);
+            log.error(ScsbCommonConstants.REQUEST_EXCEPTION_REST, ex);
             itemCheckoutResponse = new ItemCheckoutResponse();
             itemCheckoutResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            logger.error(ScsbCommonConstants.REQUEST_EXCEPTION, ex);
+            log.error(ScsbCommonConstants.REQUEST_EXCEPTION, ex);
             itemCheckoutResponse = new ItemCheckoutResponse();
             itemCheckoutResponse.setScreenMessage(ex.getMessage());
         }
@@ -306,12 +307,12 @@ public class RequestItemRestController extends AbstractController  {
             ObjectMapper om = getObjectMapper();
             itemHoldResponse = om.readValue(response, ItemHoldResponse.class);
         } catch (RestClientException ex) {
-            logger.error(ScsbCommonConstants.REQUEST_EXCEPTION_REST, ex);
-            logger.error(String.format(ScsbCommonConstants.REQUEST_EXCEPTION_REST +"%s", ex.getMessage()));
+            log.error(ScsbCommonConstants.REQUEST_EXCEPTION_REST, ex);
+            log.error(String.format(ScsbCommonConstants.REQUEST_EXCEPTION_REST +"%s", ex.getMessage()));
             itemHoldResponse.setScreenMessage(ex.getMessage());
         } catch (Exception ex) {
-            logger.error(ScsbCommonConstants.REQUEST_EXCEPTION, ex);
-            logger.error(String.format(ScsbCommonConstants.REQUEST_EXCEPTION +"%s", ex.getMessage()));
+            log.error(ScsbCommonConstants.REQUEST_EXCEPTION, ex);
+            log.error(String.format(ScsbCommonConstants.REQUEST_EXCEPTION +"%s", ex.getMessage()));
             itemHoldResponse.setScreenMessage(ex.getMessage());
         }
         return itemHoldResponse;
@@ -508,14 +509,14 @@ public class RequestItemRestController extends AbstractController  {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @ResponseBody
     public ItemRefileResponse refileItem(@ApiParam(value = "Parameters to refile an Item", required = true, name = "itemBarcode") @RequestBody ItemRefileRequest itemRefileRequest) {
-        logger.info("Refile Request Received");
+        log.info("Refile Request Received");
         ItemRefileResponse itemRefileResponse;
         HttpEntity<ItemRefileResponse> responseEntity;
         HttpEntity request = new HttpEntity<>(itemRefileRequest);
-        logger.info("Refile request received for the barcodes : {} where request id's are : {}",itemRefileRequest.getItemBarcodes(),itemRefileRequest.getRequestIds());
+        log.info("Refile request received for the barcodes : {} where request id's are : {}",itemRefileRequest.getItemBarcodes(),itemRefileRequest.getRequestIds());
         responseEntity = restTemplate.exchange(getScsbCircUrl() + ScsbConstants.URL_REQUEST_RE_FILE, HttpMethod.POST, request, ItemRefileResponse.class);
         itemRefileResponse = responseEntity.getBody();
-        logger.info("Item Refile Response : {}",itemRefileResponse.getScreenMessage());
+        log.info("Item Refile Response : {}",itemRefileResponse.getScreenMessage());
         return itemRefileResponse;
     }
 
@@ -612,7 +613,7 @@ public class RequestItemRestController extends AbstractController  {
             Map<String, String> resultMap = restTemplate.postForObject(getScsbCircUrl() + ScsbConstants.URL_REQUEST_REPLACE, replaceRequest, Map.class);
             return new ResponseEntity<>(resultMap, getHttpHeaders(), HttpStatus.OK);
         } catch (Exception ex) {
-            logger.error(ScsbCommonConstants.LOG_ERROR, ex);
+            log.error(ScsbCommonConstants.LOG_ERROR, ex);
             return new ResponseEntity<>(ScsbConstants.SCSB_CIRC_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
     }

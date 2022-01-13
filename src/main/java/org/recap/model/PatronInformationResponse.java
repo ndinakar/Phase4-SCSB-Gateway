@@ -1,15 +1,14 @@
 package org.recap.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 
 import java.util.List;
 
 /**
  * Created by sudhishk on 26/12/16.
  */
-@Getter
-@Setter
+@Data
 public class PatronInformationResponse extends AbstractResponseItem {
     private String patronIdentifier = "";
     private String patronName = "";

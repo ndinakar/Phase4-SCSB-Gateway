@@ -1,8 +1,7 @@
 package org.recap.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbCommonConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +14,12 @@ import java.util.Map;
 /**
  * Created by akulak on 27/2/18 .
  */
+@Slf4j
 @RestController
 @RequestMapping("/deAccessionService")
 public class DeAccessionRestController extends AbstractController{
 
-    private static final Logger logger = LoggerFactory.getLogger(DeAccessionRestController.class);
+    ;
 
     /**
      * This method will call scsb-circ microservice to deaccession an item in SCSB.
@@ -34,7 +34,7 @@ public class DeAccessionRestController extends AbstractController{
             HttpEntity<String> requestEntity = new HttpEntity<>(deAccessionRequest, getRestHeaderService().getHttpHeaders());
             resultMap = restTemplate.postForObject(getScsbCircUrl() + "/sharedCollection/deAccession", requestEntity, Map.class);
         } catch (Exception ex) {
-            logger.error(ScsbCommonConstants.LOG_ERROR,ex);
+            log.error(ScsbCommonConstants.LOG_ERROR,ex);
         }
         return resultMap;
     }

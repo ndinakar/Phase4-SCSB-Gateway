@@ -1,13 +1,12 @@
 package org.recap.model.transfer;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 
 /**
  * Created by sheiks on 13/07/17.
  */
-@Getter
-@Setter
+@Data
 public class ItemTransferResponse {
     private String message;
     private ItemTransferRequest itemTransferRequest;
