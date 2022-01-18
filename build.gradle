@@ -32,8 +32,8 @@ jar {
 	archiveBaseName = 'phase4-scsb-gateway'
 	archiveVersion = '0.0.1-SNAPSHOT'
 }
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
+sourceCompatibility = 1.17
+targetCompatibility = 1.17
 
 repositories {
 	mavenCentral()
