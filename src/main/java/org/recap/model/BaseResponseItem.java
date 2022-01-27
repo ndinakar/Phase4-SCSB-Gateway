@@ -1,10 +1,8 @@
 package org.recap.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public abstract class BaseResponseItem extends AbstractResponseItem {
 
     private String transactionDate;

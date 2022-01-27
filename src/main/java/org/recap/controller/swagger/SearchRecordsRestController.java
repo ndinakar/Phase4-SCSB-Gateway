@@ -5,13 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
 import org.recap.model.SearchRecordsResponse;
 import org.recap.model.SearchResultRow;
 import org.recap.model.search.SearchRecordsRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +29,12 @@ import java.util.List;
 /**
  * Created by sudhish on 13/10/16.
  */
+@Slf4j
 @RestController
 @RequestMapping("/searchService")
 @Api(value="search")
 public class SearchRecordsRestController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SearchRecordsRestController.class);
 
     /**
      * This method will call scsb-solr-client microservice to search books based on the given search records request parameter and returns a list of search result row.
@@ -54,8 +53,8 @@ public class SearchRecordsRestController extends AbstractController {
             ResponseEntity<SearchRecordsResponse> responseEntity = restTemplate.exchange(getScsbSolrClientUrl() + ScsbConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, httpEntity, SearchRecordsResponse.class);
             searchRecordsResponse = responseEntity.getBody();
         } catch (Exception e) {
-            logger.error("error--.",e);
-            logger.error(e.getMessage());
+            log.error("error--.",e);
+            log.error(e.getMessage());
             searchRecordsResponse.setErrorMessage(e.getMessage());
         }
         return searchRecordsResponse;
@@ -107,7 +106,7 @@ public class SearchRecordsRestController extends AbstractController {
             searchResultRows = responseEntity.getBody();
         } catch (Exception e) {
             searchResultRows = new ArrayList<>();
-            logger.error("Exception",e);
+            log.error("Exception",e);
         }
         return searchResultRows;
     }

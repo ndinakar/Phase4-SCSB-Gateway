@@ -1,13 +1,12 @@
 package org.recap.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 
 /**
  * Created by rajeshbabuk on 15/11/17.
  */
-@Getter
-@Setter
+@Data
 public class ReplaceRequest {
     private String replaceRequestByType;
     private String requestStatus;

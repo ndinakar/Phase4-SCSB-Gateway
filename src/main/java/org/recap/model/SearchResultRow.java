@@ -2,8 +2,8 @@ package org.recap.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 import org.recap.model.search.AbstractSearchResultRow;
 
 import java.util.ArrayList;
@@ -12,8 +12,7 @@ import java.util.List;
 /**
  * Created by rajeshbabuk on 11/7/16.
  */
-@Getter
-@Setter
+@Data
 @ApiModel(value="SearchResultRow", description="Model for Displaying Search Result")
 public class SearchResultRow extends AbstractSearchResultRow {
 

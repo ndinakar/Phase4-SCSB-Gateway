@@ -1,8 +1,7 @@
 package org.recap.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbCommonConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by akulak on 21/9/17.
  */
+@Slf4j
 @RestController
 @RequestMapping("/encryptEmailAddressService")
 public class EncryptEmailAddressRestController extends AbstractController {
-
-    private static final Logger logger = LoggerFactory.getLogger(EncryptEmailAddressRestController.class);
 
     @GetMapping(value = "/encryptEmailAddress")
     public ResponseEntity<String> encryptEmailAddress() {
@@ -29,7 +27,7 @@ public class EncryptEmailAddressRestController extends AbstractController {
             ResponseEntity<String> exchange = restTemplate.exchange(getScsbCircUrl() + "/encryptEmailAddress/startEncryptEmailAddress", HttpMethod.GET, requestEntity, String.class);
             response  = exchange.getBody();
         } catch (Exception e) {
-            logger.error(ScsbCommonConstants.LOG_ERROR, e);
+            log.error(ScsbCommonConstants.LOG_ERROR, e);
             return new ResponseEntity<>(response, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         return new ResponseEntity<>(response, getHttpHeaders(), HttpStatus.OK);

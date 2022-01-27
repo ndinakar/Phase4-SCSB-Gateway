@@ -31,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class PurgeRestControllerUT extends BaseTestCase{
 
-    private static final Logger logger = LoggerFactory.getLogger(PurgeRestController.class);
 
     @InjectMocks
     PurgeRestController purgeRestController;

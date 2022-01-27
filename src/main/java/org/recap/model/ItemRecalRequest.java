@@ -1,13 +1,14 @@
 package org.recap.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 
 /**
  * Created by sudhishk on 15/12/16.
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper=false)
 public class ItemRecalRequest extends AbstractRequestItem {
     private String patronIdentifier;
     private String bibId;
