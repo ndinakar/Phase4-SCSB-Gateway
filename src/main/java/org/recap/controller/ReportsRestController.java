@@ -1,13 +1,12 @@
 package org.recap.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
 import org.recap.model.reports.TitleMatchedReport;
 import org.recap.model.submitCollection.SubmitCollectionReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -20,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by rajeshbabuk on 13/1/17.
  */
+@Slf4j
 @RestController
 @RequestMapping("/reportsService")
 public class ReportsRestController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReportsRestController.class);
 
     /**
      * This method will call scsb-solr-client microservice to get total counts of accessioned and deaccessioned items in scsb.
@@ -147,7 +146,7 @@ public class ReportsRestController extends AbstractController {
             ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(getScsbSolrClientUrl() + countsUrl, HttpMethod.POST, httpEntity, ReportsResponse.class);
             reportsResponse = responseEntity.getBody();
         } catch (Exception e) {
-            logger.error(ScsbCommonConstants.LOG_ERROR, e);
+            log.error(ScsbCommonConstants.LOG_ERROR, e);
             reportsResponse.setMessage(e.getMessage());
         }
         return reportsResponse;

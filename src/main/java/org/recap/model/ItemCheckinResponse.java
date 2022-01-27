@@ -1,13 +1,11 @@
 package org.recap.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * Created by sudhishk on 16/12/16.
  */
-@Getter
-@Setter
+@Data
 public class ItemCheckinResponse extends BaseResponseItem {
     private boolean alert;
     private boolean magneticMedia;

@@ -1,13 +1,11 @@
 package org.recap.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * Created by sudhishk on 15/12/16.
  */
-@Getter
-@Setter
+@Data
 public class ItemRefileResponse extends AbstractResponseItem {
     private String screenMessage;
     private boolean success;

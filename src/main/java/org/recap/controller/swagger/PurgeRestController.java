@@ -4,10 +4,10 @@ package org.recap.controller.swagger;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -21,11 +21,11 @@ import java.util.Map;
 /**
  * Created by hemalathas on 10/4/17.
  */
+@Slf4j
 @RestController
 @RequestMapping("/purgeRestController")
 public class PurgeRestController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PurgeRestController.class);
 
     /**
      * Gets logger.
@@ -33,7 +33,7 @@ public class PurgeRestController extends AbstractController {
      * @return the logger
      */
     public Logger getLogger() {
-        return logger;
+        return log;
     }
 
     /**

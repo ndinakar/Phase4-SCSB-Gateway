@@ -1,6 +1,7 @@
 package org.recap.controller.swagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.ProducerTemplate;
@@ -38,8 +39,6 @@ import org.recap.model.PatronInformationRequest;
 import org.recap.model.PatronInformationResponse;
 import org.recap.model.ReplaceRequest;
 import org.recap.service.RestHeaderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -66,8 +65,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Created by hemalathas on 4/11/16.
  */
+@Slf4j
 public class RequestItemRestControllerUT extends BaseTestCase{
-    private static final Logger logger = LoggerFactory.getLogger(RequestItemRestControllerUT.class);
+
 
     @InjectMocks
     private RequestItemRestController requestItemRestController;
@@ -118,7 +118,6 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         this.scsbCircUrl = scsbCircUrl;
     }
 
-    private static final Logger mocklogger = LoggerFactory.getLogger(RequestItemRestController.class);
 
     String institutionPUL=ScsbCommonConstants.PRINCETON;
     String institutionCUL=ScsbCommonConstants.COLUMBIA;
@@ -300,7 +299,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(mockRequestItemRestController.getItemRequestInformation()).thenReturn( getItemRequestInformation("45678915","123",institutionPUL));
         Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + "requestItem/checkinItem",  getItemRequestInformation("45678915","123",institutionPUL), String.class)).thenThrow(new RestClientException("Exception occured"));;
         Mockito.when(mockRequestItemRestController.checkinItemRequest(itemCheckInRequest)).thenCallRealMethod();
-        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(mocklogger);
+        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(log);
         AbstractResponseItem abstractResponseItem = mockRequestItemRestController.checkinItemRequest(itemCheckInRequest);
         assertNull(abstractResponseItem);
      }
@@ -346,7 +345,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
     public void testItemInformationPUL_RestClientException(){
         ItemInformationRequest itemInformationRequest = getItemInformationRequest(institutionPUL);
         HttpEntity request = new HttpEntity(itemInformationRequest);
-        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(mocklogger);
+        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(log);
         Mockito.when(mockRequestItemRestController.getItemInformationRequest()).thenReturn(itemInformationRequest);
         Mockito.when(mockRequestItemRestController.getScsbCircUrl()).thenReturn(scsbCircUrl);
         Mockito.when(mockRestTemplate.exchange(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_INFORMATION, org.springframework.http.HttpMethod.POST, request, ItemInformationResponse.class)).thenThrow(new RestClientException("Exception occured"));
@@ -624,7 +623,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(mockRequestItemRestController.getObjectMapper()).thenReturn(objectMapper);
         Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_CREATEBIB, itemRequestInfo, String.class)).thenReturn(responseEntity);
         Mockito.when(objectMapper.readValue(response, ItemCreateBibResponse.class)).thenThrow(new RestClientException("Exception occured"));
-        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(mocklogger);
+        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(log);
         Mockito.when(mockRequestItemRestController.createBibRequest(itemCreateBibRequest)).thenCallRealMethod();
         AbstractResponseItem abstractResponseItem = mockRequestItemRestController.createBibRequest(itemCreateBibRequest);
         assertNotNull(abstractResponseItem);
@@ -669,7 +668,7 @@ public class RequestItemRestControllerUT extends BaseTestCase{
         Mockito.when(mockRequestItemRestController.getItemRequestInformation()).thenReturn(itemRequestInfo);
         Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_RECALL, itemRequestInfo, String.class)).thenThrow(new RestClientException("Exception occured"));
         Mockito.when(mockRequestItemRestController.recallItem(itemRecalRequest)).thenCallRealMethod();
-        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(mocklogger);
+        Mockito.when(mockRequestItemRestController.getLogger()).thenReturn(log);
         AbstractResponseItem abstractResponseItem = mockRequestItemRestController.recallItem(itemRecalRequest);
         assertNotNull(abstractResponseItem);
         assertEquals("Exception occured",abstractResponseItem.getScreenMessage());

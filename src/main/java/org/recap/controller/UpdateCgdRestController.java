@@ -1,9 +1,8 @@
 package org.recap.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 /**
  * Created by rajeshbabuk on 3/1/17.
  */
+@Slf4j
 @RestController
 @RequestMapping("/updateCgdService")
 public class UpdateCgdRestController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UpdateCgdRestController.class);
+
 
     /**
      * This method will call scsb-solr-client microservice to update CGD for an item in scsb database and scsb solr.
@@ -49,7 +49,7 @@ public class UpdateCgdRestController extends AbstractController {
             ResponseEntity<String> responseEntity = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
             statusResponse = responseEntity.getBody();
         } catch (Exception e) {
-            logger.error(ScsbCommonConstants.LOG_ERROR,e);
+            log.error(ScsbCommonConstants.LOG_ERROR,e);
             statusResponse = ScsbCommonConstants.FAILURE + "-" + e.getMessage();
         }
         return statusResponse;
