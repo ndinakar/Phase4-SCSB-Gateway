@@ -45,10 +45,6 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-web-services')
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation('commons-beanutils:commons-beanutils:1.9.4')
-	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-
-	//implementation('io.springfox:springfox-swagger-ui:3.0.0')
-	//implementation('io.springfox:springfox-swagger2:3.0.0')
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 	implementation('org.codehaus.jettison:jettison:1.4.1')
 	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
@@ -84,6 +80,9 @@ dependencies {
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+
+	implementation('io.springfox:springfox-swagger-ui:2.9.2')
+    implementation('io.springfox:springfox-boot-starter:3.0.0')
 
 }
 
