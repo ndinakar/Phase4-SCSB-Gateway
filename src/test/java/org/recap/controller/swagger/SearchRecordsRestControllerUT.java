@@ -70,7 +70,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         this.scsbSolrClient = scsbSolrClient;
     }
 
-   /* @Test
+    //@Test
     public void testSearchRecordService(){
         ResponseEntity<SearchRecordsResponse> responseEntity = new ResponseEntity<SearchRecordsResponse>(getSearchRecordsResponse(),HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
@@ -86,7 +86,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         assertNotNull(recordsResponse.getTotalItemRecordsCount());
         assertNotNull(recordsResponse.getTotalPageCount());
         assertNotNull(recordsResponse.getTotalRecordsCount());
-    }*/
+    }
     public HttpHeaders getHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -94,12 +94,11 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         return headers;
     }
 
-  /*  @Ignore
-    @Test
+    //@Test
     public void testSearchRecordService_Exception(){
         SearchRecordsResponse recordsResponse = searchRecordsRestController.searchRecordsServiceGetParam(getSearchRecordsRequest());
         assertNull(recordsResponse.getErrorMessage());
-    }*/
+    }
 
     @Test
     public void testSearchRecordServiceGet(){

@@ -73,13 +73,12 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
         assertNotNull(scheduleJobResponse1);
     }
 
-  /*  @Ignore
-    @Test
+    //@Test
     public void testScheduleJob_Exception() {
         ScheduleJobRequest scheduleJobRequest = new ScheduleJobRequest();
         ScheduleJobResponse scheduleJobResponse1 = scheduleJobsController.scheduleJob(scheduleJobRequest);
         assertNull(scheduleJobResponse1.getMessage());
-    }*/
+    }
 
     @Test
     public void testcustomLoggerTest() {
