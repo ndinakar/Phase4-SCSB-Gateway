@@ -12,6 +12,7 @@ import org.recap.PropertyKeyConstants;
 import org.recap.ScsbCommonConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
+import org.recap.model.reports.TitleMatchedReport;
 import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.submitCollection.SubmitCollectionReport;
 import org.recap.service.RestHeaderService;
@@ -48,6 +49,11 @@ public class ReportsRestControllerUT extends BaseControllerUT {
 
     @Mock
     SubmitCollectionReport submitCollectionReprot;
+
+    @Mock
+   TitleMatchedReport  titleMatchedReport;
+
+
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -199,13 +205,61 @@ public class ReportsRestControllerUT extends BaseControllerUT {
 
     @Test
     public void accessionReport() {
-        ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity=new ResponseEntity<SubmitCollectionReport>(submitCollectionReprot,HttpStatus.OK);
+        ResponseEntity<SubmitCollectionReport> submitCollectionReprotResponseEntity = new ResponseEntity<SubmitCollectionReport>(submitCollectionReprot, HttpStatus.OK);
         Mockito.doReturn(submitCollectionReprotResponseEntity).when(mockRestTemplate).exchange(
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.any(HttpMethod.class),
                 ArgumentMatchers.any(),
                 ArgumentMatchers.<Class<ReportsResponse>>any());
         ResponseEntity responseEntity1 = reportsRestController.accessionReport(submitCollectionReprot);
+        assertNotNull(responseEntity1);
+    }
+
+        @Test
+        public void titleMatchCount() {
+            ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity =new ResponseEntity<TitleMatchedReport>(titleMatchedReport,HttpStatus.OK);
+            Mockito.doReturn(titleMatchedReportResponseEntity).when(mockRestTemplate).exchange(
+                    ArgumentMatchers.anyString(),
+                    ArgumentMatchers.any(HttpMethod.class),
+                    ArgumentMatchers.any(),
+                    ArgumentMatchers.<Class<ReportsResponse>>any());
+            ResponseEntity responseEntity = reportsRestController.titleMatchCount(titleMatchedReport);
+            assertNotNull(responseEntity);
+    }
+
+    @Test
+    public void titleMatchReport() {
+        ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity =new ResponseEntity<TitleMatchedReport>(titleMatchedReport,HttpStatus.OK);
+        Mockito.doReturn(titleMatchedReportResponseEntity).when(mockRestTemplate).exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(HttpMethod.class),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<ReportsResponse>>any());
+        ResponseEntity responseEntity1 = reportsRestController.titleMatchReport(titleMatchedReport);
+        assertNotNull(responseEntity1);
+    }
+
+    @Test
+    public void titleMatchReportExport() {
+        ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity =new ResponseEntity<TitleMatchedReport>(titleMatchedReport,HttpStatus.OK);
+        Mockito.doReturn(titleMatchedReportResponseEntity).when(mockRestTemplate).exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(HttpMethod.class),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<ReportsResponse>>any());
+        ResponseEntity responseEntity1 = reportsRestController.titleMatchReportExport(titleMatchedReport);
+        assertNotNull(responseEntity1);
+    }
+
+    @Test
+    public void titleMatchReportExportS3() {
+        ResponseEntity<TitleMatchedReport> titleMatchedReportResponseEntity =new ResponseEntity<TitleMatchedReport>(titleMatchedReport,HttpStatus.OK);
+        Mockito.doReturn(titleMatchedReportResponseEntity).when(mockRestTemplate).exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(HttpMethod.class),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<ReportsResponse>>any());
+        ResponseEntity responseEntity1 = reportsRestController.titleMatchReportExportS3(titleMatchedReport);
         assertNotNull(responseEntity1);
     }
 }
