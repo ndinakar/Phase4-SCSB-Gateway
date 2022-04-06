@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 @Order(Ordered.LOWEST_PRECEDENCE)
 @Slf4j
 public class BinderControllerAdvice {
-    private static final Logger logger = LoggerFactory.getLogger(BinderControllerAdvice.class);
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
-        logger.info("Init BInder is Called");
         String[] denylist = new String[]{"class.*", "Class.*", "*.class.*", "*.Class.*"};
         dataBinder.setDisallowedFields(denylist);
     }
