@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.5.8'
+		springBootVersion = '2.5.12'
 		set('springCloudVersion', "2020.0.5")
 	}
 	repositories {
@@ -14,7 +14,7 @@ buildscript {
 plugins {
 	id "org.sonarqube" version "3.3"
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'org.springframework.boot' version '2.5.8'
+	id 'org.springframework.boot' version '2.5.12'
 }
 
 apply plugin: 'java'
@@ -41,7 +41,7 @@ repositories {
 
 
 dependencies {
-	implementation fileTree(dir: '/data/commonjar', include: '*2.1.jar')
+	implementation fileTree(dir: '/data/commonjar', include: '*2.2.jar')
 	implementation('org.springframework.boot:spring-boot-starter-web-services')
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation('commons-beanutils:commons-beanutils:1.9.4')
