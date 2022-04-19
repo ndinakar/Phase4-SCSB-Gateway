@@ -1,27 +1,25 @@
 package org.recap.controller.swagger;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
 import org.recap.PropertyKeyConstants;
+import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
-import org.recap.service.RestHeaderService;
-import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.SearchRecordsResponse;
 import org.recap.model.SearchResultRow;
+import org.recap.model.search.SearchRecordsRequest;
+import org.recap.service.RestHeaderService;
 import org.recap.spring.SwaggerAPIProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
@@ -32,8 +30,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
 
 /**
  * Created by hemalathas on 3/2/17.
@@ -46,7 +42,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
     @Mock
     RestTemplate mockRestTemplate;
 
-    @Mock
+    @InjectMocks
     SearchRecordsRestController searchRecordsRestController;
 
     @Mock
@@ -70,36 +66,6 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         this.scsbSolrClient = scsbSolrClient;
     }
 
-    //@Test
-    public void testSearchRecordService(){
-        ResponseEntity<SearchRecordsResponse> responseEntity = new ResponseEntity<SearchRecordsResponse>(getSearchRecordsResponse(),HttpStatus.OK);
-        Mockito.doReturn(responseEntity).when(mockRestTemplate).exchange(
-                ArgumentMatchers.anyString(),
-                any(HttpMethod.class),
-                any(),
-                ArgumentMatchers.<Class<SearchRecordsResponse>>any());
-        SearchRecordsResponse recordsResponse = searchRecordsRestController.searchRecordsServiceGetParam(getSearchRecordsRequest());
-        assertNotNull(recordsResponse);
-        assertNotNull(recordsResponse.getErrorMessage());
-        assertNotNull(recordsResponse.getSearchResultRows());
-        assertNotNull(recordsResponse.getTotalBibRecordsCount());
-        assertNotNull(recordsResponse.getTotalItemRecordsCount());
-        assertNotNull(recordsResponse.getTotalPageCount());
-        assertNotNull(recordsResponse.getTotalRecordsCount());
-    }
-    public HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("api_key", SwaggerAPIProvider.getInstance().getSwaggerApiKey());
-        return headers;
-    }
-
-    //@Test
-    public void testSearchRecordService_Exception(){
-        SearchRecordsResponse recordsResponse = searchRecordsRestController.searchRecordsServiceGetParam(getSearchRecordsRequest());
-        assertNull(recordsResponse.getErrorMessage());
-    }
-
     @Test
     public void testSearchRecordServiceGet(){
         HttpEntity request = new HttpEntity(restHeaderService.getHttpHeaders());
@@ -120,7 +86,7 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
 
     }
 
-    @Test
+   @Test
     public void testSearchRecordServiceGet_Exception(){
         HttpEntity request = new HttpEntity(restHeaderService.getHttpHeaders());
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbSolrClient + ScsbConstants.URL_SEARCH_BY_PARAM)
@@ -163,5 +129,34 @@ public class SearchRecordsRestControllerUT extends BaseTestCase{
         searchRecordsResponse.setErrorMessage("message");
         searchRecordsResponse.setSearchResultRows(Arrays.asList(new SearchResultRow()));
         return searchRecordsResponse;
+    }
+
+    @Test
+    public void testSearchRecordwithParam(){
+
+        ResponseEntity<SearchRecordsResponse> responseEntity = new ResponseEntity(getSearchRecordsResponse(), HttpStatus.OK);
+        HttpEntity requestEntity = getSwaggerHttpEntity();
+        Mockito.when(mockRestTemplate.exchange(scsbSolrClient + ScsbConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, requestEntity, SearchRecordsResponse.class)).thenReturn(responseEntity);
+        SearchRecordsResponse searchRecordsResponse = searchRecordsRestController.searchRecordsServiceGetParam(getSearchRecordsRequest());
+        assertNotNull(searchRecordsResponse);
+
+    }
+
+    @Test
+    public void testSearchRecordwithParam_Exception(){
+        ResponseEntity responseEntity = new ResponseEntity(getSearchRecordsResponse(), HttpStatus.OK);
+        HttpEntity requestEntity = getSwaggerHttpEntity();
+        Mockito.when(mockRestTemplate.exchange(scsbSolrClient + ScsbConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, requestEntity, SearchRecordsResponse.class)).thenReturn(null);
+        SearchRecordsResponse searchRecordsResponse = searchRecordsRestController.searchRecordsServiceGetParam(getSearchRecordsRequest());
+        assertNotNull(searchRecordsResponse);
+
+    }
+    public HttpEntity getSwaggerHttpEntity(){
+        return new HttpEntity<>(getSearchRecordsRequest(),getSwaggerHeaders());
+    }
+    public static HttpHeaders getSwaggerHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(ScsbCommonConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
+        return headers;
     }
 }

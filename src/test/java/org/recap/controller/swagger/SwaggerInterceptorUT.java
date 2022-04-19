@@ -1,16 +1,15 @@
 package org.recap.controller.swagger;
 
 
-
 import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
 import org.recap.config.SwaggerInterceptor;
+import org.recap.util.MD5EncoderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.recap.util.MD5EncoderUtil;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

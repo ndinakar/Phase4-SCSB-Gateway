@@ -18,5 +18,8 @@ public class BaseTestCase {
 	@Test
 	public void contextLoads() {
 	}
-
+	@Test
+	public static void main() {
+		Main.main(new String[] {});
+	}
 }

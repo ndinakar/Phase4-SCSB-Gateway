@@ -1,7 +1,5 @@
 package org.recap.controller;
 
-import java.util.Date;
-
 import lombok.extern.slf4j.Slf4j;
 import org.recap.PropertyKeyConstants;
 import org.recap.ScsbCommonConstants;
@@ -11,11 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * Created by rajeshbabuk on 5/4/17.
@@ -66,12 +66,7 @@ public class ScheduleJobsController extends  AbstractController {
         ScheduleJobResponse scheduleJobResponse = new ScheduleJobResponse();
         scheduleJobResponse.setMessage("Scheduler job response");
         scheduleJobResponse.setNextRunTime(new Date());
-        try {
-        	log.info("Inside the customLoggerTest method - ScheduleJobResponse : {}", scheduleJobResponse);
-        } catch (Exception e) {
-            log.error(ScsbCommonConstants.LOG_ERROR,e);
-
-        }
+        log.info("Inside the customLoggerTest method - ScheduleJobResponse : {}", scheduleJobResponse);
         return scheduleJobResponse;
     }
 }
