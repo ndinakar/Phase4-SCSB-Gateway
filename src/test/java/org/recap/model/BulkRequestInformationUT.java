@@ -2,6 +2,7 @@ package org.recap.model;
 
 import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**

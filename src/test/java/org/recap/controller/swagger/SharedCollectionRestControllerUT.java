@@ -10,10 +10,10 @@ import org.recap.PropertyKeyConstants;
 import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.controller.BaseControllerUT;
-import org.recap.model.accession.AccessionModelRequest;
-import org.recap.model.accession.AccessionRequest;
 import org.recap.model.BibItemAvailabityStatusRequest;
 import org.recap.model.ItemAvailabityStatusRequest;
+import org.recap.model.accession.AccessionModelRequest;
+import org.recap.model.accession.AccessionRequest;
 import org.recap.model.deaccession.DeAccessionItem;
 import org.recap.model.deaccession.DeAccessionRequest;
 import org.recap.model.transfer.Destination;
@@ -528,5 +528,24 @@ public class SharedCollectionRestControllerUT extends BaseControllerUT {
 
     }
 
+    @Test
+    public void submitCollection_exception() throws Exception {
+        mockRestTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        List<LinkedHashMap> linkedHashMapList = new ArrayList<>();
+        LinkedHashMap linkedHashMap = new LinkedHashMap();
+        linkedHashMap.put("itemBarcode","32101068878931");
+        linkedHashMap.put("message",null);
+        linkedHashMapList.add(linkedHashMap);
+        MultiValueMap<String,Object> requestParameter = new LinkedMultiValueMap();
+
+        Mockito.when(sharedCollectionRestController.getRestTemplate()).thenReturn(mockRestTemplate);
+        Mockito.when(sharedCollectionRestController.getScsbCoreUrl()).thenReturn(scsbCoreUrl);
+        Mockito.when(sharedCollectionRestController.getLinkedMultiValueMap()).thenReturn(null);
+        Mockito.when(mockRestTemplate.postForObject(getScsbCoreUrl() + "sharedCollection/submitCollection",requestParameter, List.class)).thenReturn(null);
+        Mockito.when(sharedCollectionRestController.submitCollection(inputRecords,"PUL",false)).thenCallRealMethod();
+        ResponseEntity responseEntity = sharedCollectionRestController.submitCollection(inputRecords,"PUL",false);
+        assertNotNull(responseEntity);
+    }
 
 }

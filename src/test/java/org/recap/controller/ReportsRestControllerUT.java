@@ -1,6 +1,5 @@
 package org.recap.controller;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -137,11 +136,20 @@ public class ReportsRestControllerUT extends BaseControllerUT {
         assertNotNull(reportsResponse1);
     }
 
-    //@Test
+    @Test
     public void cgdItemCounts_Exception() {
         ReportsRequest reportsRequest = new ReportsRequest();
+        reportsRequest.setOwningInstitutions(Arrays.asList("TEST", "TEST", "TEST"));
+        reportsRequest.setCollectionGroupDesignations(Arrays.asList("TEST", "TEST", "TEST"));
+        ReportsResponse reportsResponse = new ReportsResponse();
+        reportsResponse.setMessage(ScsbCommonConstants.SUCCESS);
+        Mockito.doReturn(null).when(mockRestTemplate).exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(HttpMethod.class),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<ReportsResponse>>any());
         ReportsResponse reportsResponse1 = reportsRestController.cgdItemCounts(reportsRequest);
-        assertNull(reportsResponse1.getMessage());
+        assertNotNull(reportsResponse1);
     }
 
     @Test
