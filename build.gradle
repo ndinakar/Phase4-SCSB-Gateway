@@ -29,7 +29,7 @@ test {
 }
 
 jar {
-	archiveBaseName = 'phase4-scsb-gateway'
+	archiveBaseName = 'scsb-gateway'
 	archiveVersion = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.17
