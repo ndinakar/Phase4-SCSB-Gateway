@@ -44,14 +44,6 @@ import static com.google.common.collect.Lists.newArrayList;
 @EnableWebMvc
 public class SwaggerConfig extends SwaggerConfigBase {
 
-    @Autowired
-    private Environment environment;
-
-    /**
-     * Get the {@link UiConfiguration}.
-     *
-     * @return the {@code UiConfiguration}.
-     */
     @Bean
     public UiConfiguration uiConfig() {
         String[] list = {"get", "post", "put", "delete"};
@@ -64,11 +56,6 @@ public class SwaggerConfig extends SwaggerConfigBase {
      */
     @Override
     public ApiInfo apiInfo() {
-        List<String> environmentList = new ArrayList<>(Arrays.asList(environment.getActiveProfiles()));
-        environmentList.remove("${com.pgac.env.type}");
-        environmentList.remove("${com.pgac.env.loc}");
-        environmentList.remove("${com.pgac.env.instance}");
-
         String title = "SCSB APIs";
 
         return new ApiInfoBuilder().title(title).description("APIs to interact with SCSB middleware are RESTful and need an API_KEY for any call to be invoked. Further NCIP protocols are also supported.")
