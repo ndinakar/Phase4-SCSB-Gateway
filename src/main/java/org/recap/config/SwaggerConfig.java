@@ -87,7 +87,7 @@ public class SwaggerConfig extends SwaggerConfigBase {
                 .apiInfo(apiInfo());
     }
 
-    private ApiKey apiKey() {
+    private static ApiKey apiKey() {
         return new ApiKey("API Key", "api_key", "header");
     }
 
@@ -125,7 +125,7 @@ public class SwaggerConfig extends SwaggerConfigBase {
             private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
                 List<T> copy = mappings.stream()
                         .filter(mapping -> mapping.getPatternParser() == null)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toCollection(ArrayList::new));
                 mappings.clear();
                 mappings.addAll(copy);
             }

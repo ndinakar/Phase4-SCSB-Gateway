@@ -79,7 +79,7 @@ public class SharedCollectionRestController extends AbstractController {
         String response;
         try {
             response = getRestTemplate().postForObject(getScsbSolrClientUrl() + "/sharedCollection/itemAvailabilityStatus", itemAvailabityStatus, String.class);
-        } catch (Exception exception) {
+        } catch (RuntimeException exception) {
             log.error(ScsbCommonConstants.LOG_ERROR, exception);
             return new ResponseEntity<>(ScsbCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -105,7 +105,7 @@ public class SharedCollectionRestController extends AbstractController {
         String response;
         try {
             response = getRestTemplate().postForObject(getScsbSolrClientUrl() + "/sharedCollection/bibAvailabilityStatus", bibItemAvailabityStatusRequest, String.class);
-        } catch (Exception exception) {
+        } catch (RuntimeException exception) {
             log.error(ScsbCommonConstants.LOG_ERROR, exception);
             return new ResponseEntity<>(ScsbCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -127,7 +127,7 @@ public class SharedCollectionRestController extends AbstractController {
         try {
             Map<String, String> resultMap = getRestTemplate().postForObject(getScsbCircUrl() + "/sharedCollection/deAccession", deAccessionRequest, Map.class);
             return new ResponseEntity<>(resultMap, getHttpHeaders(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             log.error(ScsbCommonConstants.LOG_ERROR, ex);
             return new ResponseEntity<>(ScsbConstants.SCSB_CIRC_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -251,7 +251,7 @@ public class SharedCollectionRestController extends AbstractController {
         try {
             TransferResponse transferResponse = getRestTemplate().postForObject(getScsbSolrClientUrl() + "transfer/processTransfer", transferRequest, TransferResponse.class);
             responseEntity = new ResponseEntity<>(transferResponse, getHttpHeaders(), HttpStatus.OK);
-        } catch (Exception exception) {
+        } catch (RuntimeException exception) {
             log.error(ScsbCommonConstants.LOG_ERROR, exception);
             responseEntity = new ResponseEntity<>(ScsbConstants.TRANSFER_INTERNAL_ERROR, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }

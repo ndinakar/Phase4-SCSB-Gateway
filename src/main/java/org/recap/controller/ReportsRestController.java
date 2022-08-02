@@ -145,7 +145,7 @@ public class ReportsRestController extends AbstractController {
 
             ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(getScsbSolrClientUrl() + countsUrl, HttpMethod.POST, httpEntity, ReportsResponse.class);
             reportsResponse = responseEntity.getBody();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(ScsbCommonConstants.LOG_ERROR, e);
             reportsResponse.setMessage(e.getMessage());
         }

@@ -26,7 +26,7 @@ public class EncryptEmailAddressRestController extends AbstractController {
             HttpEntity requestEntity = getHttpEntity();
             ResponseEntity<String> exchange = restTemplate.exchange(getScsbCircUrl() + "/encryptEmailAddress/startEncryptEmailAddress", HttpMethod.GET, requestEntity, String.class);
             response  = exchange.getBody();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(ScsbCommonConstants.LOG_ERROR, e);
             return new ResponseEntity<>(response, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
