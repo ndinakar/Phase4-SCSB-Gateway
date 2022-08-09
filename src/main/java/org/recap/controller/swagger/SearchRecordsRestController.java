@@ -52,7 +52,7 @@ public class SearchRecordsRestController extends AbstractController {
 
             ResponseEntity<SearchRecordsResponse> responseEntity = restTemplate.exchange(getScsbSolrClientUrl() + ScsbConstants.URL_SEARCH_BY_JSON, HttpMethod.POST, httpEntity, SearchRecordsResponse.class);
             searchRecordsResponse = responseEntity.getBody();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("error--.",e);
             log.error(e.getMessage());
             searchRecordsResponse.setErrorMessage(e.getMessage());
@@ -104,7 +104,7 @@ public class SearchRecordsRestController extends AbstractController {
 
             responseEntity = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, request, List.class);
             searchResultRows = responseEntity.getBody();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             searchResultRows = new ArrayList<>();
             log.error("Exception",e);
         }

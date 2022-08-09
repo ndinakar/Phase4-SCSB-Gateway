@@ -72,7 +72,7 @@ public class DataDumpRestController extends AbstractController  {
             responseHeaders.add(ScsbCommonConstants.RESPONSE_HEADER_CONTENT_TYPE,ScsbCommonConstants.RESPONSE_HEADER_CONTENT_TYPE_VALUE);
             ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap);
             return new ResponseEntity<>(response.getBody(), responseHeaders, response.getStatusCode());
-        } catch (Exception exception) {
+        } catch (RuntimeException exception) {
             log.error("error-->",exception);
             return new ResponseEntity<>("Scsb Etl Service is Unavailable.", getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -117,13 +117,13 @@ public class DataDumpRestController extends AbstractController  {
             ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap);
             return new ResponseEntity<>(response.getBody(), getHttpHeaders(), response.getStatusCode());
 
-        } catch (Exception exception) {
+        } catch (RuntimeException exception) {
             log.error("error-->",exception);
             return new ResponseEntity<>("Scsb Etl Service is Unavailable.", getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
-    private void setInputMapValues(Map<String,String> inputMap, String institutionCodes, String requestingInstitutionCode, String fetchType,
+    private static void setInputMapValues(Map<String,String> inputMap, String institutionCodes, String requestingInstitutionCode, String fetchType,
                                    String outputFormat, String date, String collectionGroupIds, String transmissionType, String emailToAddress,String imsDepositoryCodes,String userName)
     {
         inputMap.put("institutionCodes",institutionCodes);

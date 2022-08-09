@@ -612,7 +612,7 @@ public class RequestItemRestController extends AbstractController  {
         try {
             Map<String, String> resultMap = restTemplate.postForObject(getScsbCircUrl() + ScsbConstants.URL_REQUEST_REPLACE, replaceRequest, Map.class);
             return new ResponseEntity<>(resultMap, getHttpHeaders(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             log.error(ScsbCommonConstants.LOG_ERROR, ex);
             return new ResponseEntity<>(ScsbConstants.SCSB_CIRC_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
         }

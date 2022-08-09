@@ -48,7 +48,7 @@ public class UpdateCgdRestController extends AbstractController {
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
             statusResponse = responseEntity.getBody();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(ScsbCommonConstants.LOG_ERROR,e);
             statusResponse = ScsbCommonConstants.FAILURE + "-" + e.getMessage();
         }
