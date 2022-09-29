@@ -36,6 +36,7 @@ import org.recap.model.ItemResponseInformation;
 import org.recap.model.PatronInformationRequest;
 import org.recap.model.PatronInformationResponse;
 import org.recap.model.ReplaceRequest;
+import org.recap.service.RequestItemService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -72,6 +73,9 @@ public class RequestItemRestController extends AbstractController  {
 
     @Autowired
     private ProducerTemplate producer;
+
+    @Autowired
+    private RequestItemService requestItemService;
 
     /**
      * Gets producer.
@@ -133,7 +137,7 @@ public class RequestItemRestController extends AbstractController  {
         List<String> itemBarcodes;
         HttpStatus statusCode;
         boolean bSuccess;
-        String screenMessage;
+        String screenMessage = null;
         ObjectMapper objectMapper;
         ResponseEntity responseEntity = null;
         try {
@@ -142,10 +146,15 @@ public class RequestItemRestController extends AbstractController  {
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
             statusCode = responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
+            requestItemService.saveReceivedRequestInformation(itemRequestInfo,Boolean.TRUE);
         } catch (HttpClientErrorException httpEx) {
+            requestItemService.saveReceivedRequestInformation(itemRequestInfo,Boolean.FALSE);
             log.error("error-->", httpEx);
             statusCode = httpEx.getStatusCode();
             screenMessage = httpEx.getResponseBodyAsString();
+        } catch (Exception e){
+            statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            requestItemService.saveReceivedRequestInformation(itemRequestInfo,Boolean.FALSE);
         }
         try {
             if (statusCode != null && statusCode == HttpStatus.OK) {
@@ -623,6 +632,63 @@ public class RequestItemRestController extends AbstractController  {
         ResponseEntity responseEntity = restTemplate.postForEntity(getScsbCircUrl() + urlConstant,
                 itemRequestInfo, String.class);
         return responseEntity.getBody().toString();
+    }
+
+    public ItemResponseInformation itemSubmitRequest(ItemRequestInformation itemRequestInfo) {
+        ItemResponseInformation itemResponseInformation = new ItemResponseInformation();
+        List<String> itemBarcodes;
+        HttpStatus statusCode;
+        boolean bSuccess;
+        String screenMessage = null;
+        ObjectMapper objectMapper;
+        ResponseEntity responseEntity = null;
+        try {
+            log.info("Resubmit Item Request Information : {}",itemRequestInfo);
+            itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
+            responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
+            statusCode = responseEntity.getStatusCode();
+            screenMessage = responseEntity.getBody().toString();
+            requestItemService.updateItemRequest(itemRequestInfo);
+        } catch (HttpClientErrorException httpEx) {
+            log.error("error-->", httpEx);
+            statusCode = httpEx.getStatusCode();
+            screenMessage = httpEx.getResponseBodyAsString();
+            throw new RuntimeException();
+        } catch (Exception e){
+            statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new RuntimeException();
+        }
+        try {
+            if (statusCode != null && statusCode == HttpStatus.OK) {
+                objectMapper = new ObjectMapper();
+                itemBarcodes = itemRequestInfo.getItemBarcodes();
+                itemRequestInfo.setItemBarcodes(null);
+                itemRequestInfo.setRequestNotes(StringUtils.left(itemRequestInfo.getRequestNotes(),1000));
+                for (int i = 0; i < itemBarcodes.size(); i++) {
+                    itemRequestInfo.setItemBarcodes(Arrays.asList(itemBarcodes.get(i).trim()));
+                    String json = objectMapper.writeValueAsString(itemRequestInfo);
+                    getProducer().sendBodyAndHeader(ScsbConstants.REQUEST_ITEM_QUEUE, json, ScsbCommonConstants.REQUEST_TYPE_QUEUE_HEADER, itemRequestInfo.getRequestType());
+                }
+                bSuccess = true;
+                screenMessage = ScsbCommonConstants.REQUEST_MESSAGE_RECEVIED;
+            } else {
+                bSuccess = false;
+            }
+
+            itemResponseInformation.setSuccess(bSuccess);
+            itemResponseInformation.setScreenMessage(screenMessage);
+            itemResponseInformation.setItemBarcodes(itemRequestInfo.getItemBarcodes());
+            itemResponseInformation.setTitleIdentifier(itemRequestInfo.getTitleIdentifier());
+            itemResponseInformation.setDeliveryLocation(itemRequestInfo.getDeliveryLocation());
+            itemResponseInformation.setEmailAddress(itemRequestInfo.getEmailAddress());
+            itemResponseInformation.setPatronBarcode(itemRequestInfo.getPatronBarcode());
+            itemResponseInformation.setRequestType(itemRequestInfo.getRequestType());
+            itemResponseInformation.setRequestingInstitution(itemRequestInfo.getRequestingInstitution());
+            log.info("Message In Queue");
+        } catch (Exception e) {
+            log.error(ScsbCommonConstants.REQUEST_EXCEPTION, e);
+        }
+        return itemResponseInformation;
     }
 
 }
