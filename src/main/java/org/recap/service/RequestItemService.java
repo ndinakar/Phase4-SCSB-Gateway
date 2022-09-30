@@ -69,10 +69,10 @@ public class RequestItemService {
                 requestItemRestController.itemSubmitRequest(itemRequestInformation);
         } else {
             List<ItemRequestInformation> itemRequestInformationList = new ArrayList<>();
-            Integer pageCount = getCount(requestLogReportRequest);
+            Page<ItemRequestReceivedInformationEntity> pageResponse = getCount(requestLogReportRequest);
             requestLogReportRequest.setPageSize(500);
-            for (int i = 0; i < pageCount; i++) {
-                List<ItemRequestReceivedInformationEntity> entityList = getRequestReports(requestLogReportRequest);
+            for (int i = 0; i < pageResponse.getTotalPages(); i++) {
+                List<ItemRequestReceivedInformationEntity> entityList = getCount(requestLogReportRequest).getContent();
                 for (ItemRequestReceivedInformationEntity entity : entityList) {
                     ItemRequestInformation itemRequestInformation = prepareItemRequestInformationFromEntity(entity);
                     try {
@@ -89,21 +89,16 @@ public class RequestItemService {
         return requestLogReportRequest;
     }
 
-    private Integer getCount(RequestLogReportRequest requestLogReportRequest) {
+    private Page<ItemRequestReceivedInformationEntity> getCount(RequestLogReportRequest requestLogReportRequest) {
          requestLogReportRequest.setPageSize(500);
         Pageable pageable = PageRequest.of(requestLogReportRequest.getPageNumber(), requestLogReportRequest.getPageSize());
         Page<ItemRequestReceivedInformationEntity> pageReponse = null;
-        if(requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()
-                && requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()){
-            pageReponse = itemRequestInformationRepository.findByInstitutionAndStatus(pageable,requestLogReportRequest.getInstitution(),requestLogReportRequest.getStatus());
-        }else if(requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
-            pageReponse = itemRequestInformationRepository.findByInstitution(pageable,requestLogReportRequest.getInstitution());
-        } else if(requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()){
-            pageReponse = itemRequestInformationRepository.findByStatus(pageable,requestLogReportRequest.getStatus());
-        } else {
-            pageReponse = itemRequestInformationRepository.findAll(pageable);
+        if(requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
+            pageReponse = itemRequestInformationRepository.findByInstitutionAndStatus(pageable,requestLogReportRequest.getInstitution(),"FAILED");
+        }else {
+            pageReponse = itemRequestInformationRepository.findAll(pageable,2);
         }
-       return pageReponse.getTotalPages();
+       return pageReponse;
     }
 
     private List<ItemRequestReceivedInformationEntity> getRequestReports(RequestLogReportRequest requestLogReportRequest) {
