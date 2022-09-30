@@ -96,7 +96,7 @@ public class RequestItemService {
         if(requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
             pageReponse = itemRequestInformationRepository.findByInstitutionAndStatus(pageable,requestLogReportRequest.getInstitution(),"FAILED");
         }else {
-            pageReponse = itemRequestInformationRepository.findAll(pageable,2);
+            pageReponse = itemRequestInformationRepository.findAllByStatusId(pageable,2);
         }
        return pageReponse;
     }

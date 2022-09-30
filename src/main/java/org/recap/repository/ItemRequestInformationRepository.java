@@ -26,4 +26,7 @@ public interface ItemRequestInformationRepository extends BaseRepository<ItemReq
     @Modifying(clearAutomatically = true)
     @Query(value = "update ItemRequestReceivedInformationEntity entity set entity.status = :status , entity.statusId = :statusId where entity.id = :id")
     void update(@Param("id") Integer id, @Param("status") String status, @Param("statusId") Integer statusId);
+
+    @Query(value = "select requests from ItemRequestReceivedInformationEntity requests where requests.statusId = :statusId")
+    Page<ItemRequestReceivedInformationEntity> findAllByStatusId(Pageable pageable, @Param("statusId") Integer statusId);
 }
