@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -140,14 +141,14 @@ public class RequestItemService {
         requestLogReportRequest.setRequestInfoList(requestInfoList);
         return requestLogReportRequest;
     }
-
+    @Transactional
     public void updateItemRequest(ItemRequestInformation itemRequestInfo) {
         updateReceivedRequestInformation(itemRequestInfo,Boolean.TRUE);
     }
 
     public void updateReceivedRequestInformation(ItemRequestInformation itemRequestInfo, boolean isResponseReceived) {
         if (isResponseReceived)
-            itemRequestInformationRepository.update(itemRequestInfo.getId(),"SUCCESS");
+            itemRequestInformationRepository.update(itemRequestInfo.getId(),"SUCCESS",1);
     }
 
     private ItemRequestInformation prepareItemInfoFromrequest(RequestLogReportRequest requestLogReportRequest) {
