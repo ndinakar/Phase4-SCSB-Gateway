@@ -37,7 +37,6 @@ public class ItemRequestInformation {
     private String username;
     private String issue;
     private String volume;
-
     private Integer id;
 
     /**

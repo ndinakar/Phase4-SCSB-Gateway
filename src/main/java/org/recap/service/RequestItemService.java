@@ -17,7 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -93,10 +96,22 @@ public class RequestItemService {
          requestLogReportRequest.setPageSize(500);
         Pageable pageable = PageRequest.of(requestLogReportRequest.getPageNumber(), requestLogReportRequest.getPageSize());
         Page<ItemRequestReceivedInformationEntity> pageReponse = null;
-        if(requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
-            pageReponse = itemRequestInformationRepository.findByInstitutionAndStatus(pageable,requestLogReportRequest.getInstitution(),"FAILED");
-        }else {
-            pageReponse = itemRequestInformationRepository.findAllByStatusId(pageable,2);
+        if(requestLogReportRequest.getFromDate() != null && !requestLogReportRequest.getFromDate().isEmpty()) {
+            Date requestFromDate = convertStringToDate(requestLogReportRequest.getFromDate());
+            Date requestToDate = convertStringToDate(requestLogReportRequest.getToDate());
+            Date fromDate = getFromDate(requestFromDate);
+            Date toDate = getToDate(requestToDate);
+            if (requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByInstitutionAndStatusAndFromDateAndEndDate(pageable, requestLogReportRequest.getInstitution(), "FAILED",fromDate,toDate);
+            } else {
+                pageReponse = itemRequestInformationRepository.findByStatusIdAndFromDateAndEndDate(pageable, 2,fromDate,toDate);
+            }
+        } else {
+            if (requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByInstitutionAndStatus(pageable, requestLogReportRequest.getInstitution(), "FAILED");
+            } else {
+                pageReponse = itemRequestInformationRepository.findAllByStatusId(pageable, 2);
+            }
         }
        return pageReponse;
     }
@@ -105,21 +120,39 @@ public class RequestItemService {
         List<ItemRequestReceivedInformationEntity> entityList = new ArrayList<>();
         Pageable pageable = PageRequest.of(requestLogReportRequest.getPageNumber(), requestLogReportRequest.getPageSize());
         Page<ItemRequestReceivedInformationEntity> pageReponse = null;
-        if(requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()
-                && requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()){
-            pageReponse = itemRequestInformationRepository.findByInstitutionAndStatus(pageable,requestLogReportRequest.getInstitution(),requestLogReportRequest.getStatus());
-        }else if(requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
-            pageReponse = itemRequestInformationRepository.findByInstitution(pageable,requestLogReportRequest.getInstitution());
-        } else if(requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()){
-            pageReponse = itemRequestInformationRepository.findByStatus(pageable,requestLogReportRequest.getStatus());
+        if (requestLogReportRequest.getFromDate() != null && !requestLogReportRequest.getFromDate().isEmpty()) {
+            Date requestFromDate = convertStringToDate(requestLogReportRequest.getFromDate());
+            Date requestToDate = convertStringToDate(requestLogReportRequest.getToDate());
+            Date fromDate = getFromDate(requestFromDate);
+            Date toDate = getToDate(requestToDate);
+
+            if (requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()
+                    && requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByInstitutionAndStatusAndFromDateAndEndDate(pageable, requestLogReportRequest.getInstitution(), requestLogReportRequest.getStatus(), fromDate, toDate);
+            } else if (requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByInstitutionAndFromDateAndEndDate(pageable, requestLogReportRequest.getInstitution(), fromDate, toDate);
+            } else if (requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByStatusAndFromDateAndEndDate(pageable, requestLogReportRequest.getStatus(), fromDate, toDate);
+            } else {
+                pageReponse = itemRequestInformationRepository.findByAndFromDateAndEndDate(pageable, fromDate, toDate);
+            }
         } else {
-            pageReponse = itemRequestInformationRepository.findAll(pageable);
+            if (requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()
+                    && requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByInstitutionAndStatus(pageable, requestLogReportRequest.getInstitution(), requestLogReportRequest.getStatus());
+            } else if (requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByInstitution(pageable, requestLogReportRequest.getInstitution());
+            } else if (requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()) {
+                pageReponse = itemRequestInformationRepository.findByStatus(pageable, requestLogReportRequest.getStatus());
+            } else {
+                pageReponse = itemRequestInformationRepository.findAll(pageable);
+            }
         }
         entityList = pageReponse.getContent();
         requestLogReportRequest.setTotalPageCount(pageReponse.getTotalPages());
         requestLogReportRequest.setTotalRecordsCount(pageReponse.getTotalElements());
         return entityList;
-     }
+    }
 
     private RequestLogReportRequest prepareRequestReponseFromEnityList(List<ItemRequestReceivedInformationEntity> entityList, RequestLogReportRequest requestLogReportRequest) {
          List<RequestInfo> requestInfoList = new ArrayList<>();
@@ -166,5 +199,29 @@ public class RequestItemService {
         itemRequestInformation.setId(itemRequestReceivedInformationEntity.getId());
         return itemRequestInformation;
     }
+    private Date convertStringToDate(String stringDate){
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = dt.parse(stringDate);
+        } catch (ParseException e) {}
+        return date;
+    }
 
+    public Date getFromDate(Date createdDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(createdDate);
+        cal.set(11, 0);
+        cal.set(12, 0);
+        cal.set(13, 0);
+        return cal.getTime();
+    }
+    public Date getToDate(Date createdDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(createdDate);
+        cal.set(11, 23);
+        cal.set(12, 59);
+        cal.set(13, 59);
+        return cal.getTime();
+    }
 }
