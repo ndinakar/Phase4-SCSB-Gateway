@@ -1,8 +1,5 @@
 package org.recap.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.gson.Gson;
 import org.recap.controller.swagger.RequestItemRestController;
 import org.recap.entity.ItemRequestReceivedInformationEntity;
@@ -134,7 +131,7 @@ public class RequestItemService {
             } else if (requestLogReportRequest.getStatus() != null && !requestLogReportRequest.getStatus().isBlank() && !requestLogReportRequest.getStatus().isEmpty()) {
                 pageReponse = itemRequestInformationRepository.findByStatusAndFromDateAndEndDate(pageable, requestLogReportRequest.getStatus(), fromDate, toDate);
             } else {
-                pageReponse = itemRequestInformationRepository.findByAndFromDateAndEndDate(pageable, fromDate, toDate);
+                pageReponse = itemRequestInformationRepository.findByFromDateAndEndDate(pageable, fromDate, toDate);
             }
         } else {
             if (requestLogReportRequest.getInstitution() != null && !requestLogReportRequest.getInstitution().isBlank() && !requestLogReportRequest.getInstitution().isEmpty()
