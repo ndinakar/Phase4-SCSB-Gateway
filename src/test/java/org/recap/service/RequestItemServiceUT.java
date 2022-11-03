@@ -1,6 +1,5 @@
 package org.recap.service;
 
-import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -198,7 +197,6 @@ public class RequestItemServiceUT extends BaseTestCase{
         }
     }
 
-
     @Test
     public void getRequestReportsWithoutEmptyStatusTest(){
         try {
@@ -286,20 +284,6 @@ public class RequestItemServiceUT extends BaseTestCase{
         try {
             RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
             requestLogReportRequest.setInstitution("");
-            assertTrue(requestLogReportRequest.getInstitution().isBlank());
-            ReflectionTestUtils.invokeMethod(service, "getRequestReports", requestLogReportRequest);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-
-    @Test
-    public void getRequestReportsEmpty_Test(){
-        try {
-            RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
-            requestLogReportRequest.setInstitution("");
-            assertTrue(requestLogReportRequest.getInstitution().isEmpty());
             ReflectionTestUtils.invokeMethod(service, "getRequestReports", requestLogReportRequest);
         }catch (Exception e){
             e.printStackTrace();
@@ -307,22 +291,22 @@ public class RequestItemServiceUT extends BaseTestCase{
     }
 
     @Test
-    public void getRequestReportsStatus_Test(){
+    public void getRequestReportsNUll_Test(){
         try {
             RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
-            requestLogReportRequest.setStatus("1");
+            requestLogReportRequest.setInstitution(null);
             ReflectionTestUtils.invokeMethod(service, "getRequestReports", requestLogReportRequest);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
 
     @Test
     public void getRequestReportsStatusBlank_Test(){
         try {
-            RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
+            RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
             requestLogReportRequest.setStatus("");
-            assertTrue(requestLogReportRequest.getStatus().isBlank());
             ReflectionTestUtils.invokeMethod(service, "getRequestReports", requestLogReportRequest);
         }catch (Exception e){
             e.printStackTrace();
@@ -330,17 +314,27 @@ public class RequestItemServiceUT extends BaseTestCase{
     }
 
     @Test
-    public void getRequestReportsStatusEmpty_Test(){
+    public void getRequestReportsStatusNull_Test(){
+        try {
+            RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
+            requestLogReportRequest.setStatus(null);
+            ReflectionTestUtils.invokeMethod(service, "getRequestReports", requestLogReportRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getRequestReportsStatusIsEmpty_Test(){
         try {
             RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
-            requestLogReportRequest.setInstitution("");
+            requestLogReportRequest.setStatus("");
             assertTrue(requestLogReportRequest.getStatus().isEmpty());
             ReflectionTestUtils.invokeMethod(service, "getRequestReports", requestLogReportRequest);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
 
     @Test
     public void getRequestsTest(){
@@ -351,6 +345,30 @@ public class RequestItemServiceUT extends BaseTestCase{
             entityList.add(entity);
             ReflectionTestUtils.setField(service, "entityList", entityList);
             service.getRequests(requestLogReportRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getRequestRepotTest(){
+        try {
+            RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
+            requestLogReportRequest.setFromDate("2022-10-01");
+            requestLogReportRequest.setToDate("2022-11-01");
+            requestLogReportRequest.setInstitution("PUL");
+            requestLogReportRequest.setStatus("FAILED");
+            requestLogReportRequest.setTotalRecordsCount(11);
+            requestLogReportRequest.setTotalPageCount(1);
+            Page<ItemRequestReceivedInformationEntity> pageReponse = Mockito.mock(Page.class);
+            List<ItemRequestReceivedInformationEntity> entityList = new ArrayList<>();
+            ItemRequestReceivedInformationEntity entity = getItemRequestReceivedInformationEntity();
+            entityList.add(entity);
+            Mockito.when(pageReponse.getContent()).thenReturn(entityList);
+            Mockito.when(pageReponse.getTotalPages()).thenReturn(1);
+            Mockito.when(pageReponse.getTotalElements()).thenReturn(1l);
+//            ReflectionTestUtils.setField(service, "pageReponse", pageReponse);
+            ReflectionTestUtils.invokeMethod(service, "getRequestReports", requestLogReportRequest);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -444,6 +462,18 @@ public class RequestItemServiceUT extends BaseTestCase{
     }
 
     @Test
+    public void getCountexceptionTest(){
+        try {
+            RequestLogReportRequest requestLogReportRequest =  new RequestLogReportRequest();
+            requestLogReportRequest.setInstitution("");
+            ReflectionTestUtils.invokeMethod(service, "getCount", requestLogReportRequest);
+            assertTrue(requestLogReportRequest.getInstitution().isEmpty());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void getCountTest(){
         try {
             RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
@@ -502,16 +532,31 @@ public class RequestItemServiceUT extends BaseTestCase{
         return itemRequestInformation;
     }
 
-//      @Test
-//    public void submitRequestsTest(){
-//        RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
-//        requestLogReportRequest.setId(0);
-//        ItemRequestInformation itemRequestInformation = getItemRequestInformation();
-//        ReflectionTestUtils.setField(service, "itemRequestInformation", itemRequestInformation);
-//        ReflectionTestUtils.invokeMethod(service, "submitRequests", requestLogReportRequest);
-//          service.submitRequests(requestLogReportRequest);
-//    }
+      @Test
+    public void submitRequestsTest(){
+        try {
+            RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
+            requestLogReportRequest.setId(0);
+            requestLogReportRequest.setStatus("Resubmit is successfull");
+            ReflectionTestUtils.invokeMethod(service, "submitRequests", requestLogReportRequest);
+            service.submitRequests(requestLogReportRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    @Test
+    public void submitRequestTest(){
+        try {
+            RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
+            requestLogReportRequest.setId(2);
+            requestLogReportRequest.setStatus("Resubmit is successfull");
+            ReflectionTestUtils.invokeMethod(service, "submitRequests", requestLogReportRequest);
+            service.submitRequests(requestLogReportRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
 
