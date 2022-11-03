@@ -19,6 +19,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -114,8 +115,11 @@ public class RequestItemServiceUT extends BaseTestCase{
     @Test
     public void prepareItemInfoFromrequestTest(){
         try {
-            ReflectionTestUtils.invokeMethod(service, "prepareItemInfoFromrequest", new RequestLogReportRequest());
-            assert(Optional.empty().isPresent());
+            RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
+            requestLogReportRequest.setId(2);
+            Mockito.when(repository.findById(any())).thenReturn(Optional.of(getItemRequestReceivedInformationEntity()));
+            ReflectionTestUtils.invokeMethod(service, "prepareItemInfoFromrequest", requestLogReportRequest);
+//            assert(Optional.empty().isPresent());
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -221,6 +225,7 @@ public class RequestItemServiceUT extends BaseTestCase{
             e.printStackTrace();
         }
     }
+
 
     private RequestLogReportRequest getRequestLogReportRequest() {
         RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
@@ -532,11 +537,11 @@ public class RequestItemServiceUT extends BaseTestCase{
         return itemRequestInformation;
     }
 
-      @Test
-    public void submitRequestsTest(){
+    @Test
+    public void submitRequestTest(){
         try {
             RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
-            requestLogReportRequest.setId(0);
+            requestLogReportRequest.setId(1);
             requestLogReportRequest.setStatus("Resubmit is successfull");
             ReflectionTestUtils.invokeMethod(service, "submitRequests", requestLogReportRequest);
             service.submitRequests(requestLogReportRequest);
@@ -546,11 +551,13 @@ public class RequestItemServiceUT extends BaseTestCase{
     }
 
     @Test
-    public void submitRequestTest(){
+    public void submitRequesttest(){
         try {
             RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
-            requestLogReportRequest.setId(2);
+            requestLogReportRequest.setId(0);
+//            Page<ItemRequestReceivedInformationEntity> pageResponse = Mockito.mock(Page.class);
             requestLogReportRequest.setStatus("Resubmit is successfull");
+//            ReflectionTestUtils.setField(service, "pageResponse", pageResponse);
             ReflectionTestUtils.invokeMethod(service, "submitRequests", requestLogReportRequest);
             service.submitRequests(requestLogReportRequest);
         }catch (Exception e){
