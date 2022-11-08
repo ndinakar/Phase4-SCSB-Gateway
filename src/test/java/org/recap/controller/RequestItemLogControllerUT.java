@@ -31,27 +31,27 @@ public class RequestItemLogControllerUT extends BaseTestCase {
     public void getRequestLogReportsTest(){
         RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
         Mockito.when(requestItemService.submitRequests(any())).thenReturn(requestLogReportRequest);
-        ResponseEntity<RequestLogReportRequest> requestLogReports = requestItemLogController.getRequestLogReports(new RequestLogReportRequest());
+        ResponseEntity<RequestLogReportRequest> requestLogReports = requestItemLogController.getRequestLogReports(requestLogReportRequest);
         assertNotNull(requestLogReports);
     }
 
     @Test
     public void getRequestLogSubmitReportsTest(){
-        RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
+        RequestLogReportRequest requestLogReportRequest =getRequestLogReportRequest();
         Mockito.when(requestItemService.submitRequests(requestLogReportRequest)).thenReturn(requestLogReportRequest);
-        ResponseEntity<RequestLogReportRequest> requestLogReports = requestItemLogController.getRequestLogSubmitReports(new RequestLogReportRequest());
+        ResponseEntity<RequestLogReportRequest> requestLogReports = requestItemLogController.getRequestLogSubmitReports(requestLogReportRequest);
         assertNotNull(requestLogReports);
     }
 
     @Test
     public void getRequestLogSubmitReportsExceptionTest(){
-        RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
+        RequestLogReportRequest requestLogReportRequest= new RequestLogReportRequest();
         requestLogReportRequest.setStatus(null);
         ResponseEntity<RequestLogReportRequest> requestLogReports = requestItemLogController.getRequestLogSubmitReports(requestLogReportRequest);
         assertNotNull(requestLogReports);
     }
 
-    private RequestLogReportRequest getRequestLogReportRequest() {
+    public RequestLogReportRequest getRequestLogReportRequest() {
         RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
         requestLogReportRequest.setStatus("FAILED");
         requestLogReportRequest.setPageSize(1);
