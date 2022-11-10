@@ -69,7 +69,6 @@ public class SwaggerInterceptorUT extends BaseTestCase {
         MD5EncoderUtil EncoderUtil = swaggerInterceptor.getMd5EncoderUtil();
     }
 
-
     @Test
     public void matchingWithInstitutionKeysTest(){
         ReflectionTestUtils.invokeMethod(swaggerInterceptor, "matchingWithInstitutionKeys", "key");

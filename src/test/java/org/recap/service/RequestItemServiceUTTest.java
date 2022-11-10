@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,11 +41,9 @@ public class RequestItemServiceUTTest extends BaseTestCaseUT {
 
     @Before
     public void setup() throws Exception {
-//        ItemRequestInformation itemRequestInformation = new ItemRequestInformation();
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(requestItemService, "itemRequestInformationRepository", itemRequestInformationRepository);
         ReflectionTestUtils.setField(requestItemService, "requestItemRestController", requestItemRestController);
-//        ReflectionTestUtils.setField(requestItemService, "itemRequestInformation", itemRequestInformation);
     }
 
     @Test
@@ -56,20 +55,23 @@ public class RequestItemServiceUTTest extends BaseTestCaseUT {
     public RequestLogReportRequest getRequestLogReportRequest() {
         RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
         requestLogReportRequest.setInstitution("PUL");
-        requestLogReportRequest.setFromDate("2022-10-01");
-        requestLogReportRequest.setToDate("2022-11-01");
+        Date date = new Date();
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        String format = dt.format(date);
+        requestLogReportRequest.setFromDate(format);
+        requestLogReportRequest.setToDate(format);
         requestLogReportRequest.setId(1);
         return requestLogReportRequest;
     }
     private Optional<ItemRequestReceivedInformationEntity> getItemRequestReceivedInformationEntity() {
         ItemRequestReceivedInformationEntity itemRequestReceivedInformationEntity = new ItemRequestReceivedInformationEntity();
-        itemRequestReceivedInformationEntity.setRequestInstitution("CUL");
-        itemRequestReceivedInformationEntity.setItemOwningInstitution("PUL");
+        itemRequestReceivedInformationEntity.setRequestInstitution("TEST");
+        itemRequestReceivedInformationEntity.setItemOwningInstitution("TEST");
         itemRequestReceivedInformationEntity.setRequestedItemBarcode("12445");
         itemRequestReceivedInformationEntity.setDate(new Date());
         itemRequestReceivedInformationEntity.setStatus("FAILED");
         itemRequestReceivedInformationEntity.setId(2);
-        itemRequestReceivedInformationEntity.setRequestRecieved("{\"itemBarcodes\":[\"CU11418427\"],\"titleIdentifier\":\"\\u003cPushto poems. 2002-2003\\u003e.      \",\"itemOwningInstitution\":\"CUL\",\"patronBarcode\":\"87654321\",\"emailAddress\":\"\",\"requestingInstitution\":\"PUL\",\"requestType\":\"RETRIEVAL\",\"deliveryLocation\":\"PW\",\"requestNotes\":\"\",\"author\":\"\",\"startPage\":\"\",\"endPage\":\"\",\"chapterTitle\":\"\",\"username\":\"dinakartest\",\"issue\":\"\",\"volume\":\"\"}");
+        itemRequestReceivedInformationEntity.setRequestRecieved("{\"itemBarcodes\":[\"465654\"],\"titleIdentifier\":\"\\u003cPushto poems. 2002-2003\\u003e.      \",\"itemOwningInstitution\":\"TEST\",\"patronBarcode\":\"8765124321\",\"emailAddress\":\"\",\"requestingInstitution\":\"TEST\",\"requestType\":\"RETRIEVAL\",\"deliveryLocation\":\"TEST\",\"requestNotes\":\"\",\"author\":\"\",\"startPage\":\"\",\"endPage\":\"\",\"chapterTitle\":\"\",\"username\":\"dinakartest\",\"issue\":\"\",\"volume\":\"\"}");
         return Optional.of(itemRequestReceivedInformationEntity);
     }
 
@@ -90,13 +92,13 @@ public class RequestItemServiceUTTest extends BaseTestCaseUT {
     private List<ItemRequestReceivedInformationEntity> getItemRequestReceivedInformationEntityList() {
         List<ItemRequestReceivedInformationEntity> list = new ArrayList<>();
         ItemRequestReceivedInformationEntity itemRequestReceivedInformationEntity = new ItemRequestReceivedInformationEntity();
-        itemRequestReceivedInformationEntity.setRequestInstitution("CUL");
-        itemRequestReceivedInformationEntity.setItemOwningInstitution("PUL");
+        itemRequestReceivedInformationEntity.setRequestInstitution("TEST");
+        itemRequestReceivedInformationEntity.setItemOwningInstitution("TEST");
         itemRequestReceivedInformationEntity.setRequestedItemBarcode("12445");
         itemRequestReceivedInformationEntity.setDate(new Date());
         itemRequestReceivedInformationEntity.setStatus("FAILED");
         itemRequestReceivedInformationEntity.setId(2);
-        itemRequestReceivedInformationEntity.setRequestRecieved("{\"itemBarcodes\":[\"CU11418427\"],\"titleIdentifier\":\"\\u003cPushto poems. 2002-2003\\u003e.      \",\"itemOwningInstitution\":\"CUL\",\"patronBarcode\":\"87654321\",\"emailAddress\":\"\",\"requestingInstitution\":\"PUL\",\"requestType\":\"RETRIEVAL\",\"deliveryLocation\":\"PW\",\"requestNotes\":\"\",\"author\":\"\",\"startPage\":\"\",\"endPage\":\"\",\"chapterTitle\":\"\",\"username\":\"dinakartest\",\"issue\":\"\",\"volume\":\"\"}");
+        itemRequestReceivedInformationEntity.setRequestRecieved("{\"itemBarcodes\":[\"23555\"],\"titleIdentifier\":\"\\u003cPushto poems. 2002-2003\\u003e.      \",\"itemOwningInstitution\":\"TEST\",\"patronBarcode\":\"457688\",\"emailAddress\":\"\",\"requestingInstitution\":\"TEST\",\"requestType\":\"RETRIEVAL\",\"deliveryLocation\":\"PW\",\"requestNotes\":\"\",\"author\":\"\",\"startPage\":\"\",\"endPage\":\"\",\"chapterTitle\":\"\",\"username\":\"dinakartest\",\"issue\":\"\",\"volume\":\"\"}");
         list.add(itemRequestReceivedInformationEntity);
         return list;
     }
