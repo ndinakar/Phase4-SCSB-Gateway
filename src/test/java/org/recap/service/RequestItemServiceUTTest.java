@@ -54,7 +54,7 @@ public class RequestItemServiceUTTest extends BaseTestCaseUT {
     }
     public RequestLogReportRequest getRequestLogReportRequest() {
         RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
-        requestLogReportRequest.setInstitution("PUL");
+        requestLogReportRequest.setInstitution("TEST");
         Date date = new Date();
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
         String format = dt.format(date);

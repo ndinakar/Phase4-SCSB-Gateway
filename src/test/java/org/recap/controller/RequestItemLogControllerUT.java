@@ -55,7 +55,7 @@ public class RequestItemLogControllerUT extends BaseTestCase {
     @Test
     public void getRequestLogSubmitReportstest() {
         RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
-        Mockito.when(requestItemService.submitRequests(requestLogReportRequest)).thenReturn(requestLogReportRequest);
+        Mockito.when(requestItemService.submitRequests(requestLogReportRequest)).thenThrow(new RuntimeException("Exception occured"));
         ResponseEntity<RequestLogReportRequest> requestLogReports = requestItemLogController.getRequestLogSubmitReports(requestLogReportRequest);
         assertNotNull(requestLogReports);
     }
