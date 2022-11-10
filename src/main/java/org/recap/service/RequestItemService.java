@@ -65,12 +65,14 @@ public class RequestItemService {
 
     public RequestLogReportRequest submitRequests(RequestLogReportRequest requestLogReportRequest) {
          Integer count = 0;
+         Boolean multiSubmit = false;
         if (requestLogReportRequest.getId() != 0) {
             ItemRequestInformation itemRequestInformation = prepareItemInfoFromrequest(requestLogReportRequest);
 
             try {
                 if (itemRequestInformation != null)
                     requestItemRestController.itemSubmitRequest(itemRequestInformation);
+                requestLogReportRequest.setStatus(ScsbConstants.SUCCESS);
             } catch (Exception e) {
                 requestLogReportRequest.setStatus(ScsbConstants.FAILED);
             }
@@ -79,6 +81,7 @@ public class RequestItemService {
             List<ItemRequestInformation> itemRequestInformationList = new ArrayList<>();
             Page<ItemRequestReceivedInformationEntity> pageResponse = getCount(requestLogReportRequest);
             requestLogReportRequest.setPageSize(500);
+            multiSubmit = true;
             for (int i = 0; i < pageResponse.getTotalPages(); i++) {
                 List<ItemRequestReceivedInformationEntity> entityList = getCount(requestLogReportRequest).getContent();
                 for (ItemRequestReceivedInformationEntity entity : entityList) {
@@ -93,9 +96,9 @@ public class RequestItemService {
                 }
             }
         }
-        if(count > 0){
+        if(multiSubmit && count > 0){
             requestLogReportRequest.setStatus(ScsbConstants.PARTIALLY);
-        } else {
+        } else if(multiSubmit){
             requestLogReportRequest.setStatus(ScsbConstants.SUCCESS);
         }
         return requestLogReportRequest;
