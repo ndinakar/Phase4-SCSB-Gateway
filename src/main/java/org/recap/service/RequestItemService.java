@@ -208,7 +208,7 @@ public class RequestItemService {
     public void updateReceivedRequestInformation(boolean isResponseReceived, Integer requestLogId) {
         try {
             if (isResponseReceived)
-                itemRequestInformationRepository.update(requestLogId, ScsbConstants.SUCCESS, 1);
+                itemRequestInformationRepository.update(requestLogId, ScsbConstants.SUCCESS, 1, new Date());
         } catch (Exception e) {
             log.info(ScsbConstants.REQUEST_LOG_EXCEPTOIN_UPDATE, e.getMessage());
         }
