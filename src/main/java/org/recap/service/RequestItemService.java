@@ -162,9 +162,9 @@ public class RequestItemService {
             toDate = getToDate(requestToDate);
         }
         try {
-            pageReponse = itemRequestInformationRepository.findByInstitutionAndStatusAndFromDateAndEndDateAndValidationMessage(pageable, requestLogReportRequest.getInstitution().toUpperCase(), requestLogReportRequest.getStatus().toUpperCase(), fromDate, toDate,requestLogReportRequest.getValidationStatus().toUpperCase());
+            pageReponse = itemRequestInformationRepository.findByInstitutionAndStatusAndFromDateAndEndDateAndValidationStatus(pageable, requestLogReportRequest.getInstitution(), requestLogReportRequest.getStatus(), fromDate, toDate,requestLogReportRequest.getValidationStatus());
         } catch (Exception e) {
-            log.info("exception occurred while pull records from gateway item request is :: {}",e.getMessage());
+            log.info(ScsbConstants.REQUEST_LOG_EXCEPTION_PULL,e.getMessage());
         }
         entityList = pageReponse.getContent();
         requestLogReportRequest.setTotalPageCount(pageReponse.getTotalPages());

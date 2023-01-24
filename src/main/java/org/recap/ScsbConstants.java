@@ -69,6 +69,7 @@ public final class ScsbConstants {
 
     public static final String REQUEST_LOG_EXCEPTOIN_SAVE = "exception occurred while saving request in request log table and message is: {}";
     public static final String REQUEST_LOG_EXCEPTOIN_UPDATE = "exception occured while updating request status: {}";
+    public static final String REQUEST_LOG_EXCEPTION_PULL = "exception occurred while pull records from gateway item request is :: {}";
 
 
     private ScsbConstants() {
