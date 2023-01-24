@@ -149,15 +149,15 @@ public class RequestItemRestController extends AbstractController  {
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,"",Boolean.TRUE);
         } catch (HttpClientErrorException e) {
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,e.getMessage(),Boolean.TRUE);
-            log.error("error::", e.getMessage());
+            log.error(ScsbConstants.ERROR_LOG, e.getMessage());
             statusCode = e.getStatusCode();
             screenMessage = e.getResponseBodyAsString();
         } catch (RestClientException e){
-            log.error("error::", e.getMessage());
+            log.error(ScsbConstants.ERROR_LOG, e.getMessage());
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,e.getMessage(),Boolean.FALSE);
         } catch (Exception e){
-            log.error("error::", e.getMessage());
+            log.error(ScsbConstants.ERROR_LOG, e.getMessage());
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,e.getMessage(),Boolean.FALSE);
         }
