@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCaseUT;
 import org.recap.controller.swagger.RequestItemRestController;
-import org.recap.entity.ItemRequestReceivedInformationEntity;
+import org.recap.model.jpa.ItemRequestReceivedInformationEntity;
 import org.recap.model.ItemRequestInformation;
 import org.recap.model.request.RequestLogReportRequest;
 import org.recap.repository.ItemRequestInformationRepository;
@@ -60,7 +60,7 @@ public class RequestItemServiceUTTest extends BaseTestCaseUT {
         String format = dt.format(date);
         requestLogReportRequest.setFromDate(format);
         requestLogReportRequest.setToDate(format);
-        requestLogReportRequest.setId(1);
+        requestLogReportRequest.setGatewayRequestLogId(1);
         return requestLogReportRequest;
     }
     private Optional<ItemRequestReceivedInformationEntity> getItemRequestReceivedInformationEntity() {
@@ -84,7 +84,7 @@ public class RequestItemServiceUTTest extends BaseTestCaseUT {
     }
     public RequestLogReportRequest getRequestLogReportRequestNoBody() {
         RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
-        requestLogReportRequest.setId(0);
+        requestLogReportRequest.setGatewayRequestLogId(0);
         requestLogReportRequest.setPageNumber(1);
         requestLogReportRequest.setPageSize(1);
         return requestLogReportRequest;
