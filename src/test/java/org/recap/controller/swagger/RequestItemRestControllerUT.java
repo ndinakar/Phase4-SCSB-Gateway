@@ -5,12 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.ProducerTemplate;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.recap.BaseTestCase;
 import org.recap.PropertyKeyConstants;
 import org.recap.ScsbCommonConstants;
@@ -35,7 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 
 
 /**
@@ -836,8 +835,8 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         ItemResponseInformation itemResponseInformation = null;
         ResponseEntity responseEntity = new ResponseEntity("Success", HttpStatus.OK);
         try {
-            Mockito.doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(), any(),Boolean.TRUE);
-            Mockito.doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(), any(),Boolean.FALSE);
+            doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(), any(),Boolean.TRUE);
+            doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(), any(),Boolean.FALSE);
             Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, getItemRequestInformation(), String.class)).thenReturn(responseEntity);
             itemResponseInformation = requestItemRestController.itemRequest(getItemRequestInformation());
             assertNotNull(itemResponseInformation);
@@ -856,8 +855,8 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         ItemResponseInformation itemResponseInformation = null;
         ResponseEntity responseEntity = new ResponseEntity("Success", HttpStatus.OK);
         try {
-            Mockito.doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(ItemRequestInformation.class),any(String.class), Boolean.TRUE);
-            Mockito.doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(ItemRequestInformation.class),any(String.class), Boolean.FALSE);
+            doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(ItemRequestInformation.class),any(String.class), Boolean.TRUE);
+            doThrow(new Exception()).when(service).saveReceivedRequestInformation(any(ItemRequestInformation.class),any(String.class), Boolean.FALSE);
             Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, getItemRequestInformation(), String.class)).thenThrow(new Exception("Exception occured"));
             itemResponseInformation = requestItemRestController.itemRequest(getItemRequestInformation());
             assertNotNull(itemResponseInformation);
@@ -887,7 +886,7 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         ResponseEntity responseEntity = new ResponseEntity("Success", HttpStatus.OK);
         try {
             Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, getItemRequestInformation(), String.class)).thenReturn(responseEntity);
-            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation());
+            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation(),1);
             assertNotNull(itemResponseInformation);
             assertTrue(itemResponseInformation.isSuccess());
             assertEquals("Message received, your request will be processed", itemResponseInformation.getScreenMessage());
@@ -902,9 +901,10 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         ItemResponseInformation itemResponseInformation = null;
         ResponseEntity responseEntity = new ResponseEntity("Success", HttpStatus.OK);
         try {
-            Mockito.doThrow(new Exception()).when(service).updateItemRequest(any(ItemRequestInformation.class));
+            doThrow(new Exception("Error occurred")).when(service)
+                    .updateItemRequest(anyString(), anyInt());
             Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, getItemRequestInformation(), String.class)).thenReturn(responseEntity);
-            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation());
+            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation(), 1);
             assertNotNull(itemResponseInformation);
             assertTrue(itemResponseInformation.isSuccess());
             assertEquals("Message received, your request will be processed", itemResponseInformation.getScreenMessage());
@@ -921,9 +921,10 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         ItemResponseInformation itemResponseInformation = null;
         ResponseEntity responseEntity = new ResponseEntity("Success", HttpStatus.OK);
         try {
-            Mockito.doThrow(new Exception()).when(service).updateItemRequest(any(ItemRequestInformation.class));
+            doThrow(new Exception("Error occurred")).when(service)
+                    .updateItemRequest(anyString(), anyInt());
             Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, getItemRequestInformation(), String.class)).thenThrow(new Exception("Exception occured"));
-            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation());
+            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation(),1);
             assertNotNull(itemResponseInformation);
             assertTrue(itemResponseInformation.isSuccess());
             assertEquals("Message received, your request will be processed", itemResponseInformation.getScreenMessage());
@@ -942,7 +943,7 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         try {
             ReflectionTestUtils.setField(requestItemRestController, "producer", null);
             Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, getItemRequestInformation(), String.class)).thenReturn(responseEntity);
-            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation());
+            itemResponseInformation = requestItemRestController.itemSubmitRequest(getItemRequestInformation(),1);
             assertNotNull(itemResponseInformation);
         } catch (Exception e) {
             e.printStackTrace();
@@ -955,7 +956,7 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         try {
             ItemRequestInformation itemRequestInfo = new ItemRequestInformation();
             Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class)).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
-            itemResponseInformation = requestItemRestController.itemSubmitRequest(itemRequestInfo);
+            itemResponseInformation = requestItemRestController.itemSubmitRequest(itemRequestInfo, 1);
             assertNotNull(itemResponseInformation);
         } catch (Exception e) {
             e.printStackTrace();

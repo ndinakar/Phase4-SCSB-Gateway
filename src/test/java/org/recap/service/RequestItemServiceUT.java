@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
 import org.recap.controller.swagger.RequestItemRestController;
-import org.recap.entity.ItemRequestReceivedInformationEntity;
+import org.recap.model.jpa.ItemRequestReceivedInformationEntity;
 import org.recap.model.ItemRequestInformation;
 import org.recap.model.request.RequestLogReportRequest;
 import org.recap.repository.ItemRequestInformationRepository;
@@ -99,24 +99,24 @@ public class RequestItemServiceUT extends BaseTestCase {
 
     @Test
     public void updateReceivedRequestInformationTest() {
-        service.updateReceivedRequestInformation(new ItemRequestInformation(), true);
+        service.updateReceivedRequestInformation("success", true, 1);
     }
 
     @Test
     public void updateReceivedRequestInformationException() {
-        service.updateReceivedRequestInformation(new ItemRequestInformation(), false);
+        service.updateReceivedRequestInformation("failure", false, 0);
     }
 
     @Test
     public void updateItemRequestTest() {
-        service.updateItemRequest(new ItemRequestInformation());
+        service.updateItemRequest("sucess", 1);
     }
 
     @Test
     public void prepareItemInfoFromrequestTest() {
         try {
             RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
-            requestLogReportRequest.setId(2);
+            requestLogReportRequest.setGatewayRequestLogId(2);
             Mockito.when(repository.findById(any())).thenReturn(Optional.of(getItemRequestReceivedInformationEntity()));
             ReflectionTestUtils.invokeMethod(service, "prepareItemInfoFromrequest", requestLogReportRequest);
         } catch (Exception e) {
@@ -547,7 +547,7 @@ public class RequestItemServiceUT extends BaseTestCase {
     public void submitRequestTest() {
         try {
             RequestLogReportRequest requestLogReportRequest = getRequestLogReportRequest();
-            requestLogReportRequest.setId(1);
+            requestLogReportRequest.setGatewayRequestLogId(1);
             requestLogReportRequest.setStatus("Resubmit is successfull");
             ReflectionTestUtils.invokeMethod(service, "submitRequests", requestLogReportRequest);
             service.submitRequests(requestLogReportRequest);

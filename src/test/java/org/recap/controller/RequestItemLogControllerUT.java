@@ -65,7 +65,7 @@ public class RequestItemLogControllerUT extends BaseTestCase {
         RequestLogReportRequest requestLogReportRequest = new RequestLogReportRequest();
         requestLogReportRequest.setStatus("FAILED");
         requestLogReportRequest.setPageSize(1);
-        requestLogReportRequest.setId(1);
+        requestLogReportRequest.setGatewayRequestLogId(1);
         requestLogReportRequest.setInstitution("TEST");
         requestLogReportRequest.setFromDate(new Date().toString());
         return requestLogReportRequest;
