@@ -963,5 +963,20 @@ public class RequestItemRestControllerUT extends BaseTestCase {
         }
     }
 
+    @Test
+    public void testRequestSubmitItem_RestClientException() {
+        ItemResponseInformation itemResponseInformation = null;
+        try {
+            Mockito.when(mockRestTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, null, null)).thenThrow(new RestClientException("Exception Occurred"));
+            itemResponseInformation = requestItemRestController.itemSubmitRequest(null, 1);
+            assertNotNull(itemResponseInformation);
+        }catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-}
+
+
+    }
