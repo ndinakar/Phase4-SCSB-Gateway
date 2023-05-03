@@ -879,6 +879,12 @@ public class RequestItemRestControllerUT extends BaseTestCase {
 
     }
 
+    @Test
+    public void requestItemtestExceptionTest() {
+        ItemResponseInformation itemResponseInformation = requestItemRestController.itemRequest(getItemRequestInformation());
+        assertNotNull(itemResponseInformation);
+    }
+
 
     @Test
     public void itemSubmitRequestTest() {
