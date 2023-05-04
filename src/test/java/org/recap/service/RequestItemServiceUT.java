@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.recap.BaseTestCase;
+import org.recap.ScsbConstants;
 import org.recap.controller.swagger.RequestItemRestController;
 import org.recap.model.jpa.ItemRequestReceivedInformationEntity;
 import org.recap.model.ItemRequestInformation;
@@ -20,8 +22,7 @@ import java.util.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Chittoor Charan Raj
@@ -106,6 +107,17 @@ public class RequestItemServiceUT extends BaseTestCase {
     public void updateReceivedRequestInformationException() {
         service.updateReceivedRequestInformation("failure", false, 0);
     }
+
+    @Test
+    public void updateReceivedRequestInformationException1() {
+        try {
+            doThrow(new RuntimeException("Test Exception")).when(repository).update(null, anyInt(), null, anyInt(), any(Date.class));
+            service.updateReceivedRequestInformation("failure", false, 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Test
     public void updateItemRequestTest() {
@@ -438,6 +450,22 @@ public class RequestItemServiceUT extends BaseTestCase {
 
     }
 
+    @Test
+    public void saveReceivedRequestInformationsExceptionTest() {
+        try {
+            ItemRequestInformation itemRequestInfo = new ItemRequestInformation();
+            ItemRequestReceivedInformationEntity itemRequestReceivedInformationEntity = new ItemRequestReceivedInformationEntity();
+            itemRequestReceivedInformationEntity.setStatus("FAILED");
+            itemRequestReceivedInformationEntity.setStatusId(2);
+            boolean isResponseReceived = false;
+            Mockito.when(repository.save(Mockito.any())).thenReturn(itemRequestReceivedInformationEntity);
+            service.saveReceivedRequestInformation(itemRequestInfo,"", isResponseReceived);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     @Test
     public void getCountTestDate() {
@@ -554,7 +582,11 @@ public class RequestItemServiceUT extends BaseTestCase {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+
+
+
 
 }
 
