@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Dinakar N created on 10/05/23
  */
 @RestController
-public class SpringController {
+public class SpringMvcController {
     @GetMapping("/")
-    public String getMvc() {
+    public String checkMvc() {
         return "index";
     }
 }
