@@ -1,5 +1,6 @@
 package org.recap.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.ScsbCommonConstants;
 import org.recap.util.HelperUtil;
@@ -17,6 +18,7 @@ import java.util.Date;
  * Created by hemalathas on 7/9/16.
  */
 @Component
+@Slf4j
 public class SwaggerInterceptor implements HandlerInterceptor {
 
     MD5EncoderUtil md5EncoderUtil;
@@ -46,7 +48,9 @@ public class SwaggerInterceptor implements HandlerInterceptor {
         String key = request.getHeader(ScsbCommonConstants.API_KEY);
         if (key != null && matchingWithInstitutionKeys(key)) {
             continueExport = true;
+            log.info("the given key is valid");
         } else {
+            log.info("the given key is invalid");
             continueExport = false;
             response.setStatus(401);
             response.setHeader("Date" , date);
