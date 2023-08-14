@@ -46,14 +46,14 @@
 				</stackHash>
 				<provider class="org.recap.CustomStackTraceJsonProvider">
 					<fieldName>stack_trace</fieldName>
-					<throwableConverter
+					<!--<throwableConverter
 						class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
 						<shortenedClassNameLength>short</shortenedClassNameLength>
 						<maxDepthPerThrowable>short</maxDepthPerThrowable>
 						<maxLength>short</maxLength>
 						<rootCauseFirst>true</rootCauseFirst>
 						<exclude>sun\.reflect\..*\.invoke.*</exclude>
-					</throwableConverter>
+					</throwableConverter>-->
 				</provider>
 			</providers>
 		</encoder>

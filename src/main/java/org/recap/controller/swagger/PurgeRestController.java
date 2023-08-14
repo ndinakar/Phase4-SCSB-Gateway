@@ -1,13 +1,12 @@
 package org.recap.controller.swagger;
 
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
-import org.slf4j.Logger;;
+import org.slf4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+
+;
 
 /**
  * Created by hemalathas on 10/4/17.
@@ -42,8 +43,8 @@ public class PurgeRestController extends AbstractController {
      * @return the response entity
      */
     @GetMapping(value = "/purgeEmailAddress")
-    @ApiOperation(value = "purgeEmailAddress",notes = "The Purge email address API as the name suggests purges all email addresses of patrons stored in SCSB database as part of request information. This API is internally used to purge emails through a scheduled job at regular intervals to remove Patron identifying information from SCSB.", nickname = "purgeEmailAddress", position = 0)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "purgeEmailAddress",description = "The Purge email address API as the name suggests purges all email addresses of patrons stored in SCSB database as part of request information. This API is internally used to purge emails through a scheduled job at regular intervals to remove Patron identifying information from SCSB.",  operationId = "0")
+    @ApiResponse(responseCode = "200", description = "OK")
     public ResponseEntity purgeEmailAddress(){
         ResponseEntity<Map> responseEntity = null;
         Map response = null;
@@ -64,8 +65,8 @@ public class PurgeRestController extends AbstractController {
      * @return the response entity
      */
     @GetMapping(value = "/purgeExceptionRequests")
-    @ApiOperation(value = "purgeExceptionRequests",notes = "The Purge exception requests API as the name suggests purges all requests that have gone to an exception status in SCSB database. This API is internally used by SCSB to purge requests with status as exception through a scheduled job at regular intervals.", nickname = "purgeExceptionRequests", position = 0)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "purgeExceptionRequests",description = "The Purge exception requests API as the name suggests purges all requests that have gone to an exception status in SCSB database. This API is internally used by SCSB to purge requests with status as exception through a scheduled job at regular intervals.",  operationId = "0")
+    @ApiResponse(responseCode = "200", description = "OK")
     public ResponseEntity purgeExceptionRequests() {
         Map response = null;
         try {

@@ -1,9 +1,7 @@
 package org.recap.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
 import org.recap.model.search.AbstractSearchResultRow;
 
 import java.util.ArrayList;
@@ -13,16 +11,16 @@ import java.util.List;
  * Created by rajeshbabuk on 11/7/16.
  */
 @Data
-@ApiModel(value="SearchResultRow", description="Model for Displaying Search Result")
+@Schema(name="SearchResultRow", description="Model for Displaying Search Result")
 public class SearchResultRow extends AbstractSearchResultRow {
 
-    @ApiModelProperty(name= "searchItemResultRows", value= "Item Results",position = 16)
+    @Schema(name= "searchItemResultRows", description= "Item Results",maxLength = 16)
     private List<SearchItemResultRow> searchItemResultRows = new ArrayList<>();
-    @ApiModelProperty(name= "owningInstitutionBibId", value= "Owning Institution Bib Id",position = 18)
+    @Schema(name= "owningInstitutionBibId", description= "Owning Institution Bib Id",maxLength = 18)
     private String owningInstitutionBibId;
-    @ApiModelProperty(name= "owningInstitutionHoldingsId", value= "Owning Institution Holdings Id",position = 19)
+    @Schema(name= "owningInstitutionHoldingsId", description= "Owning Institution Holdings Id",maxLength = 19)
     private String owningInstitutionHoldingsId;
-    @ApiModelProperty(name= "owningInstitutionItemId", value= "Owning Institution Item Id",position = 20)
+    @Schema(name= "owningInstitutionItemId", description= "Owning Institution Item Id",maxLength = 20)
     private String owningInstitutionItemId;
 
     private Integer requestPosition;
