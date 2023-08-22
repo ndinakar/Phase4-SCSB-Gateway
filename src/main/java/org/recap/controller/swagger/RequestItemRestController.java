@@ -42,7 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,7 +54,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -136,7 +134,7 @@ public class RequestItemRestController extends AbstractController  {
     public ItemResponseInformation itemRequest(@Parameter(description = "Parameters to place a request on an Item", required = true, name = "requestItemJson") @RequestBody ItemRequestInformation itemRequestInfo) {
         ItemResponseInformation itemResponseInformation = new ItemResponseInformation();
         List<String> itemBarcodes;
-        HttpStatusCode statusCode;
+        HttpStatus statusCode;
         boolean bSuccess;
         String screenMessage = null;
         ObjectMapper objectMapper;
@@ -145,13 +143,13 @@ public class RequestItemRestController extends AbstractController  {
             log.info("Item Request Information : {}",itemRequestInfo);
             itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
-            statusCode = responseEntity.getStatusCode();
+            statusCode = (HttpStatus) responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,"",Boolean.TRUE);
         } catch (HttpClientErrorException e) {
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,e.getMessage(),Boolean.TRUE);
             log.error(ScsbConstants.ERROR_LOG, e.getMessage());
-            statusCode = e.getStatusCode();
+            statusCode = (HttpStatus) e.getStatusCode();
             screenMessage = e.getResponseBodyAsString();
         } catch (RestClientException e){
             log.error(ScsbConstants.ERROR_LOG, e.getMessage());
@@ -213,7 +211,7 @@ public class RequestItemRestController extends AbstractController  {
             response = (String) responseEntity.getBody();
         } catch (HttpClientErrorException httpEx) {
             log.error("error-->", httpEx);
-            HttpStatusCode statusCode = httpEx.getStatusCode();
+            HttpStatus statusCode = (HttpStatus) httpEx.getStatusCode();
             String responseBodyAsString = httpEx.getResponseBodyAsString();
             return new ResponseEntity<>(responseBodyAsString, getHttpHeaders(), statusCode);
         } catch (Exception ex) {
@@ -643,7 +641,7 @@ public class RequestItemRestController extends AbstractController  {
     public ItemResponseInformation itemSubmitRequest(ItemRequestInformation itemRequestInfo,Integer requestLogId) {
         ItemResponseInformation itemResponseInformation = new ItemResponseInformation();
         List<String> itemBarcodes;
-        HttpStatusCode statusCode;
+        HttpStatus statusCode;
         boolean bSuccess;
         String screenMessage = null;
         ObjectMapper objectMapper;
@@ -652,12 +650,12 @@ public class RequestItemRestController extends AbstractController  {
             log.info("Resubmit Item Request Information : {}",itemRequestInfo);
             itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
-            statusCode = responseEntity.getStatusCode();
+            statusCode = (HttpStatus) responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
             requestItemService.updateItemRequest("",requestLogId);
         } catch (HttpClientErrorException e) {
             log.error("error::", e);
-            statusCode = e.getStatusCode();
+            statusCode = (HttpStatus) e.getStatusCode();
             screenMessage = e.getResponseBodyAsString();
             requestItemService.updateItemRequest(e.getMessage(),requestLogId);
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
