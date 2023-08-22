@@ -237,14 +237,16 @@ public class RequestItemRestController extends AbstractController  {
     public ItemCheckoutResponse checkoutItemRequest(@Parameter(description = "Parameters for checking out an item", required = true, name = "requestItemJson") @RequestBody ItemCheckOutRequest itemCheckOutRequest) {
         ItemCheckoutResponse itemCheckoutResponse = null;
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
-        String response = "";
+        String response = null;
         try {
             itemRequestInfo.setPatronBarcode(itemCheckOutRequest.getPatronIdentifier());
             itemRequestInfo.setItemBarcodes(itemCheckOutRequest.getItemBarcodes());
             itemRequestInfo.setItemOwningInstitution(itemCheckOutRequest.getItemOwningInstitution());
             itemRequestInfo.setRequestingInstitution(itemCheckOutRequest.getItemOwningInstitution());
             ResponseEntity responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/checkoutItem", itemRequestInfo, String.class);
-            response = responseEntity.getBody().toString();
+            if(responseEntity.getStatusCode().is2xxSuccessful()){
+                response = (String) responseEntity.getBody();
+            }
             ObjectMapper om = getObjectMapper();
             itemCheckoutResponse = om.readValue(response, ItemCheckoutResponse.class);
         } catch (RestClientException ex) {
@@ -280,7 +282,8 @@ public class RequestItemRestController extends AbstractController  {
             itemRequestInfo.setItemOwningInstitution(itemCheckInRequest.getItemOwningInstitution());
             itemRequestInfo.setRequestingInstitution(itemCheckInRequest.getItemOwningInstitution());
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/checkinItem", itemRequestInfo, String.class);
-            response = responseEntity.getBody().toString();
+            if(responseEntity.getStatusCode().is2xxSuccessful()){
+            response = responseEntity.getBody().toString();}
             ObjectMapper om = getObjectMapper();
             itemCheckinResponse = om.readValue(response, ItemCheckinResponse.class);
         } catch (RestClientException ex) {
