@@ -207,10 +207,10 @@ public class RequestItemRestController extends AbstractController  {
     @ResponseBody
     public ResponseEntity validateItemRequest(@Parameter(description = "Parameters to validate information prior to request", required = true, name = "requestItemJson") @RequestBody ItemRequestInformation itemRequestInfo) {
         ResponseEntity responseEntity ;
-        String response = null;
+        String response = "";
         try {
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/validateItemRequestInformations", itemRequestInfo, String.class);
-            response = (String) responseEntity.getBody();
+            response =  responseEntity.getBody().toString();
         } catch (HttpClientErrorException httpEx) {
             log.error("error-->", httpEx);
             HttpStatusCode statusCode = httpEx.getStatusCode();
@@ -275,14 +275,14 @@ public class RequestItemRestController extends AbstractController  {
         ItemCheckinResponse itemCheckinResponse = null;
         ResponseEntity responseEntity = null;
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
-        String response = null;
+        String response = "";
         try {
             itemRequestInfo.setPatronBarcode(itemCheckInRequest.getPatronIdentifier());
             itemRequestInfo.setItemBarcodes(itemCheckInRequest.getItemBarcodes());
             itemRequestInfo.setItemOwningInstitution(itemCheckInRequest.getItemOwningInstitution());
             itemRequestInfo.setRequestingInstitution(itemCheckInRequest.getItemOwningInstitution());
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/checkinItem", itemRequestInfo, String.class);
-            response = (String) responseEntity.getBody();
+            response = responseEntity.getBody().toString();
             ObjectMapper om = getObjectMapper();
             itemCheckinResponse = om.readValue(response, ItemCheckinResponse.class);
         } catch (RestClientException ex) {
