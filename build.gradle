@@ -54,7 +54,7 @@ dependencies {
 	implementation('org.apache.camel.springboot:camel-spring-boot-starter:4.0.0-RC2')
 	implementation('org.apache.camel:camel-activemq:4.0.0-RC2')
 //	implementation('org.apache.camel:camel-jms:3.20.4')
-	implementation 'org.apache.camel:camel-jms:4.0.0-RC2'
+	implementation group: 'org.apache.camel', name: 'camel-sjms', version: '4.0.0-RC2'
 	implementation('org.apache.camel:camel-ftp:4.0.0-RC2')
 	implementation('org.apache.camel:camel-csv:4.0.0-RC2')
 	implementation('info.freelibrary:freelib-marc4j:2.6.12')
