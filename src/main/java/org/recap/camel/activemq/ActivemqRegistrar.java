@@ -11,12 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.JMSException;
+import org.springframework.stereotype.Component;
 
 
 /**
  * Created by premkb on 12/10/16.
  */
-@Configuration
+@Component
 public class ActivemqRegistrar {
 
     /**
