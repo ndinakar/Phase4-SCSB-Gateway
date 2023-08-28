@@ -2,7 +2,6 @@ package org.recap.camel.activemq;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Configuration;
 import org.apache.camel.component.activemq.ActiveMQComponent;
 import org.recap.PropertyKeyConstants;
 import org.recap.ScsbCommonConstants;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by premkb on 12/10/16.
  */
-@Configuration
+@Component
 public class ActivemqRegistrar {
 
     /**
