@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by premkb on 12/10/16.
  */
-@Component
+@Configuration
 public class ActivemqRegistrar {
 
     /**
