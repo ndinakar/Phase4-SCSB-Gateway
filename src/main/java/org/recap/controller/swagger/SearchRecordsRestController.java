@@ -1,10 +1,12 @@
 package org.recap.controller.swagger;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
@@ -14,14 +16,9 @@ import org.recap.model.search.SearchRecordsRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import springfox.documentation.annotations.ApiIgnore;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/searchService")
-@Api(value="search")
+@Tag(name="search")
 public class SearchRecordsRestController extends AbstractController {
 
 
@@ -43,9 +40,10 @@ public class SearchRecordsRestController extends AbstractController {
      * @return the search records response
      */
     @PostMapping(value="/search")
-    @ApiOperation(value = "search",notes = "The Search API allows the end user to search the SCSB database for bibliographic records using different fields. It takes in a JSON formatted request as input and allows pagination.", nickname = "search", position = 0, consumes="application/json")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful Search")})
-    public SearchRecordsResponse searchRecordsServiceGetParam(@ApiParam(value = "Parameters to search a record in SCSB", required = true, name = "searchRecordsRequest")@RequestBody SearchRecordsRequest searchRecordsRequest) {
+    @Operation(summary = "search",description ="The Search API allows the end user to search the SCSB database for bibliographic records using different fields. It takes in a JSON formatted request as input and allows pagination.",  operationId = "0")
+    @ApiResponse(responseCode = "200", description = "Successful Search", content = { @Content(mediaType = "application/json",
+            schema = @Schema(implementation = SearchRecordsResponse.class)) })
+    public SearchRecordsResponse searchRecordsServiceGetParam(@Parameter(description = "Parameters to search a record in SCSB", required = true, name = "searchRecordsRequest")@RequestBody SearchRecordsRequest searchRecordsRequest) {
         SearchRecordsResponse searchRecordsResponse = new SearchRecordsResponse();
         try {
             HttpEntity<SearchRecordsRequest> httpEntity = new HttpEntity<>(searchRecordsRequest, getRestHeaderService().getHttpHeaders());
@@ -73,19 +71,19 @@ public class SearchRecordsRestController extends AbstractController {
      * @param pageSize                    the page size
      * @return the list
      */
-    @ApiIgnore
+    @Hidden
     @GetMapping(value="/searchByParam")
-    @ApiOperation(value = "searchParam",notes = "The Search by param API allows the end user to search the SCSB database for bibliographic records using the parameters listed.", nickname = "search", position = 0)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful Search")})
+    @Operation(summary = "searchParam",description ="The Search by param API allows the end user to search the SCSB database for bibliographic records using the parameters listed.",  operationId = "0")
+    @ApiResponse(responseCode = "200", description = "Successful Search")
     public List<SearchResultRow> searchRecordsServiceGet(
             @RequestParam(name="fieldValue", required = false)  String fieldValue,
-            @ApiParam(name="fieldName",required = false,allowableValues = "Author_search,Title_search,TitleStartsWith,Publisher,PublicationPlace,PublicationDate,Subject,ISBN,ISSN,OCLCNumber,Notes,CallNumber_search,Barcode") @RequestParam(name="fieldName", value = "fieldName" , required = false)  String fieldName,
-            @ApiParam(name="owningInstitutions", value= "${swagger.values.owningInstitutions}")@RequestParam(name="owningInstitutions",required = false ) String owningInstitutions,
-            @ApiParam(name="collectionGroupDesignations", value = "${swagger.values.cgds}") @RequestParam(name="collectionGroupDesignations", value = "collectionGroupDesignations" , required = false)  String collectionGroupDesignations,
-            @ApiParam(name="availability", value = "Availability: Available, NotAvailable") @RequestParam(name="availability", value = "availability" , required = false)  String availability,
-            @ApiParam(name="materialTypes", value = "MaterialTypes: Monograph, Serial, Other") @RequestParam(name="materialTypes", value = "materialTypes" , required = false)  String materialTypes,
-            @ApiParam(name="useRestrictions", value = "Use Restrictions: NoRestrictions, InLibraryUse, SupervisedUse") @RequestParam(name="useRestrictions", value = "useRestrictions" , required = false)  String useRestrictions,
-            @ApiParam(name="pageSize", value = "Page Size in Numers - 10, 20 30...") @RequestParam(name="pageSize", required = false) Integer pageSize
+            @Parameter(name="fieldName",required = false,description = "Author_search,Title_search,TitleStartsWith,Publisher,PublicationPlace,PublicationDate,Subject,ISBN,ISSN,OCLCNumber,Notes,CallNumber_search,Barcode") @RequestParam(name="fieldName", value = "fieldName" , required = false)  String fieldName,
+            @Parameter(name="owningInstitutions", description= "${swagger.values.owningInstitutions}")@RequestParam(name="owningInstitutions",required = false ) String owningInstitutions,
+            @Parameter(name="collectionGroupDesignations", description = "${swagger.values.cgds}") @RequestParam(name="collectionGroupDesignations", value = "collectionGroupDesignations" , required = false)  String collectionGroupDesignations,
+            @Parameter(name="availability", description = "Availability: Available, NotAvailable") @RequestParam(name="availability", value = "availability" , required = false)  String availability,
+            @Parameter(name="materialTypes", description = "MaterialTypes: Monograph, Serial, Other") @RequestParam(name="materialTypes", value = "materialTypes" , required = false)  String materialTypes,
+            @Parameter(name="useRestrictions", description = "Use Restrictions: NoRestrictions, InLibraryUse, SupervisedUse") @RequestParam(name="useRestrictions", value = "useRestrictions" , required = false)  String useRestrictions,
+            @Parameter(name="pageSize", description = "Page Size in Numers - 10, 20 30...") @RequestParam(name="pageSize", required = false) Integer pageSize
     ) {
         HttpEntity<List> responseEntity = null;
         HttpEntity request = new HttpEntity<>(getRestHeaderService().getHttpHeaders());

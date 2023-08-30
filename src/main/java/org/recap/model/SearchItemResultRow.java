@@ -1,7 +1,7 @@
 package org.recap.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.recap.model.search.AbstractSearchItemResultRow;
@@ -11,14 +11,14 @@ import org.recap.model.search.AbstractSearchItemResultRow;
  */
 @Data
 @EqualsAndHashCode(of = {"chronologyAndEnum"})
-@ApiModel(value="SearchItemResultRow", description="Model for Displaying Item Result")
+@Schema(name="SearchItemResultRow", description="Model for Displaying Item Result")
 public class SearchItemResultRow extends AbstractSearchItemResultRow implements Comparable<SearchItemResultRow> {
 
-    @ApiModelProperty(name= "itemId", value= "Item Id",position = 8)
+    @Schema(name= "itemId", description= "Item Id",maxLength = 8)
     private Integer itemId;
-    @ApiModelProperty(name= "owningInstitutionItemId", value= "Owning Institution Item Id",position = 9)
+    @Schema(name= "owningInstitutionItemId", description= "Owning Institution Item Id",maxLength = 9)
     private String owningInstitutionItemId;
-    @ApiModelProperty(name= "owningInstitutionHoldingsId", value= "Owning Institution Holdings Id",position = 10)
+    @Schema(name= "owningInstitutionHoldingsId", description= "Owning Institution Holdings Id",maxLength = 10)
     private String owningInstitutionHoldingsId;
 
     @Override

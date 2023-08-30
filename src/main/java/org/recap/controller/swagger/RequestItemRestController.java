@@ -1,11 +1,11 @@
 package org.recap.controller.swagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.ProducerTemplate;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +54,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,12 +65,12 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/requestItem")
-@Api(value = "requestItem")
+@Tag(name = "requestItem")
 public class RequestItemRestController extends AbstractController  {
 
 
 
-    @Autowired
+    @Autowired(required = false)
     private ProducerTemplate producer;
 
     @Autowired
@@ -129,10 +128,10 @@ public class RequestItemRestController extends AbstractController  {
      * @return the item response information
      */
     @PostMapping(value = ScsbConstants.REST_URL_REQUEST_ITEM)
-    @ApiOperation(value = "Request Item", notes = "The Request item API allows the user to raise a request (retrieve / recall / EDD) in SCSB for a valid item.", nickname = "requestItem")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "Request Item", description = "The Request item API allows the user to raise a request (retrieve / recall / EDD) in SCSB for a valid item.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public ItemResponseInformation itemRequest(@ApiParam(value = "Parameters to place a request on an Item", required = true, name = "requestItemJson") @RequestBody ItemRequestInformation itemRequestInfo) {
+    public ItemResponseInformation itemRequest(@Parameter(description = "Parameters to place a request on an Item", required = true, name = "requestItemJson") @RequestBody ItemRequestInformation itemRequestInfo) {
         ItemResponseInformation itemResponseInformation = new ItemResponseInformation();
         List<String> itemBarcodes;
         HttpStatus statusCode;
@@ -144,13 +143,13 @@ public class RequestItemRestController extends AbstractController  {
             log.info("Item Request Information : {}",itemRequestInfo);
             itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
-            statusCode = responseEntity.getStatusCode();
+            statusCode = (HttpStatus) responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,"",Boolean.TRUE);
         } catch (HttpClientErrorException e) {
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,e.getMessage(),Boolean.TRUE);
             log.error(ScsbConstants.ERROR_LOG, e.getMessage());
-            statusCode = e.getStatusCode();
+            statusCode = (HttpStatus) e.getStatusCode();
             screenMessage = e.getResponseBodyAsString();
         } catch (RestClientException e){
             log.error(ScsbConstants.ERROR_LOG, e.getMessage());
@@ -200,19 +199,19 @@ public class RequestItemRestController extends AbstractController  {
      * @return the response entity
      */
     @PostMapping(value = ScsbConstants.REST_URL_VALIDATE_REQUEST_ITEM)
-    @ApiOperation(value = "validateItemRequestInformations",
-            notes = "The Validate item request API is an internal API call made by SCSB to validate the various parameters of the request item API call. This is to ensure only valid data is allowed to be processed even when the request comes through the request item API.", nickname = "validateItemRequestInformation")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "validateItemRequestInformations",
+            description = "The Validate item request API is an internal API call made by SCSB to validate the various parameters of the request item API call. This is to ensure only valid data is allowed to be processed even when the request comes through the request item API.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public ResponseEntity validateItemRequest(@ApiParam(value = "Parameters to validate information prior to request", required = true, name = "requestItemJson") @RequestBody ItemRequestInformation itemRequestInfo) {
+    public ResponseEntity validateItemRequest(@Parameter(description = "Parameters to validate information prior to request", required = true, name = "requestItemJson") @RequestBody ItemRequestInformation itemRequestInfo) {
         ResponseEntity responseEntity ;
-        String response = null;
+        String response = "";
         try {
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/validateItemRequestInformations", itemRequestInfo, String.class);
-            response = (String) responseEntity.getBody();
+            response =  responseEntity.getBody().toString();
         } catch (HttpClientErrorException httpEx) {
             log.error("error-->", httpEx);
-            HttpStatus statusCode = httpEx.getStatusCode();
+            HttpStatus statusCode = (HttpStatus) httpEx.getStatusCode();
             String responseBodyAsString = httpEx.getResponseBodyAsString();
             return new ResponseEntity<>(responseBodyAsString, getHttpHeaders(), statusCode);
         } catch (Exception ex) {
@@ -231,21 +230,23 @@ public class RequestItemRestController extends AbstractController  {
      * @return the item checkout response
      */
     @PostMapping(value = "/checkoutItem")
-    @ApiOperation(value = "checkoutItem",
-            notes = "The Check-out item API call is an internal call made by SCSB as part of the request API call.", nickname = "checkoutItem")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "checkoutItem",
+            description = "The Check-out item API call is an internal call made by SCSB as part of the request API call.")
+    @ApiResponse(responseCode= "200", description = "OK")
     @ResponseBody
-    public ItemCheckoutResponse checkoutItemRequest(@ApiParam(value = "Parameters for checking out an item", required = true, name = "requestItemJson") @RequestBody ItemCheckOutRequest itemCheckOutRequest) {
+    public ItemCheckoutResponse checkoutItemRequest(@Parameter(description = "Parameters for checking out an item", required = true, name = "requestItemJson") @RequestBody ItemCheckOutRequest itemCheckOutRequest) {
         ItemCheckoutResponse itemCheckoutResponse = null;
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
-        String response = "";
+        String response = null;
         try {
             itemRequestInfo.setPatronBarcode(itemCheckOutRequest.getPatronIdentifier());
             itemRequestInfo.setItemBarcodes(itemCheckOutRequest.getItemBarcodes());
             itemRequestInfo.setItemOwningInstitution(itemCheckOutRequest.getItemOwningInstitution());
             itemRequestInfo.setRequestingInstitution(itemCheckOutRequest.getItemOwningInstitution());
             ResponseEntity responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/checkoutItem", itemRequestInfo, String.class);
-            response = responseEntity.getBody().toString();
+            if(responseEntity.getStatusCode().is2xxSuccessful()){
+                response = (String) responseEntity.getBody();
+            }
             ObjectMapper om = getObjectMapper();
             itemCheckoutResponse = om.readValue(response, ItemCheckoutResponse.class);
         } catch (RestClientException ex) {
@@ -266,22 +267,23 @@ public class RequestItemRestController extends AbstractController  {
      * @return the abstract response item
      */
     @PostMapping(value = "/checkinItem")
-    @ApiOperation(value = "checkinItem",
-            notes = "The Check-in item API is an internal call made by SCSB as part of the refile and accession API calls.", nickname = "checkinItem")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "checkinItem",
+            description ="The Check-in item API is an internal call made by SCSB as part of the refile and accession API calls.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public AbstractResponseItem checkinItemRequest(@ApiParam(value = "Parameters for checking in an item", required = true, name = "requestItemJson") @RequestBody ItemCheckInRequest itemCheckInRequest) {
+    public AbstractResponseItem checkinItemRequest(@Parameter(description = "Parameters for checking in an item", required = true, name = "requestItemJson") @RequestBody ItemCheckInRequest itemCheckInRequest) {
         ItemCheckinResponse itemCheckinResponse = null;
         ResponseEntity responseEntity = null;
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
-        String response = null;
+        String response = "";
         try {
             itemRequestInfo.setPatronBarcode(itemCheckInRequest.getPatronIdentifier());
             itemRequestInfo.setItemBarcodes(itemCheckInRequest.getItemBarcodes());
             itemRequestInfo.setItemOwningInstitution(itemCheckInRequest.getItemOwningInstitution());
             itemRequestInfo.setRequestingInstitution(itemCheckInRequest.getItemOwningInstitution());
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/checkinItem", itemRequestInfo, String.class);
-            response = (String) responseEntity.getBody();
+            if(responseEntity.getStatusCode().is2xxSuccessful()){
+            response = responseEntity.getBody().toString();}
             ObjectMapper om = getObjectMapper();
             itemCheckinResponse = om.readValue(response, ItemCheckinResponse.class);
         } catch (RestClientException ex) {
@@ -298,11 +300,11 @@ public class RequestItemRestController extends AbstractController  {
      * @return the abstract response item
      */
     @PostMapping(value = "/holdItem")
-    @ApiOperation(value = "holdItem",
-            notes = "The Hold item API call is an internal call made by SCSB to the partner's ILS to place a hold request as part of the request API workflow.", nickname = "holdItem")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "holdItem",
+            description ="The Hold item API call is an internal call made by SCSB to the partner's ILS to place a hold request as part of the request API workflow.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public AbstractResponseItem holdItemRequest(@ApiParam(value = "Parameters for placing a hold on the item in the ILS", required = true, name = "requestItemJson") @RequestBody ItemHoldRequest itemHoldRequest) {
+    public AbstractResponseItem holdItemRequest(@Parameter(description = "Parameters for placing a hold on the item in the ILS", required = true, name = "requestItemJson") @RequestBody ItemHoldRequest itemHoldRequest) {
         ItemHoldResponse itemHoldResponse = new ItemHoldResponse();
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
         String response = "";
@@ -338,11 +340,11 @@ public class RequestItemRestController extends AbstractController  {
      * @return the abstract response item
      */
     @PostMapping(value = "/cancelHoldItem")
-    @ApiOperation(value = "cancelHoldItem",
-            notes = "This internal call cancels a hold request in the partner ILS as part of the Cancel Request API.", nickname = "cancelHoldItem")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "cancelHoldItem",
+            description ="This internal call cancels a hold request in the partner ILS as part of the Cancel Request API.")
+    @ApiResponse(responseCode= "200", description = "OK")
     @ResponseBody
-    public AbstractResponseItem cancelHoldItemRequest(@ApiParam(value = "Parameters for canceling a hold on the Item", required = true, name = "requestItemJson") @RequestBody ItemHoldCancelRequest itemHoldCancelRequest) {
+    public AbstractResponseItem cancelHoldItemRequest(@Parameter(description = "Parameters for canceling a hold on the Item", required = true, name = "requestItemJson") @RequestBody ItemHoldCancelRequest itemHoldCancelRequest) {
         ItemHoldResponse itemHoldResponse = null;
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
         String response = "";
@@ -380,11 +382,11 @@ public class RequestItemRestController extends AbstractController  {
      * @return the abstract response item
      */
     @PostMapping(value = "/createBib")
-    @ApiOperation(value = "createBib",
-            notes = "The Create bibliographic record API is an internal call made by SCSB to partner ILS as part of the request API for cross partner borrowing. Usually when an item owned by another partner is requesting, the requesting institution will not have the metadata of the item that is being requested. In order to place the hold for the patron against the item, the Create bib record API creates a temporary record against which the hold can be placed and subsequent charge and discharge processes can be done.", nickname = "createBib")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "createBib",
+            description ="The Create bibliographic record API is an internal call made by SCSB to partner ILS as part of the request API for cross partner borrowing. Usually when an item owned by another partner is requesting, the requesting institution will not have the metadata of the item that is being requested. In order to place the hold for the patron against the item, the Create bib record API creates a temporary record against which the hold can be placed and subsequent charge and discharge processes can be done.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public AbstractResponseItem createBibRequest(@ApiParam(value = "Parameters for creating a temporary bibliographic record in the ILS", required = true, name = "requestItemJson") @RequestBody ItemCreateBibRequest itemCreateBibRequest) {
+    public AbstractResponseItem createBibRequest(@Parameter(description = "Parameters for creating a temporary bibliographic record in the ILS", required = true, name = "requestItemJson") @RequestBody ItemCreateBibRequest itemCreateBibRequest) {
         ItemCreateBibResponse itemCreateBibResponse = new ItemCreateBibResponse();
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
         String response;
@@ -417,10 +419,10 @@ public class RequestItemRestController extends AbstractController  {
      * @return the abstract response item
      */
     @PostMapping(value = "/itemInformation")
-    @ApiOperation(value = "itemInformation", notes = "The Item information API call is made internally by SCSB as part of the request API call.", nickname = "itemInformation")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "itemInformation", description ="The Item information API call is made internally by SCSB as part of the request API call.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public AbstractResponseItem itemInformation(@ApiParam(value = "Parameters to retrieve the item information from the ILS", required = true, name = "requestItemJson") @RequestBody ItemInformationRequest itemRequestInfo) {
+    public AbstractResponseItem itemInformation(@Parameter(description = "Parameters to retrieve the item information from the ILS", required = true, name = "requestItemJson") @RequestBody ItemInformationRequest itemRequestInfo) {
         HttpEntity<ItemInformationResponse> responseEntity;
         ItemInformationResponse itemInformationResponse;
         ItemInformationRequest itemInformationRequest = getItemInformationRequest();
@@ -449,11 +451,11 @@ public class RequestItemRestController extends AbstractController  {
      * @return the abstract response item
      */
     @PostMapping(value = "/recall")
-    @ApiOperation(value = "recall",
-            notes = "The Recall API is used internally by SCSB during request API calls with request type RECALL.", nickname = "RecallItem")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "recall",
+            description ="The Recall API is used internally by SCSB during request API calls with request type RECALL.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public AbstractResponseItem recallItem(@ApiParam(value = "Parameters to recall an item", required = true, name = "requestItemJson") @RequestBody ItemRecalRequest itemRecalRequest) {
+    public AbstractResponseItem recallItem(@Parameter(description = "Parameters to recall an item", required = true, name = "requestItemJson") @RequestBody ItemRecalRequest itemRecalRequest) {
         ItemRecallResponse itemRecallResponse = new ItemRecallResponse();
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
         String response;
@@ -486,10 +488,10 @@ public class RequestItemRestController extends AbstractController  {
      * @return the patron information response
      */
     @PostMapping(value = "/patronInformation")
-    @ApiOperation(value = "patronInformation", notes = "The Patron information API is used internally by SCSB as part of the request API.", nickname = "patronInformation")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "patronInformation", description ="The Patron information API is used internally by SCSB as part of the request API.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public PatronInformationResponse patronInformation(@ApiParam(value = "Parameters to retrieve the patron information from the ILS", required = true, name = "requestpatron") @RequestBody PatronInformationRequest patronInformationRequest) {
+    public PatronInformationResponse patronInformation(@Parameter(description = "Parameters to retrieve the patron information from the ILS", required = true, name = "requestpatron") @RequestBody PatronInformationRequest patronInformationRequest) {
         HttpEntity<PatronInformationResponse> responseEntity;
         PatronInformationResponse patronInformation = null;
         ItemRequestInformation itemRequestInformation = getItemRequestInformation();
@@ -519,10 +521,10 @@ public class RequestItemRestController extends AbstractController  {
      * @return the item refile response
      */
     @PostMapping(value = "/refile")
-    @ApiOperation(value = "refile", notes = "The Refile item API is called when IMS Depository staff refile the item into LAS, and LAS will call SCSB with the details of the refile.", nickname = "Re-File")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "refile", description ="The Refile item API is called when IMS Depository staff refile the item into LAS, and LAS will call SCSB with the details of the refile.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public ItemRefileResponse refileItem(@ApiParam(value = "Parameters to refile an Item", required = true, name = "itemBarcode") @RequestBody ItemRefileRequest itemRefileRequest) {
+    public ItemRefileResponse refileItem(@Parameter(description = "Parameters to refile an Item", required = true, name = "itemBarcode") @RequestBody ItemRefileRequest itemRefileRequest) {
         log.info("Refile Request Received");
         ItemRefileResponse itemRefileResponse;
         HttpEntity<ItemRefileResponse> responseEntity;
@@ -541,10 +543,10 @@ public class RequestItemRestController extends AbstractController  {
      * @return the cancel request response
      */
     @PostMapping(value = "/cancelRequest")
-    @ApiOperation(value = "cancelRequest", notes = "The Cancel Request API will be used by both partners and IMS Depository users to cancel a request placed through SCSB. Partners will incorporate the API into their discovery systems to provide the patrons a way to cancel requests that have been raised by them. IMS Depository users would use it through the SCSB UI to cancel requests that are difficult to process.", nickname = "cancelRequest")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "cancelRequest", description ="The Cancel Request API will be used by both partners and IMS Depository users to cancel a request placed through SCSB. Partners will incorporate the API into their discovery systems to provide the patrons a way to cancel requests that have been raised by them. IMS Depository users would use it through the SCSB UI to cancel requests that are difficult to process.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public CancelRequestResponse cancelRequest(@ApiParam(value = "Parameters for canceling a request on the Item", required = true, name = "requestId") @RequestParam Integer requestId) {
+    public CancelRequestResponse cancelRequest(@Parameter(description = "Parameters for canceling a request on the Item", required = true, name = "requestId") @RequestParam Integer requestId) {
         CancelRequestResponse cancelRequestResponse;
         HttpEntity request = new HttpEntity<>(getRestHeaderService().getHttpHeaders());
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbCircUrl() + ScsbConstants.URL_REQUEST_CANCEL).queryParam("requestId", requestId);
@@ -559,10 +561,10 @@ public class RequestItemRestController extends AbstractController  {
      * @return
      */
     @PostMapping(value = "/bulkRequest", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "bulkRequest", notes = "The Bulk Request API is internally called by SCSB UI which will be probably initiated by LAS users.", nickname = "bulkRequest")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "bulkRequest", description ="The Bulk Request API is internally called by SCSB UI which will be probably initiated by LAS users.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public BulkRequestResponse bulkRequest(@ApiParam(value = "Parameters for initiating bulk request", required = true, name = "bulkRequestId") @RequestParam int bulkRequestId) {
+    public BulkRequestResponse bulkRequest(@Parameter(description = "Parameters for initiating bulk request", required = true, name = "bulkRequestId") @RequestParam int bulkRequestId) {
         getProducer().sendBody(ScsbCommonConstants.BULK_REQUEST_ITEM_QUEUE, bulkRequestId);
         BulkRequestResponse bulkRequestResponse = new BulkRequestResponse();
         bulkRequestResponse.setBulkRequestId(bulkRequestId);
@@ -576,7 +578,7 @@ public class RequestItemRestController extends AbstractController  {
      * @param bulkRequestInformation
      * @return
      */
-    @ApiIgnore
+    @Hidden
     @PostMapping(value = "/patronValidationBulkRequest")
     public Boolean patronValidation(@RequestBody BulkRequestInformation bulkRequestInformation){
         return new RestTemplate().postForEntity(getScsbCircUrl() + "/requestItem/patronValidationBulkRequest", bulkRequestInformation, Boolean.class).getBody();
@@ -588,14 +590,14 @@ public class RequestItemRestController extends AbstractController  {
      * @param owningInstitution
      * @return
      */
-    @ApiIgnore
+    @Hidden
     @PostMapping(value = "/refileItemInILS", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "refileItemInILS",
-            notes = "The Refile item API is an internal call made by SCSB as part of the refile and accession API calls.", nickname = "refileItemInILS")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "refileItemInILS",
+            description ="The Refile item API is an internal call made by SCSB as part of the refile and accession API calls.")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public AbstractResponseItem refileItemInILS(@ApiParam(value = "Parameters for refiling an item", required = true, name = "itemBarcode") @RequestParam String itemBarcode,
-                                                @ApiParam(value = "Parameters for refiling an item", required = true, name = "owningInstitution") @RequestParam String owningInstitution) {
+    public AbstractResponseItem refileItemInILS(@Parameter(description = "Parameters for refiling an item", required = true, name = "itemBarcode") @RequestParam String itemBarcode,
+                                                @Parameter(description = "Parameters for refiling an item", required = true, name = "owningInstitution") @RequestParam String owningInstitution) {
         ItemRefileResponse itemRefileResponse = null;
         ItemRequestInformation itemRequestInfo = getItemRequestInformation();
         try {
@@ -617,12 +619,12 @@ public class RequestItemRestController extends AbstractController  {
      * @param replaceRequest the replace request body
      * @return the string response
      */
-    @ApiIgnore
+    @Hidden
     @PostMapping(value = "/replaceRequest")
-    @ApiOperation(value = "replaceRequest", notes = "Resubmit the failed requests to LAS", nickname = "Replace Request")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @Operation(summary = "replaceRequest", description ="Resubmit the failed requests to LAS")
+    @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
-    public ResponseEntity replaceRequestToLAS(@ApiParam(value = "Parameters to replace the request", required = true, name = "replaceRequest") @RequestBody ReplaceRequest replaceRequest) {
+    public ResponseEntity replaceRequestToLAS(@Parameter(description = "Parameters to replace the request", required = true, name = "replaceRequest") @RequestBody ReplaceRequest replaceRequest) {
         try {
             Map<String, String> resultMap = restTemplate.postForObject(getScsbCircUrl() + ScsbConstants.URL_REQUEST_REPLACE, replaceRequest, Map.class);
             return new ResponseEntity<>(resultMap, getHttpHeaders(), HttpStatus.OK);
@@ -651,12 +653,12 @@ public class RequestItemRestController extends AbstractController  {
             log.info("Resubmit Item Request Information : {}",itemRequestInfo);
             itemRequestInfo.setPatronBarcode(itemRequestInfo.getPatronBarcode() != null ? itemRequestInfo.getPatronBarcode().trim() : null);
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
-            statusCode = responseEntity.getStatusCode();
+            statusCode = (HttpStatus) responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
             requestItemService.updateItemRequest("",requestLogId);
         } catch (HttpClientErrorException e) {
             log.error("error::", e);
-            statusCode = e.getStatusCode();
+            statusCode = (HttpStatus) e.getStatusCode();
             screenMessage = e.getResponseBodyAsString();
             requestItemService.updateItemRequest(e.getMessage(),requestLogId);
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
