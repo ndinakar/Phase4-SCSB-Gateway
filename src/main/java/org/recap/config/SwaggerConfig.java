@@ -90,4 +90,13 @@ public class SwaggerConfig extends SwaggerConfigBase {
 //
 //    }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("https://test-recap.htcinc.com:9093/swagger-ui/index.html", "http://test-recap.htcinc.com:9093/swagger-ui/index.html")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+    }
+
 }
