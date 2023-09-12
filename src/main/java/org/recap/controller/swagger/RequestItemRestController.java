@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -560,9 +562,10 @@ public class RequestItemRestController extends AbstractController  {
      * @param bulkRequestId
      * @return
      */
-    @PostMapping(value = "/bulkRequest", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/bulkRequest")
     @Operation(summary = "bulkRequest", description ="The Bulk Request API is internally called by SCSB UI which will be probably initiated by LAS users.")
-    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "200", description = "OK",content = { @Content(mediaType = "application/json",
+            schema = @Schema(implementation = BulkRequestResponse.class)) })
     @ResponseBody
     public BulkRequestResponse bulkRequest(@Parameter(description = "Parameters for initiating bulk request", required = true, name = "bulkRequestId") @RequestParam int bulkRequestId) {
         getProducer().sendBody(ScsbCommonConstants.BULK_REQUEST_ITEM_QUEUE, bulkRequestId);
