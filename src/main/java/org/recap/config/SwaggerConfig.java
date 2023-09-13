@@ -9,7 +9,6 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
@@ -36,16 +35,6 @@ public class SwaggerConfig extends SwaggerConfigBase {
         addSecurity(openApi);
         return openApi;
     }
-
-
-//    @Bean
-//    public GroupedOpenApi excludeApi() {
-//        return GroupedOpenApi.builder()
-//                .group("springshop-admin")
-//                .pathsToExclude("/deAccessionService/**","/encryptEmailAddressService/**")
-//                .packagesToExclude("org.recap.controller")
-//                .build();
-//    }
 
     @Bean
     public GroupedOpenApi adminApi() {
@@ -80,23 +69,5 @@ public class SwaggerConfig extends SwaggerConfigBase {
                 .in(SecurityScheme.In.HEADER);
     }
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new SwaggerInterceptor())
-//                .addPathPatterns("/sharedCollection/*")
-//                .addPathPatterns("/requestItem/*")
-//                .addPathPatterns("/searchService/*")
-//                .addPathPatterns("/dataDump/*");
-//
-//    }
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("https://test-recap.htcinc.com:9093/swagger-ui/index.html", "http://test-recap.htcinc.com:9093/swagger-ui/index.html")
-//                .allowedMethods("GET", "POST", "PUT", "DELETE")
-//                .allowedHeaders("*")
-//                .allowCredentials(true);
-//    }
 
 }
