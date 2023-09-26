@@ -1,25 +1,16 @@
 package org.recap.controller.swagger;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +21,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/dataDump")
-@Api(value="dataDump")
+@Tag(name="dataDump")
 public class DataDumpRestController extends AbstractController  {
 
 
@@ -49,20 +40,20 @@ public class DataDumpRestController extends AbstractController  {
      * @return the response entity
      */
     @GetMapping("/exportDataDump")
-    @ApiOperation(value = "exportDataDump",
-            notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by support institution team.", nickname = "exportDataDump", position = 0)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = ScsbConstants.DATADUMP_PROCESS_STARTED)})
+    @Operation(summary = "exportDataDump",
+           description =  "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by support institution team.")
+    @ApiResponse(responseCode = "200", description = ScsbConstants.DATADUMP_PROCESS_STARTED)
     @ResponseBody
-    public ResponseEntity exportDataDump(@ApiParam(value = "${swagger.values.institutionCodes}" , required = true, name = "institutionCodes") @RequestParam String institutionCodes,
-                                         @ApiParam(value = "${swagger.values.requestingInstitutionCode}",required=true, name = "requestingInstitutionCode") @RequestParam String requestingInstitutionCode,
-                                         @ApiParam(value = "${swagger.values.imsDepositoryCodes}", name = "imsDepositoryCodes") @RequestParam(required=false) String imsDepositoryCodes,
-                                         @ApiParam(value = "Type of export - Incremental (use 1) or Deleted (use 2) or Full Dump (use 10)" , required = true , name = "fetchType") @RequestParam String fetchType,
-                                         @ApiParam(value = "Type of format - Marc xml (use 0) or SCSB xml (use 1), for deleted records only json format (use 2)",required=true, name = "outputFormat") @RequestParam String outputFormat,
-                                         @ApiParam(value = "Get updates to middleware collection since the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "date") @RequestParam(required = false) String date,
-                                         @ApiParam(value = "Data can be requested by Collection Group ID, either Shared (use 1)/Open (use 2)/Private (use 3)/Committed (use 5)/Uncommittable (use 6). Default is Shared, Open, Committed and Uncommittable, can use 1,2,3 as well.", name = "collectionGroupIds") @RequestParam(required=false) String collectionGroupIds,
-                                         @ApiParam(value = "Type of transmission - for S3 use 0, for HTTP response use 1. Default is S3.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
-                                         @ApiParam(value = "Email address to whom email will be sent upon completion" , name = "emailToAddress")@RequestParam(required=false) String emailToAddress,
-                                         @ApiIgnore @RequestParam(required=false) String userName
+    public ResponseEntity exportDataDump(@Parameter(description = "${swagger.values.institutionCodes}" , required = true, name = "institutionCodes") @RequestParam String institutionCodes,
+                                         @Parameter(description = "${swagger.values.requestingInstitutionCode}",required=true, name = "requestingInstitutionCode") @RequestParam String requestingInstitutionCode,
+                                         @Parameter(description = "${swagger.values.imsDepositoryCodes}", name = "imsDepositoryCodes") @RequestParam(required=false) String imsDepositoryCodes,
+                                         @Parameter(description = "Type of export - Incremental (use 1) or Deleted (use 2) or Full Dump (use 10)" , required = true , name = "fetchType") @RequestParam String fetchType,
+                                         @Parameter(description = "Type of format - Marc xml (use 0) or SCSB xml (use 1), for deleted records only json format (use 2)",required=true, name = "outputFormat") @RequestParam String outputFormat,
+                                         @Parameter(description = "Get updates to middleware collection since the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "date") @RequestParam(required = false) String date,
+                                         @Parameter(description = "Data can be requested by Collection Group ID, either Shared (use 1)/Open (use 2)/Private (use 3)/Committed (use 5)/Uncommittable (use 6). Default is Shared, Open, Committed and Uncommittable, can use 1,2,3 as well.", name = "collectionGroupIds") @RequestParam(required=false) String collectionGroupIds,
+                                         @Parameter(description = "Type of transmission - for S3 use 0, for HTTP response use 1. Default is S3.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
+                                         @Parameter(description = "Email address to whom email will be sent upon completion" , name = "emailToAddress")@RequestParam(required=false) String emailToAddress,
+                                         @Parameter(hidden = true) @RequestParam(required=false) String userName
     ){
         Map<String,String> inputMap = new HashMap<>();
         setInputMapValues(inputMap, institutionCodes, requestingInstitutionCode, fetchType, outputFormat, date, collectionGroupIds, transmissionType, emailToAddress,imsDepositoryCodes,userName);
@@ -70,7 +61,7 @@ public class DataDumpRestController extends AbstractController  {
             HttpEntity requestEntity = getSwaggerHttpEntity();
             HttpHeaders responseHeaders = getHttpHeaders();
             responseHeaders.add(ScsbCommonConstants.RESPONSE_HEADER_CONTENT_TYPE,ScsbCommonConstants.RESPONSE_HEADER_CONTENT_TYPE_VALUE);
-            ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap);
+            ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap);
             return new ResponseEntity<>(response.getBody(), responseHeaders, response.getStatusCode());
         } catch (RuntimeException exception) {
             log.error("error-->",exception);
@@ -93,28 +84,28 @@ public class DataDumpRestController extends AbstractController  {
      * @return the response entity
      */
     @GetMapping("/exportDataDumpWithToDate")
-    @ApiOperation(value = "exportDataDump",
-            notes = "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by support institution team.", nickname = "exportDataDump", position = 0)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = ScsbConstants.DATADUMP_PROCESS_STARTED)})
+    @Operation(summary = "exportDataDump",
+           description =  "The Export Data Dump API allows export of bibliographic records in SCSB database into MARCXML or SCSBXML format. This is used by partners to export records in preferred format and update their respective discovery systems. These jobs are scheduled to run by support institution team.", operationId = "0")
+    @ApiResponse(responseCode = "200", description = ScsbConstants.DATADUMP_PROCESS_STARTED)
     @ResponseBody
-    public ResponseEntity exportDataDumpWithToDate(@ApiParam(value = "${swagger.values.institutionCodes}" , required = true, name = "institutionCodes") @RequestParam String institutionCodes,
-                                         @ApiParam(value = "${swagger.values.requestingInstitutionCode}",required=true, name = "requestingInstitutionCode") @RequestParam String requestingInstitutionCode,
-                                         @ApiParam(value = "${swagger.values.imsDepositoryCodes}" ,name = "imsDepositoryCodes") @RequestParam(required=false) String imsDepositoryCodes,
-                                         @ApiParam(value = "Type of export - Incremental (use 1) or Deleted (use 2)" , required = true , name = "fetchType") @RequestParam String fetchType,
-                                         @ApiParam(value = "Type of format - Marc xml (use 0) or SCSB xml (use 1), for deleted records only json format (use 2)",required=true, name = "outputFormat") @RequestParam String outputFormat,
-                                         @ApiParam(value = "Get updates to middleware collection since the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "date") @RequestParam(required = false) String date,
-                                         @ApiParam(value = "Get updates to middleware collection until the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "toDate") @RequestParam(required = false) String toDate,
-                                         @ApiParam(value = "Data can be requested by Collection Group ID, either Shared (use 1)/Open (use 2)/Private (use 3)/Committed (use 5)/Uncommittable (use 6). Default is Shared, Open, Committed and Uncommittable, can use 1,2 as well.", name = "collectionGroupIds") @RequestParam(required=false) String collectionGroupIds,
-                                         @ApiParam(value = "Type of transmission - for S3 use 0, for HTTP response use 1. Default is S3.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
-                                         @ApiParam(value = "Email address to whom email will be sent upon completion" , name = "emailToAddress")@RequestParam(required=false) String emailToAddress,
-                                                   @ApiIgnore @RequestParam(required=false) String userName
+    public ResponseEntity exportDataDumpWithToDate(@Parameter(description = "${swagger.values.institutionCodes}" , required = true, name = "institutionCodes") @RequestParam String institutionCodes,
+                                         @Parameter(description = "${swagger.values.requestingInstitutionCode}",required=true, name = "requestingInstitutionCode") @RequestParam String requestingInstitutionCode,
+                                         @Parameter(description = "${swagger.values.imsDepositoryCodes}" ,name = "imsDepositoryCodes") @RequestParam(required=false) String imsDepositoryCodes,
+                                         @Parameter(description = "Type of export - Incremental (use 1) or Deleted (use 2)" , required = true , name = "fetchType") @RequestParam String fetchType,
+                                         @Parameter(description = "Type of format - Marc xml (use 0) or SCSB xml (use 1), for deleted records only json format (use 2)",required=true, name = "outputFormat") @RequestParam String outputFormat,
+                                         @Parameter(description = "Get updates to middleware collection since the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "date") @RequestParam(required = false) String date,
+                                         @Parameter(description = "Get updates to middleware collection until the date provided. Date format will be a string (yyyy-MM-dd HH:mm) and is Eastern Time.",name = "toDate") @RequestParam(required = false) String toDate,
+                                         @Parameter(description = "Data can be requested by Collection Group ID, either Shared (use 1)/Open (use 2)/Private (use 3)/Committed (use 5)/Uncommittable (use 6). Default is Shared, Open, Committed and Uncommittable, can use 1,2 as well.", name = "collectionGroupIds") @RequestParam(required=false) String collectionGroupIds,
+                                         @Parameter(description = "Type of transmission - for S3 use 0, for HTTP response use 1. Default is S3.", name = "transmissionType")@RequestParam(required=false) String transmissionType,
+                                         @Parameter(description = "Email address to whom email will be sent upon completion" , name = "emailToAddress")@RequestParam(required=false) String emailToAddress,
+                                                   @Parameter(hidden = true) @RequestParam(required=false) String userName
     ){
         Map<String,String> inputMap = new HashMap<>();
         setInputMapValues(inputMap, institutionCodes, requestingInstitutionCode, fetchType, outputFormat, date, collectionGroupIds, transmissionType, emailToAddress,imsDepositoryCodes,userName);
         inputMap.put("toDate",toDate);
         try {
             HttpEntity requestEntity = getSwaggerHttpEntity();
-            ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump/?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap);
+            ResponseEntity<String> response = restTemplate.exchange(getScsbEtlUrl() + "dataDump/exportDataDump?institutionCodes={institutionCodes}&requestingInstitutionCode={requestingInstitutionCode}&imsDepositoryCodes={imsDepositoryCodes}&fetchType={fetchType}&outputFormat={outputFormat}&date={date}&toDate={toDate}&collectionGroupIds={collectionGroupIds}&transmissionType={transmissionType}&emailToAddress={emailToAddress}&userName={userName}", HttpMethod.GET, requestEntity, String.class, inputMap);
             return new ResponseEntity<>(response.getBody(), getHttpHeaders(), response.getStatusCode());
 
         } catch (RuntimeException exception) {

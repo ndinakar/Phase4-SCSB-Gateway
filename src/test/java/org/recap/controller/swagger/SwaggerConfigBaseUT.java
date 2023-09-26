@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.recap.BaseTestCase;
 import org.recap.config.SwaggerConfig;
-import springfox.documentation.service.ApiInfo;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

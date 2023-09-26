@@ -1,7 +1,7 @@
 package org.recap.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
+
 import lombok.Data;
 
 import java.util.List;
