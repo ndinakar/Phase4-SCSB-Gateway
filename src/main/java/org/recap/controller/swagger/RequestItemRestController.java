@@ -147,7 +147,7 @@ public class RequestItemRestController extends AbstractController  {
             responseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST, itemRequestInfo, String.class);
             statusCode = (HttpStatus) responseEntity.getStatusCode();
             screenMessage = responseEntity.getBody().toString();
-            requestItemService.saveReceivedRequestInformation(itemRequestInfo,"",Boolean.TRUE);
+            requestItemService.saveReceivedRequestInformation(itemRequestInfo,screenMessage,Boolean.TRUE);
         } catch (HttpClientErrorException e) {
             requestItemService.saveReceivedRequestInformation(itemRequestInfo,e.getMessage(),Boolean.TRUE);
             log.error(ScsbConstants.ERROR_LOG, e.getMessage());
