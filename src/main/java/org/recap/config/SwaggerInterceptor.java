@@ -1,5 +1,6 @@
 package org.recap.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.ScsbCommonConstants;
 import org.recap.util.HelperUtil;
@@ -50,7 +51,7 @@ public class SwaggerInterceptor implements HandlerInterceptor {
         if (key != null && matchingWithInstitutionKeys(key)) {
             continueExport = true;
         } else {
-            if (key == null || Objects.requireNonNull(key).isEmpty()) {
+            if(key == null || Objects.requireNonNull(key).isEmpty()) {
                 log.info("AUTHENTICATION FAILED AND KEY IS : {}", key);
             } else {
                 log.info("AUTHENTICATION FAILED");
