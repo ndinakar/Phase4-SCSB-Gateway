@@ -1,5 +1,6 @@
 package org.recap.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.ScsbCommonConstants;
 import org.recap.util.HelperUtil;
@@ -12,10 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by hemalathas on 7/9/16.
  */
+@Slf4j
 @Component
 public class SwaggerInterceptor implements HandlerInterceptor {
 
@@ -41,12 +44,18 @@ public class SwaggerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        log.info("AUTHENTICATION IS TAKING PLACE");
         boolean continueExport = false;
         String date = new Date().toString();
         String key = request.getHeader(ScsbCommonConstants.API_KEY);
         if (key != null && matchingWithInstitutionKeys(key)) {
             continueExport = true;
         } else {
+            if(key == null || Objects.requireNonNull(key).isEmpty()) {
+                log.info("AUTHENTICATION FAILED AND KEY IS : {}", key);
+            } else {
+                log.info("AUTHENTICATION FAILED");
+            }
             continueExport = false;
             response.setStatus(401);
             response.setHeader("Date" , date);

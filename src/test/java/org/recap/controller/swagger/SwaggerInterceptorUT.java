@@ -1,6 +1,9 @@
 package org.recap.controller.swagger;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.recap.BaseTestCase;
 import org.recap.config.SwaggerInterceptor;
@@ -8,9 +11,6 @@ import org.recap.util.MD5EncoderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.ModelAndView;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,9 +30,19 @@ public class SwaggerInterceptorUT extends BaseTestCase {
     @Autowired
     private HttpServletResponse httpServletResponse;
 
+    public static final String KEY = "api_key";
+
     @Test
     public void testPreHandle() throws Exception {
         httpServletRequest.setAttribute("api_key", "scsb");
+        boolean continueExport = swaggerInterceptor.preHandle(httpServletRequest, httpServletResponse, new Object());
+        assertTrue(!continueExport);
+    }
+
+    @Test
+    public void testAuthentication() throws Exception {
+        String randomString = RandomStringUtils.random(10, true, true);
+        httpServletRequest.setAttribute(KEY, randomString);
         boolean continueExport = swaggerInterceptor.preHandle(httpServletRequest, httpServletResponse, new Object());
         assertTrue(!continueExport);
     }
