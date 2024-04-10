@@ -39,7 +39,6 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	implementation fileTree(dir: '/data/commonjar', include: '*2.7.jar')
 	implementation('org.springframework.boot:spring-boot-starter-web-services')
@@ -53,8 +52,6 @@ dependencies {
 	implementation('org.apache.camel:camel-bindy:4.4.0')
 	implementation('org.apache.camel.springboot:camel-spring-boot-starter:4.4.0')
 	implementation('org.apache.camel:camel-activemq:4.4.0')
-//	implementation 'org.apache.camel:camel-cxf:3.17.0'
-//	implementation('org.apache.camel:camel-jms:3.20.4')
 	implementation 'org.apache.camel:camel-jms:4.4.0'
 	implementation('org.apache.camel:camel-ftp:4.4.0')
 	implementation('org.apache.camel:camel-csv:4.4.0')
@@ -62,15 +59,14 @@ dependencies {
 	testImplementation 'org.apache.camel:camel-jetty:4.4.0'
 	implementation('org.apache.solr:solr-solrj:9.4.0')
 	implementation('org.apache.activemq:activemq-camel:5.16.6')
-	implementation('org.apache.activemq:activemq-pool:5.18.2')
-	implementation('org.apache.activemq:activemq-broker:5.18.2')
-	implementation('org.apache.activemq:activemq-client-jakarta:5.18.2')
+	implementation('org.apache.activemq:activemq-pool:5.18.3')
+	implementation('org.apache.activemq:activemq-broker:5.18.3')
+	implementation('org.apache.activemq:activemq-client-jakarta:5.18.3')
 			{exclude module: 'activemq-client'}
 	implementation('org.projectlombok:lombok:1.18.30')
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.boot:spring-boot-starter-activemq:3.1.2'
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 	implementation 'io.zipkin.brave:brave:5.2.0'
 
@@ -119,12 +115,10 @@ jacocoTestReport {
 	}
 }
 
-
 jacoco {
 	toolVersion = "0.8.10"
 	reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
-
 
 task scsbJavadocs(type: Javadoc) {
 	source = sourceSets.main.java
